@@ -1,0 +1,1600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#9A5028" />
+
+<title>Ganga Lehari Pansari (GLP) — Heritage Spices &amp; Premixes from Sarafa Bazaar, Alwar · Since 1918</title>
+<meta name="description" content="Heritage Rajasthani spices and premixes from Sarafa Bazaar, Alwar. Hand-blended by the family of Shri Moti Lal Ji Pansari since 1918. Four shops in Alwar, stockists across India, now shipping direct to your kitchen." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Italiana&family=Manrope:wght@300;400;500;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet" />
+
+<style>
+/* ════════════ TOKENS ════════════ */
+:root{
+  --ivory:#FFFBF1;
+  --cream:#F5ECDA;
+  --paper:#FAF3E1;
+  --mist:#E6D8B9;
+  --terracotta:#9A5028;
+  --terracotta-2:#7E3F1F;
+  --brick:#5A2812;
+  --ink:#2A1F18;
+  --soft-ink:#4A3A2E;
+  --gold:#C9863E;
+
+  --display:"Italiana", serif;
+  --serif:"Cormorant Garamond", serif;
+  --body:"Manrope", system-ui, sans-serif;
+  --devanagari:"Tiro Devanagari Hindi", serif;
+
+  --pad-y:120px;
+  --pad-x:28px;
+}
+
+*,*::before,*::after{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+html[data-lang="hi"] body{ font-family:var(--devanagari); }
+html[data-lang="hi"] .roman, html[data-lang="hi"] .acc {
+  font-family:var(--devanagari);
+}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%; display:block}
+a{color:inherit; text-decoration:none}
+button{font:inherit; cursor:pointer; border:none; background:none; color:inherit}
+
+.container{max-width:1280px; margin:0 auto; padding-left:var(--pad-x); padding-right:var(--pad-x)}
+
+/* common typography helpers */
+.eyebrow{
+  display:inline-flex; align-items:center; gap:14px;
+  font-size:11px; letter-spacing:.36em; text-transform:uppercase;
+  font-weight:600; color:var(--terracotta);
+  font-family:var(--body);
+}
+.eyebrow::before, .eyebrow::after{
+  content:""; height:1px; width:36px; background:var(--terracotta); opacity:.45;
+}
+h2.section-h{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(36px, 5vw, 64px); line-height:1.05;
+  color:var(--ink); letter-spacing:-.01em;
+  margin:18px 0 22px;
+}
+h2.section-h .acc{font-style:italic; color:var(--terracotta)}
+h2.section-h .roman{font-style:normal}
+.section-head p{
+  font-size:17px; color:var(--soft-ink); max-width:640px;
+  line-height:1.65;
+}
+.section{padding:var(--pad-y) 0; position:relative}
+.section.tight{padding:80px 0}
+
+.reveal{opacity:0; transform:translateY(20px); transition:opacity .9s ease, transform .9s ease}
+.reveal.in{opacity:1; transform:none}
+
+/* ════════════ BUTTONS ════════════ */
+.btn{
+  display:inline-flex; align-items:center; gap:14px;
+  padding:18px 36px; min-height:52px;
+  font-size:12.5px; letter-spacing:.28em; text-transform:uppercase; font-weight:600;
+  border-radius:999px; cursor:pointer; transition:all .3s ease;
+}
+.btn .arrow{
+  display:inline-block; width:0; height:0;
+  border-top:5px solid transparent; border-bottom:5px solid transparent;
+  border-left:7px solid currentColor;
+}
+.btn-primary{background:var(--terracotta); color:var(--ivory)}
+.btn-primary:hover{background:var(--brick); transform:translateY(-2px); box-shadow:0 12px 28px -10px rgba(154,80,40,.55)}
+.btn-ghost{background:transparent; color:var(--terracotta); border:1px solid var(--terracotta)}
+.btn-ghost:hover{background:var(--terracotta); color:var(--ivory)}
+
+/* ════════════ ANNOUNCE + LANG TOGGLE ════════════ */
+.announce{
+  background:var(--ink); color:var(--cream);
+  font-size:11px; letter-spacing:.24em; text-transform:uppercase;
+  font-weight:500;
+  display:flex; align-items:center;
+  padding:0; min-height:38px;
+  position:relative; z-index:5;
+}
+.announce-track{
+  flex:1; overflow:hidden; white-space:nowrap;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image:linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  padding:10px 0;
+}
+.announce-track-inner{
+  display:inline-flex; gap:48px; animation:scrollAnnounce 38s linear infinite;
+  padding-left:28px;
+}
+.announce-track-inner span::before{
+  content:"✦"; margin-right:14px; opacity:.55; color:var(--gold);
+}
+@keyframes scrollAnnounce{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+.lang-toggle{
+  display:flex; align-items:center; gap:2px; padding:0 18px;
+  border-left:1px solid rgba(245,236,218,.18);
+  height:38px;
+}
+.lang-toggle button{
+  padding:8px 12px; font-size:11px; letter-spacing:.18em; font-weight:600;
+  color:rgba(245,236,218,.55); border-radius:4px; min-width:36px;
+  transition:color .2s ease, background .2s ease;
+  font-family:var(--body);
+}
+.lang-toggle button[data-lang-btn="hi"]{ font-family:var(--devanagari); font-size:13px; letter-spacing:.05em }
+.lang-toggle button:hover{color:var(--cream)}
+.lang-toggle button.active{color:var(--gold); background:rgba(201,134,62,.12)}
+.lang-toggle .sep{color:rgba(245,236,218,.25); font-size:11px}
+
+/* ════════════ HEADER / NAV ════════════ */
+.header{
+  background:var(--ivory);
+  border-bottom:1px solid rgba(154,80,40,.12);
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px var(--pad-x);
+  max-width:1280px; margin:0 auto;
+  gap:16px;
+}
+.nav-logo{display:flex; align-items:center; gap:14px}
+.nav-logo img{height:54px; transition:transform .3s ease}
+.nav-logo:hover img{transform:scale(1.02)}
+.nav-logo .marker{
+  display:flex; flex-direction:column; line-height:1;
+}
+.nav-logo .marker .est{
+  font-family:var(--display); font-size:18px; letter-spacing:.18em;
+  color:var(--terracotta);
+}
+.nav-logo .marker .sub{
+  font-size:9px; letter-spacing:.32em; color:var(--soft-ink);
+  text-transform:uppercase; margin-top:5px; font-weight:500;
+}
+.nav-links{display:flex; gap:42px; align-items:center}
+.nav-links a{
+  font-size:12px; letter-spacing:.24em; text-transform:uppercase; font-weight:600;
+  color:var(--ink); position:relative; padding:8px 0;
+  transition:color .2s ease;
+}
+.nav-links a:hover{color:var(--terracotta)}
+.nav-links a::after{
+  content:""; position:absolute; left:0; bottom:0; width:0; height:1px;
+  background:var(--terracotta); transition:width .3s ease;
+}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex; align-items:center; gap:18px}
+.nav-icon{
+  width:42px; height:42px; border-radius:50%;
+  display:grid; place-items:center;
+  color:var(--ink); transition:all .25s ease;
+}
+.nav-icon:hover{background:var(--cream); color:var(--terracotta)}
+.bag-badge{
+  position:relative;
+}
+.bag-badge::after{
+  content:"0"; position:absolute; top:6px; right:6px;
+  background:var(--terracotta); color:var(--ivory);
+  font-size:9px; font-weight:700; width:16px; height:16px;
+  border-radius:50%; display:grid; place-items:center;
+  letter-spacing:0;
+}
+
+.hamburger{
+  display:none; width:44px; height:44px; border-radius:50%;
+  align-items:center; justify-content:center;
+}
+.hamburger span{
+  display:block; width:22px; height:1.5px; background:var(--ink);
+  position:relative; transition:all .3s ease;
+}
+.hamburger span::before, .hamburger span::after{
+  content:""; position:absolute; width:22px; height:1.5px; background:var(--ink);
+  left:0; transition:all .3s ease;
+}
+.hamburger span::before{top:-7px}
+.hamburger span::after{top:7px}
+body.menu-open .hamburger span{background:transparent}
+body.menu-open .hamburger span::before{top:0; transform:rotate(45deg)}
+body.menu-open .hamburger span::after{top:0; transform:rotate(-45deg)}
+
+/* mobile menu drawer */
+.mobile-menu{
+  position:fixed; top:0; right:0; bottom:0; width:80%; max-width:340px;
+  background:var(--ivory); z-index:100;
+  padding:96px 32px 32px;
+  transform:translateX(100%); transition:transform .35s ease;
+  display:flex; flex-direction:column; gap:8px;
+  box-shadow:-20px 0 60px -20px rgba(42,31,24,.25);
+}
+body.menu-open .mobile-menu{transform:translateX(0)}
+.mobile-menu a{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:28px; color:var(--ink); padding:14px 0;
+  border-bottom:1px solid rgba(154,80,40,.1);
+}
+.mobile-menu a:last-child{border-bottom:none}
+.menu-overlay{
+  position:fixed; inset:0; background:rgba(42,31,24,.4);
+  opacity:0; pointer-events:none; transition:opacity .3s ease; z-index:99;
+}
+body.menu-open .menu-overlay{opacity:1; pointer-events:auto}
+body.menu-open{overflow:hidden}
+
+/* ════════════ HERO ════════════ */
+.hero{
+  position:relative;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(201,134,62,.14), transparent 50%),
+    radial-gradient(ellipse at 10% 100%, rgba(154,80,40,.10), transparent 55%),
+    linear-gradient(180deg, var(--ivory) 0%, var(--paper) 60%, var(--cream) 100%);
+  padding:80px 0 140px;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:80px;
+  align-items:center;
+  position:relative; z-index:2;
+}
+.hero-stamp{
+  display:inline-flex; align-items:center; gap:14px; margin-bottom:28px;
+  padding:10px 18px; background:var(--ivory);
+  border:1px solid rgba(154,80,40,.18); border-radius:999px;
+  font-size:11px; letter-spacing:.26em; text-transform:uppercase; font-weight:600;
+  color:var(--terracotta);
+}
+.hero-stamp::before{content:"✦"; color:var(--gold)}
+.hero-stamp .stamp-sub{
+  color:var(--soft-ink); font-weight:500;
+  padding-left:14px; border-left:1px solid rgba(154,80,40,.25);
+  font-size:10px;
+}
+.hero h1{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(44px, 6.5vw, 92px); line-height:1.02;
+  color:var(--ink); letter-spacing:-.015em;
+  margin-bottom:32px;
+}
+.hero h1 .acc{font-style:italic; color:var(--terracotta)}
+.hero h1 .roman{font-style:normal}
+.hero .lede{
+  font-size:18px; color:var(--soft-ink);
+  max-width:560px; line-height:1.7; margin-bottom:40px;
+}
+.hero-ctas{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:48px}
+.hero-tag{
+  font-family:var(--display); font-size:13px; letter-spacing:.45em;
+  color:var(--terracotta); text-transform:uppercase;
+}
+
+/* hero visual side */
+.hero-visual{
+  position:relative; aspect-ratio:.88; max-width:540px; margin-left:auto;
+}
+.hero-cartouche{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  background:
+    radial-gradient(ellipse at center, rgba(154,80,40,.08), transparent 65%);
+}
+.hero-cartouche img{
+  width:100%; height:auto; max-width:480px;
+  filter:drop-shadow(0 30px 60px rgba(154,80,40,.18));
+  animation:float 6s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+.hero-1918{
+  position:absolute; right:-40px; bottom:-30px; z-index:0;
+  font-family:var(--display); font-size:clamp(160px, 22vw, 280px);
+  color:var(--terracotta); opacity:.07; letter-spacing:-.03em;
+  line-height:1; pointer-events:none;
+}
+.hero-chips{
+  position:absolute; left:-40px; top:20%;
+  display:flex; flex-direction:column; gap:14px; z-index:3;
+}
+.chip{
+  background:var(--ivory); padding:12px 18px; border-radius:999px;
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:500;
+  color:var(--soft-ink); display:inline-flex; align-items:center; gap:10px;
+  border:1px solid rgba(154,80,40,.15);
+  box-shadow:0 8px 24px -8px rgba(42,31,24,.15);
+}
+.chip::before{content:"✦"; color:var(--terracotta); font-size:10px}
+.chip b{color:var(--terracotta); font-weight:700}
+
+/* ════════════ STRIP ════════════ */
+.strip{
+  background:var(--terracotta); color:var(--cream);
+  overflow:hidden;
+  padding:18px 0;
+  border-top:1px solid rgba(255,251,241,.1);
+  border-bottom:1px solid rgba(255,251,241,.1);
+}
+.strip-track{
+  display:flex; gap:80px; white-space:nowrap;
+  animation:scrollStrip 50s linear infinite;
+}
+.strip-track span{
+  font-size:13px; letter-spacing:.32em; text-transform:uppercase; font-weight:500;
+  display:inline-flex; align-items:center; gap:24px;
+}
+.strip-track span::after{content:"✦"; color:var(--gold)}
+@keyframes scrollStrip{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+
+/* ════════════ COLLECTION ════════════ */
+.collection{background:var(--cream)}
+.section-head-row{
+  display:flex; justify-content:space-between; align-items:end; gap:40px;
+  margin-bottom:64px; flex-wrap:wrap;
+}
+.section-head{max-width:680px}
+.filters{display:flex; gap:8px; flex-wrap:wrap}
+.filters button{
+  padding:10px 18px; border-radius:999px;
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+  color:var(--soft-ink); border:1px solid transparent;
+  transition:all .25s ease;
+}
+.filters button.active{background:var(--ink); color:var(--cream)}
+.filters button:not(.active):hover{border-color:rgba(154,80,40,.3); color:var(--ink)}
+
+.product-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:32px;
+}
+.card{
+  background:var(--ivory); border-radius:8px; overflow:hidden;
+  position:relative; display:flex; flex-direction:column;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.card:hover{transform:translateY(-6px); box-shadow:0 20px 48px -16px rgba(42,31,24,.22)}
+.card-img{
+  aspect-ratio:1; position:relative;
+  background:linear-gradient(135deg, var(--paper) 0%, var(--mist) 100%);
+  display:grid; place-items:center; overflow:hidden;
+}
+.card-img-inner{
+  width:78%; height:78%;
+  background-color:var(--terracotta);
+  -webkit-mask-image:url('/GLP_Logo.png');
+          mask-image:url('/GLP_Logo.png');
+  -webkit-mask-size:contain; mask-size:contain;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  opacity:.32;
+}
+.card-tag{
+  position:absolute; top:18px; left:18px;
+  background:var(--ivory); padding:6px 14px; border-radius:999px;
+  font-size:10px; letter-spacing:.22em; text-transform:uppercase; font-weight:600;
+  color:var(--terracotta);
+}
+.card-body{padding:28px 26px 32px; flex:1; display:flex; flex-direction:column}
+.card-eyebrow{
+  font-size:10px; letter-spacing:.28em; text-transform:uppercase; font-weight:600;
+  color:var(--terracotta); margin-bottom:10px;
+}
+.card h3{
+  font-family:var(--serif); font-weight:400; font-size:30px; line-height:1.1;
+  color:var(--ink); margin-bottom:6px;
+}
+.card h3 em{color:var(--terracotta); font-weight:500}
+.card .weight{
+  font-size:11.5px; letter-spacing:.18em; color:var(--soft-ink);
+  text-transform:uppercase; margin-bottom:16px; opacity:.85;
+}
+.card p{font-size:14.5px; color:var(--soft-ink); line-height:1.6; margin-bottom:20px; flex:1}
+.card-tags{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:22px}
+.card-tags span{
+  font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+  padding:5px 10px; background:var(--paper); border-radius:4px; color:var(--soft-ink);
+}
+.card-cta{
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:22px; border-top:1px solid rgba(154,80,40,.12);
+}
+.card-cta .price{
+  font-family:var(--serif); font-size:28px; color:var(--ink); font-weight:500;
+  letter-spacing:-.01em;
+}
+.card-add{
+  font-size:11px; letter-spacing:.22em; text-transform:uppercase; font-weight:600;
+  color:var(--terracotta); padding:10px 18px; border:1px solid var(--terracotta);
+  border-radius:999px; transition:all .25s ease;
+}
+.card-add:hover{background:var(--terracotta); color:var(--ivory)}
+
+.see-all{text-align:center; margin-top:64px}
+.see-all a{
+  font-size:12px; letter-spacing:.32em; text-transform:uppercase; font-weight:600;
+  color:var(--terracotta); display:inline-flex; align-items:center; gap:14px;
+  padding:6px 0; border-bottom:1px solid var(--terracotta);
+}
+
+/* ════════════ PROMISE ════════════ */
+.promise{background:var(--ivory)}
+.promise-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:0;
+  margin-top:64px;
+}
+.pillar{
+  text-align:center; padding:40px 32px;
+  border-right:1px solid rgba(154,80,40,.12);
+  position:relative;
+}
+.pillar:last-child{border-right:none}
+.pillar .pillar-mark{
+  width:64px; height:64px; margin:0 auto 28px;
+  display:grid; place-items:center;
+  background:var(--terracotta); border-radius:50%;
+  color:var(--ivory); font-family:var(--display); font-size:24px;
+}
+.pillar h3{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:34px; color:var(--ink); margin-bottom:6px; line-height:1;
+}
+.pillar h3 .hi{
+  display:block; font-family:var(--devanagari); font-style:normal;
+  font-size:36px; color:var(--terracotta); margin-bottom:8px;
+  font-weight:400;
+}
+.pillar .pillar-en{
+  font-size:10.5px; letter-spacing:.32em; text-transform:uppercase;
+  color:var(--soft-ink); font-weight:600; margin-bottom:18px;
+}
+.pillar p{font-size:14.5px; color:var(--soft-ink); line-height:1.65; max-width:280px; margin:0 auto}
+
+/* ════════════ STORY ════════════ */
+.story{
+  background:
+    linear-gradient(180deg, var(--paper), var(--cream-2, #F1E5C8));
+  position:relative;
+}
+.story::before{
+  content:""; position:absolute; inset:0;
+  background-image:radial-gradient(circle at 1px 1px, rgba(154,80,40,.1) 1px, transparent 1px);
+  background-size:32px 32px; opacity:.4; pointer-events:none;
+}
+.story-grid{
+  display:grid; grid-template-columns:.95fr 1.05fr;
+  gap:80px; align-items:center; position:relative; z-index:2;
+}
+.story-portrait{
+  position:relative; aspect-ratio:.78;
+  background:
+    radial-gradient(ellipse at center, rgba(154,80,40,.12), transparent 60%),
+    linear-gradient(135deg, var(--paper), var(--cream));
+  border:1px solid rgba(154,80,40,.18);
+  border-radius:6px;
+  display:grid; place-items:center; overflow:hidden;
+  box-shadow:0 30px 80px -30px rgba(42,31,24,.25);
+}
+.story-portrait::after{
+  content:""; position:absolute; inset:14px;
+  border:1px solid rgba(154,80,40,.25); border-radius:4px; pointer-events:none;
+}
+.portrait-inner{
+  width:74%; height:74%;
+  background-color:var(--terracotta);
+  -webkit-mask-image:url('/GLP_Logo.png');
+          mask-image:url('/GLP_Logo.png');
+  -webkit-mask-size:contain; mask-size:contain;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  opacity:.55;
+}
+.portrait-label{
+  position:absolute; left:50%; top:34px; transform:translateX(-50%);
+  text-align:center;
+}
+.founder-name{
+  font-family:var(--display); font-size:13px; letter-spacing:.32em;
+  color:var(--gold); margin-bottom:8px; font-weight:400; text-transform:uppercase;
+}
+.portrait-year{
+  font-family:var(--display); font-size:64px; letter-spacing:.04em;
+  color:var(--terracotta); line-height:1;
+}
+.portrait-sub{
+  font-size:10.5px; letter-spacing:.32em; text-transform:uppercase;
+  color:var(--soft-ink); margin-top:10px; font-weight:600;
+}
+.portrait-stamp{
+  position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+  font-family:var(--display); font-size:11px; letter-spacing:.42em;
+  color:var(--terracotta); text-transform:uppercase;
+}
+.story-content h2{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(36px, 4.6vw, 60px); line-height:1.08;
+  color:var(--ink); letter-spacing:-.01em; margin-bottom:32px;
+}
+.story-content h2 .acc, .story-content h2 em{font-style:italic; color:var(--terracotta)}
+.story-content h2 .roman{font-style:normal}
+.story-body p{
+  font-size:16px; color:var(--soft-ink); line-height:1.85;
+  margin-bottom:18px;
+}
+.story-body p.lead{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:21px; line-height:1.55; color:var(--ink);
+  margin-bottom:24px;
+}
+.story-sig{margin-top:36px}
+.story-sig div{
+  font-family:var(--display); font-size:22px; letter-spacing:.18em;
+  color:var(--terracotta); margin-bottom:6px;
+}
+.story-sig small{
+  font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--soft-ink); font-weight:600;
+}
+
+/* ════════════ CRAFT ════════════ */
+.craft{
+  background:var(--ink); color:var(--cream);
+  position:relative; overflow:hidden;
+}
+.craft::before{
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(201,134,62,.12), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(154,80,40,.15), transparent 50%);
+}
+.craft > *{position:relative; z-index:2}
+.craft .eyebrow{color:var(--gold)}
+.craft .eyebrow::before, .craft .eyebrow::after{background:var(--gold)}
+.craft h2{color:var(--cream)}
+.craft h2 .acc{color:var(--gold)}
+.craft .section-head p{color:rgba(245,236,218,.7)}
+
+.craft-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  margin-top:64px; background:rgba(245,236,218,.12);
+}
+.step{
+  background:var(--ink); padding:48px 32px;
+  transition:background .3s ease; cursor:default;
+}
+.step:hover{background:#3a2a20}
+.step-num{
+  font-family:var(--display); font-size:13px; letter-spacing:.32em;
+  color:var(--gold); margin-bottom:24px; text-transform:uppercase;
+}
+.step h4{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:26px; color:var(--cream); line-height:1.2; margin-bottom:14px;
+}
+.step p{
+  font-size:14px; color:rgba(245,236,218,.65); line-height:1.65;
+}
+
+/* ════════════ FOOTPRINT ════════════ */
+.footprint{
+  background:
+    radial-gradient(ellipse at 20% 100%, rgba(154,80,40,.06), transparent 60%),
+    var(--paper);
+  border-top:1px solid rgba(154,80,40,.12);
+  border-bottom:1px solid rgba(154,80,40,.12);
+}
+.milestones{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:0;
+  position:relative;
+}
+.milestones::before{
+  content:""; position:absolute;
+  top:88px; left:12%; right:12%;
+  border-top:1px dashed var(--terracotta); opacity:.35; height:1px;
+}
+.milestone{text-align:center; padding:0 24px; position:relative}
+.milestone .m-year{
+  font-family:var(--body); font-size:10.5px; letter-spacing:.32em;
+  text-transform:uppercase; color:var(--terracotta); font-weight:500;
+  margin-bottom:30px;
+}
+.milestone .m-dot{
+  width:16px; height:16px; border-radius:50%;
+  background:var(--paper); border:2px solid var(--terracotta);
+  margin:0 auto 32px; position:relative; z-index:2;
+  transition:transform .3s ease, background .3s ease;
+}
+.milestone:hover .m-dot{background:var(--terracotta); transform:scale(1.2)}
+.milestone .m-num{
+  font-family:var(--display); font-size:56px; color:var(--terracotta);
+  line-height:1; margin-bottom:24px; letter-spacing:.04em;
+}
+.milestone h4{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:24px; color:var(--ink); line-height:1.2; margin-bottom:6px;
+}
+.milestone .m-place{
+  font-family:var(--body); font-size:10.5px; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--soft-ink); margin-bottom:18px; opacity:.75;
+}
+.milestone p{
+  font-size:14px; color:var(--soft-ink); line-height:1.6;
+  max-width:240px; margin:0 auto;
+}
+
+/* ════════════ BUNDLE ════════════ */
+.bundle{background:var(--ivory)}
+.bundle-card{
+  background:var(--terracotta); color:var(--cream);
+  padding:80px 64px; border-radius:8px;
+  display:grid; grid-template-columns:1fr 1fr; gap:64px;
+  align-items:center; position:relative; overflow:hidden;
+}
+.bundle-card::before{
+  content:"1918"; position:absolute; right:-30px; bottom:-50px;
+  font-family:var(--display); font-size:280px;
+  color:rgba(255,251,241,.05); letter-spacing:-.03em; line-height:1;
+}
+.bundle-eyebrow{
+  font-size:11px; letter-spacing:.36em; text-transform:uppercase; font-weight:600;
+  color:var(--gold); margin-bottom:18px;
+}
+.bundle-card h2{
+  font-family:var(--serif); font-weight:400;
+  font-size:clamp(40px, 5vw, 64px); line-height:1.05;
+  color:var(--cream); letter-spacing:-.01em; margin-bottom:22px;
+}
+.bundle-card h2 em{color:var(--gold); font-weight:500}
+.bundle-card p{font-size:17px; color:rgba(245,236,218,.85); margin-bottom:36px; line-height:1.65}
+.bundle-price{
+  display:flex; align-items:baseline; gap:20px; margin-bottom:34px;
+  position:relative; z-index:2;
+}
+.bundle-price .new{
+  font-family:var(--serif); font-size:64px; color:var(--cream); font-weight:500;
+}
+.bundle-price .old{
+  font-family:var(--serif); font-size:28px; color:rgba(245,236,218,.5);
+  text-decoration:line-through;
+}
+.bundle-price .save{
+  font-size:11px; letter-spacing:.22em; text-transform:uppercase; font-weight:700;
+  background:var(--gold); color:var(--ink); padding:6px 12px; border-radius:4px;
+}
+.bundle-ctas{display:flex; gap:14px; flex-wrap:wrap}
+.bundle-ctas .btn-primary{background:var(--cream); color:var(--terracotta)}
+.bundle-ctas .btn-primary:hover{background:var(--ivory)}
+.bundle-ctas .btn-ghost{color:var(--cream); border-color:var(--cream)}
+.bundle-ctas .btn-ghost:hover{background:var(--cream); color:var(--terracotta)}
+.bundle-visual{
+  position:relative; aspect-ratio:1; max-width:420px; margin-left:auto;
+}
+.bundle-visual-inner{
+  position:absolute; inset:0;
+  background-color:var(--cream);
+  -webkit-mask-image:url('/GLP_Logo.png');
+          mask-image:url('/GLP_Logo.png');
+  -webkit-mask-size:contain; mask-size:contain;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  opacity:.92;
+}
+
+/* ════════════ VOICES ════════════ */
+.voices{background:var(--cream)}
+.voices-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:32px;
+  margin-top:64px;
+}
+.voice{
+  background:var(--ivory); padding:36px 30px; border-radius:6px;
+  position:relative;
+}
+.voice::before{
+  content:"\201C"; position:absolute; top:8px; left:24px;
+  font-family:var(--display); font-size:72px; color:var(--terracotta);
+  opacity:.32; line-height:1;
+}
+.voice p{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:18px; line-height:1.55; color:var(--ink);
+  margin-bottom:24px; position:relative; padding-top:28px;
+}
+.voice .who{
+  font-size:12px; letter-spacing:.22em; text-transform:uppercase; font-weight:700;
+  color:var(--terracotta);
+}
+.voice .who-sub{font-size:11px; color:var(--soft-ink); margin-top:4px}
+
+/* ════════════ LETTERS ════════════ */
+.letters{
+  background:
+    radial-gradient(ellipse at center, rgba(201,134,62,.07), transparent 60%),
+    linear-gradient(180deg, var(--cream-2, #F1E5C8), var(--paper));
+}
+.letters-inner{
+  text-align:center; max-width:680px; margin:0 auto;
+}
+.letters-form{
+  display:flex; gap:12px; margin-top:36px;
+  background:var(--ivory); padding:8px; border-radius:999px;
+  border:1px solid rgba(154,80,40,.18);
+}
+.letters-form input{
+  flex:1; padding:14px 22px; border:none; background:transparent;
+  font:inherit; font-size:15px; outline:none; color:var(--ink); min-width:0;
+}
+.letters-form input::placeholder{color:var(--soft-ink); opacity:.55}
+.letters-form button{
+  padding:14px 28px; background:var(--terracotta); color:var(--ivory);
+  border-radius:999px; font-size:12px; letter-spacing:.24em;
+  text-transform:uppercase; font-weight:600;
+  transition:background .25s ease;
+  white-space:nowrap;
+}
+.letters-form button:hover{background:var(--brick)}
+.letters .fine{
+  font-size:12px; color:var(--soft-ink); margin-top:18px;
+  letter-spacing:.18em; text-transform:uppercase; opacity:.7;
+}
+
+/* ════════════ FOOTER ════════════ */
+.footer{
+  background:var(--ink); color:rgba(245,236,218,.7);
+  padding:80px 0 32px;
+}
+.footer-grid{
+  display:grid; grid-template-columns:1.4fr .9fr .9fr .9fr; gap:48px;
+  margin-bottom:48px;
+}
+.foot-brand img{height:64px; margin-bottom:20px; filter:brightness(0) invert(.92) sepia(.18)}
+.foot-brand p{
+  font-size:14px; line-height:1.7;
+  color:rgba(245,236,218,.65);
+  margin-bottom:18px; max-width:340px;
+}
+.foot-brand .tag{
+  font-family:var(--display); font-size:13px; letter-spacing:.42em;
+  color:var(--gold); text-transform:uppercase;
+}
+.footer h5{
+  font-family:var(--body); font-size:11px; letter-spacing:.32em;
+  text-transform:uppercase; color:var(--cream); font-weight:700;
+  margin-bottom:22px;
+}
+.footer ul{list-style:none; display:flex; flex-direction:column; gap:14px}
+.footer ul a{
+  font-size:14px; color:rgba(245,236,218,.62); transition:color .2s ease;
+}
+.footer ul a:hover{color:var(--gold)}
+
+.footer-entities{
+  padding-top:36px; border-top:1px solid rgba(245,236,218,.08);
+  display:grid; grid-template-columns:1fr 1fr; gap:48px;
+  margin-bottom:32px;
+}
+.entity h6{
+  font-size:10px; letter-spacing:.36em; text-transform:uppercase; color:var(--gold);
+  font-weight:700; margin-bottom:12px;
+}
+.entity p{font-size:12.5px; line-height:1.65; color:rgba(245,236,218,.55)}
+
+.footer-bottom{
+  padding-top:28px; border-top:1px solid rgba(245,236,218,.08);
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+  font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  color:rgba(245,236,218,.45); flex-wrap:wrap;
+}
+
+/* ════════════ CHATBOT ════════════ */
+.chatbot{
+  position:fixed; bottom:24px; right:24px; z-index:90;
+  font-family:var(--body);
+}
+.chatbot-toggle{
+  width:60px; height:60px; border-radius:50%;
+  background:var(--terracotta); color:var(--ivory);
+  display:grid; place-items:center;
+  box-shadow:0 14px 36px -10px rgba(154,80,40,.55);
+  transition:all .3s ease; position:relative;
+}
+.chatbot-toggle:hover{background:var(--brick); transform:translateY(-2px)}
+.chatbot-toggle-icon{display:grid; place-items:center}
+.chatbot-toggle-pulse{
+  position:absolute; inset:-4px; border-radius:50%;
+  border:2px solid var(--terracotta); opacity:.4;
+  animation:chatPulse 2.4s ease-out infinite;
+}
+@keyframes chatPulse{
+  0%{transform:scale(.9); opacity:.55}
+  100%{transform:scale(1.6); opacity:0}
+}
+.chatbot.open .chatbot-toggle-pulse{display:none}
+
+.chatbot-panel{
+  position:absolute; bottom:80px; right:0;
+  width:380px; max-width:calc(100vw - 32px);
+  height:540px; max-height:calc(100vh - 120px);
+  background:var(--ivory); border-radius:14px;
+  box-shadow:0 30px 80px -16px rgba(42,31,24,.32);
+  display:none; flex-direction:column; overflow:hidden;
+  border:1px solid rgba(154,80,40,.15);
+}
+.chatbot-panel.open{display:flex; animation:chatOpen .3s ease-out}
+@keyframes chatOpen{from{opacity:0; transform:translateY(8px)}}
+
+.chatbot-header{
+  background:linear-gradient(135deg, var(--terracotta), var(--brick));
+  color:var(--cream); padding:18px 22px;
+  display:flex; align-items:center; gap:14px;
+}
+.chatbot-mark{
+  width:42px; height:42px; border-radius:50%;
+  background:rgba(255,251,241,.16);
+  display:grid; place-items:center; flex-shrink:0;
+}
+.chatbot-mark img{height:32px; filter:brightness(0) invert(1) opacity(.92)}
+.chatbot-title-wrap{flex:1; min-width:0}
+.chatbot-header h4{
+  font-family:var(--serif); font-style:italic; font-weight:500;
+  font-size:18px; margin-bottom:2px; color:var(--cream);
+}
+.chatbot-sub{
+  font-size:10.5px; letter-spacing:.22em; text-transform:uppercase;
+  color:rgba(245,236,218,.78);
+}
+.chatbot-close{
+  background:rgba(255,251,241,.16); border:none; color:var(--cream);
+  width:32px; height:32px; border-radius:50%;
+  display:grid; place-items:center; cursor:pointer;
+  transition:background .2s ease;
+}
+.chatbot-close:hover{background:rgba(255,251,241,.28)}
+
+.chatbot-messages{
+  flex:1; overflow-y:auto; padding:22px 18px;
+  display:flex; flex-direction:column; gap:10px;
+  background:var(--paper);
+}
+.chatbot-msg{
+  max-width:84%; padding:11px 16px; border-radius:14px;
+  font-size:14px; line-height:1.5;
+  animation:msgIn .3s ease-out;
+}
+@keyframes msgIn{from{opacity:0; transform:translateY(6px)}}
+.chatbot-msg.bot{
+  background:var(--ivory); color:var(--ink);
+  border-bottom-left-radius:4px; align-self:flex-start;
+  border:1px solid rgba(154,80,40,.1);
+}
+.chatbot-msg.user{
+  background:var(--terracotta); color:var(--cream);
+  border-bottom-right-radius:4px; align-self:flex-end;
+}
+html[data-lang="hi"] .chatbot-msg{font-family:var(--devanagari); font-size:15px}
+
+.chatbot-input{
+  display:flex; padding:14px 14px; gap:8px;
+  background:var(--ivory); border-top:1px solid rgba(154,80,40,.12);
+}
+.chatbot-input input{
+  flex:1; min-width:0;
+  padding:12px 16px; border:1px solid rgba(154,80,40,.2);
+  border-radius:999px; background:var(--paper);
+  font-size:14px; outline:none; color:var(--ink);
+  transition:border .2s ease;
+}
+.chatbot-input input:focus{border-color:var(--terracotta); background:var(--ivory)}
+.chatbot-input button{
+  padding:0 18px; border-radius:999px;
+  background:var(--terracotta); color:var(--ivory); border:none;
+  font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:600;
+  cursor:pointer; transition:background .2s ease;
+  min-height:42px;
+}
+.chatbot-input button:hover{background:var(--brick)}
+
+/* ════════════ RESPONSIVE ════════════ */
+@media (max-width: 1100px){
+  .hero-grid{gap:48px}
+  .hero-chips{left:-20px}
+}
+
+@media (max-width: 960px){
+  :root{--pad-y:96px; --pad-x:24px}
+  .hero-grid{grid-template-columns:1fr; gap:48px}
+  .hero-visual{order:-1; max-width:380px; margin:0 auto; aspect-ratio:1}
+  .hero-1918{font-size:160px; right:-20px; bottom:-30px}
+  .hero-chips{left:auto; right:-12px; top:50%; transform:translateY(-50%)}
+  .hero{padding:60px 0 100px}
+
+  .story-grid{grid-template-columns:1fr; gap:48px}
+  .story-portrait{max-width:420px; margin:0 auto; order:-1}
+
+  .product-grid{grid-template-columns:repeat(2, 1fr); gap:24px}
+  .craft-grid{grid-template-columns:repeat(2, 1fr)}
+  .promise-grid{grid-template-columns:1fr; gap:0}
+  .pillar{border-right:none; border-bottom:1px solid rgba(154,80,40,.12); padding:36px 24px}
+  .pillar:last-child{border-bottom:none}
+
+  .voices-grid{grid-template-columns:1fr; gap:18px}
+  .voices-grid .voice{max-width:600px; margin:0 auto}
+
+  .bundle-card{grid-template-columns:1fr; padding:56px 36px; gap:36px}
+  .bundle-visual{max-width:280px; margin:0 auto; aspect-ratio:1}
+
+  .footer-grid{grid-template-columns:1fr 1fr; gap:36px}
+  .foot-brand{grid-column:1 / -1}
+
+  .milestones{grid-template-columns:repeat(2, 1fr); gap:56px 0}
+  .milestones::before{display:none}
+
+  .nav-links{display:none}
+  .hamburger{display:flex}
+}
+
+@media (max-width: 700px){
+  :root{--pad-y:72px; --pad-x:20px}
+  body{font-size:16px}
+
+  .announce{font-size:10px; letter-spacing:.18em}
+  .announce-track-inner{gap:32px; padding-left:18px}
+  .lang-toggle{padding:0 12px}
+  .lang-toggle button{padding:6px 8px; min-width:30px}
+
+  .nav{padding:14px var(--pad-x)}
+  .nav-logo img{height:46px}
+  .nav-logo .marker{display:none}
+  .nav-icon{width:40px; height:40px}
+  .nav-actions{gap:8px}
+  .nav-actions .nav-icon:nth-child(1), .nav-actions .nav-icon:nth-child(2){display:none}
+
+  .hero{padding:48px 0 80px}
+  .hero h1{font-size:clamp(36px, 9vw, 56px); line-height:1.04}
+  .hero .lede{font-size:16px; margin-bottom:28px}
+  .hero-stamp{font-size:10px; letter-spacing:.18em; padding:8px 14px}
+  .hero-stamp .stamp-sub{padding-left:10px; font-size:9px}
+  .hero-1918{font-size:120px; opacity:.06}
+  .hero-chips{display:none}
+  .hero-visual{max-width:280px}
+  .hero-ctas .btn{padding:14px 24px; font-size:11.5px; flex:1; justify-content:center; min-height:48px}
+  .hero-tag{font-size:11px; letter-spacing:.32em}
+
+  .strip{padding:14px 0}
+  .strip-track span{font-size:11px; letter-spacing:.22em; gap:18px}
+  .strip-track{gap:48px}
+
+  .eyebrow{font-size:10px; letter-spacing:.28em}
+  .section-head-row{margin-bottom:40px; gap:24px}
+  .filters{gap:6px}
+  .filters button{padding:8px 14px; font-size:10px; letter-spacing:.16em}
+
+  .product-grid{grid-template-columns:1fr; gap:20px}
+  .card-body{padding:22px 20px 24px}
+  .card h3{font-size:26px}
+  .craft-grid{grid-template-columns:1fr}
+  .step{padding:36px 24px}
+
+  .story-content h2{font-size:34px}
+  .story-body p.lead{font-size:18px}
+  .story-body p{font-size:15.5px; line-height:1.8}
+  .story-portrait{max-width:300px}
+  .portrait-year{font-size:48px}
+
+  .milestones{grid-template-columns:1fr; gap:48px 0}
+
+  .bundle-card{padding:44px 24px}
+  .bundle-card h2{font-size:36px}
+  .bundle-card p{font-size:15px}
+  .bundle-price{gap:14px; margin-bottom:28px}
+  .bundle-price .new{font-size:48px}
+  .bundle-price .old{font-size:22px}
+  .bundle-ctas .btn{padding:14px 22px; font-size:11px; flex:1; min-width:0; justify-content:center}
+
+  .voice{padding:28px 22px}
+  .voice p{font-size:16px; padding-top:24px}
+
+  .letters-form{flex-direction:column; gap:8px; background:transparent; border:none; padding:0}
+  .letters-form input{padding:14px 20px; background:var(--ivory); border-radius:999px; border:1px solid rgba(154,80,40,.18); text-align:center}
+  .letters-form button{padding:16px 28px; width:100%}
+
+  .footer-grid{grid-template-columns:1fr; gap:32px}
+  .footer-entities{grid-template-columns:1fr; gap:28px}
+  .footer-bottom{flex-direction:column; align-items:flex-start; gap:14px; text-align:left}
+
+  .chatbot{bottom:18px; right:18px}
+  .chatbot-toggle{width:54px; height:54px}
+  .chatbot-panel{
+    position:fixed; bottom:0; right:0; left:0;
+    width:100%; max-width:100%; height:100vh; height:100dvh;
+    max-height:100vh; max-height:100dvh; border-radius:0;
+  }
+  .chatbot-panel.open{animation:chatOpenMobile .3s ease-out}
+  @keyframes chatOpenMobile{from{transform:translateY(20px); opacity:0}}
+}
+
+@media (max-width: 420px){
+  .hero h1{font-size:34px}
+  .hero-stamp{font-size:9.5px}
+  .pillar h3{font-size:30px}
+  .pillar h3 .hi{font-size:32px}
+  .bundle-card{padding:36px 20px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important}
+  .reveal{opacity:1; transform:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ════════════ ANNOUNCE + LANG TOGGLE ════════════ -->
+<div class="announce">
+  <div class="announce-track">
+    <div class="announce-track-inner">
+      <span data-i18n="announce.shipping">Complimentary shipping across India on orders above ₹999</span>
+      <span data-i18n="announce.cod">Cash on Delivery available</span>
+      <span data-i18n="announce.handmade">Hand-blended in Alwar</span>
+      <span data-i18n="announce.shipping">Complimentary shipping across India on orders above ₹999</span>
+      <span data-i18n="announce.cod">Cash on Delivery available</span>
+      <span data-i18n="announce.handmade">Hand-blended in Alwar</span>
+    </div>
+  </div>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button type="button" data-lang-btn="en" aria-pressed="true">EN</button>
+    <span class="sep">·</span>
+    <button type="button" data-lang-btn="hi" aria-pressed="false">हिं</button>
+  </div>
+</div>
+
+<!-- ════════════ HEADER ════════════ -->
+<header class="header">
+  <nav class="nav">
+    <a href="#" class="nav-logo">
+      <img src="/GLP_Logo.png" alt="Ganga Lehari Pansari" />
+      <div class="marker">
+        <div class="est">Est. 1918</div>
+        <div class="sub">Alwar · Rajasthan</div>
+      </div>
+    </a>
+
+    <div class="nav-links">
+      <a href="#collection" data-i18n="nav.collection">The Collection</a>
+      <a href="#story" data-i18n="nav.heritage">Heritage</a>
+      <a href="#craft" data-i18n="nav.craft">The Craft</a>
+      <a href="#" data-i18n="nav.recipes">Recipes</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="nav-icon" data-i18n-aria="nav.search" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="nav-icon" data-i18n-aria="nav.account" aria-label="Account">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      </button>
+      <button class="nav-icon bag-badge" data-i18n-aria="nav.bag" aria-label="Bag">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+      </button>
+      <button class="hamburger" aria-label="Menu" id="hamburger-btn"><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<!-- mobile menu -->
+<div class="menu-overlay" id="menu-overlay"></div>
+<aside class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <a href="#collection" data-i18n="nav.collection">The Collection</a>
+  <a href="#story" data-i18n="nav.heritage">Heritage</a>
+  <a href="#craft" data-i18n="nav.craft">The Craft</a>
+  <a href="#" data-i18n="nav.recipes">Recipes</a>
+</aside>
+
+<!-- ════════════ HERO ════════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-stamp reveal">
+          <b data-i18n="hero.stamp.title">Founded by Shri Moti Lal Ji Pansari</b>
+          <span class="stamp-sub" data-i18n="hero.stamp.sub">Alwar · Rajasthan · India</span>
+        </div>
+        <h1 class="reveal" data-i18n="hero.h1">
+          The taste of <span class="acc">a hundred-year</span><br/>
+          <span class="roman">recipe, measured</span><br/>
+          <span class="roman">one spoon at a time.</span>
+        </h1>
+        <p class="lede reveal" data-i18n="hero.lede">A small pansari shop opened in Sarafa Bazaar, Alwar in 1918. A century on, the same family still grinds the same masalas in the same small batches — now packed for kitchens across India.</p>
+        <div class="hero-ctas reveal">
+          <a href="#collection" class="btn btn-primary" data-i18n="hero.cta.primary">Shop the Collection</a>
+          <a href="#story" class="btn btn-ghost" data-i18n="hero.cta.ghost">Read Our Story <span class="arrow"></span></a>
+        </div>
+        <div class="hero-tag reveal" data-i18n="hero.tagline">— Swaad · Suvidha · Gunvatta —</div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-1918">1918</div>
+        <div class="hero-cartouche">
+          <img src="/GLP_Logo.png" alt="GLP cartouche" />
+        </div>
+        <div class="hero-chips">
+          <div class="chip reveal" data-i18n="hero.chip.years"><b>107</b> years of recipes</div>
+          <div class="chip reveal" data-i18n="hero.chip.fssai"><b>FSSAI</b> certified blends</div>
+          <div class="chip reveal" data-i18n="hero.chip.batch">Small <b>batch</b> ground</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ STRIP ════════════ -->
+<div class="strip">
+  <div class="strip-track">
+    <span data-i18n="strip.1">Hand-Ground in Alwar</span>
+    <span data-i18n="strip.2">Family Run Since 1918</span>
+    <span data-i18n="strip.3">Four Shops in Alwar</span>
+    <span data-i18n="strip.4">Stocked Across India</span>
+    <span data-i18n="strip.5">No Artificial Colours</span>
+    <span data-i18n="strip.6">Free Shipping ₹999+</span>
+    <span data-i18n="strip.1">Hand-Ground in Alwar</span>
+    <span data-i18n="strip.2">Family Run Since 1918</span>
+    <span data-i18n="strip.3">Four Shops in Alwar</span>
+    <span data-i18n="strip.4">Stocked Across India</span>
+    <span data-i18n="strip.5">No Artificial Colours</span>
+    <span data-i18n="strip.6">Free Shipping ₹999+</span>
+  </div>
+</div>
+
+<!-- ════════════ COLLECTION ════════════ -->
+<section class="section collection" id="collection">
+  <div class="container">
+    <div class="section-head-row">
+      <div class="section-head reveal">
+        <span class="eyebrow" data-i18n="col.eyebrow">The Collection</span>
+        <h2 class="section-h" data-i18n="col.h2"><span class="roman">Heritage in</span> <span class="acc">every blend.</span></h2>
+        <p data-i18n="col.lede">Three of our most-loved heirlooms — recipes that have lived in the same notebook, in the same hand, for over a century. Ready in minutes. Tastes like decades.</p>
+      </div>
+      <div class="filters reveal">
+        <button class="active" data-i18n="col.filter.all">All</button>
+        <button data-i18n="col.filter.premix">Premixes</button>
+        <button data-i18n="col.filter.masala">Masalas</button>
+        <button data-i18n="col.filter.seasonal">Seasonal &amp; Festive</button>
+        <button data-i18n="col.filter.bundles">Bundles</button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <div class="card reveal">
+        <div class="card-img">
+          <div class="card-img-inner"></div>
+          <div class="card-tag" data-i18n="p.dv.name">Dahi Vada Premix</div>
+        </div>
+        <div class="card-body">
+          <div class="card-eyebrow" data-i18n="p.dv.sub">Premix</div>
+          <h3><em data-i18n="p.dv.title">Dahi Vada</em></h3>
+          <div class="weight" data-i18n="p.dv.weight">Net 350 g · Makes 42 Bhallas</div>
+          <p data-i18n="p.dv.desc">Black-eyed bean batter, ready in three steps. Salt &amp; spices already in. Makes Kanji Bada too.</p>
+          <div class="card-tags">
+            <span data-i18n="p.dv.tag1">5 Servings</span>
+            <span data-i18n="p.dv.tag2">Veg</span>
+            <span data-i18n="p.dv.tag3">3-Step Ready</span>
+          </div>
+          <div class="card-cta">
+            <div class="price">₹120</div>
+            <button class="card-add" data-i18n="p.cta.add">Add to Bag</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-img">
+          <div class="card-img-inner"></div>
+          <div class="card-tag" data-i18n="p.cm.name">Chaat Masala</div>
+        </div>
+        <div class="card-body">
+          <div class="card-eyebrow" data-i18n="p.cm.sub">Classic</div>
+          <h3><em data-i18n="p.cm.title">Chaat Masala</em></h3>
+          <div class="weight" data-i18n="p.cm.weight">Net 100 g · 50 Servings</div>
+          <p data-i18n="p.cm.desc">Sixteen-spice tangy blend with kachri, anardana &amp; black salt. The one your grandmother sprinkled on everything.</p>
+          <div class="card-tags">
+            <span data-i18n="p.cm.tag1">16 Spices</span>
+            <span data-i18n="p.cm.tag2">Min. 58% Spice</span>
+            <span data-i18n="p.cm.tag3">Veg</span>
+          </div>
+          <div class="card-cta">
+            <div class="price">₹100</div>
+            <button class="card-add" data-i18n="p.cta.add">Add to Bag</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-img">
+          <div class="card-img-inner"></div>
+          <div class="card-tag" data-i18n="p.db.name">Doodh Bahaar</div>
+        </div>
+        <div class="card-body">
+          <div class="card-eyebrow" data-i18n="p.db.sub">Saffron Milk Mix</div>
+          <h3><em data-i18n="p.db.title">Doodh Bahaar</em></h3>
+          <div class="weight" data-i18n="p.db.weight">Net 200 g · Seasonal</div>
+          <p data-i18n="p.db.desc">Almonds, pistachios, kesar and the slow-roasted warmth of a Rajasthani winter. Stir into hot milk.</p>
+          <div class="card-tags">
+            <span data-i18n="p.db.tag1">Saffron</span>
+            <span data-i18n="p.db.tag2">Pistachio</span>
+            <span data-i18n="p.db.tag3">Limited Batch</span>
+          </div>
+          <div class="card-cta">
+            <div class="price">₹220</div>
+            <button class="card-add" data-i18n="p.cta.add">Add to Bag</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="see-all reveal">
+      <a href="#"><span data-i18n="col.see.all">See the full pantry</span> <span class="arrow"></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ PROMISE ════════════ -->
+<section class="section promise">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center; margin:0 auto 0">
+      <span class="eyebrow" style="justify-content:center" data-i18n="promise.eyebrow">Our Promise · Since 1918</span>
+      <h2 class="section-h" style="text-align:center" data-i18n="promise.h2"><span class="roman">Three words</span> <span class="acc">in our crest.</span></h2>
+      <p style="margin-left:auto; margin-right:auto; text-align:center" data-i18n="promise.lede">Pressed into every cartouche. Honoured in every batch.</p>
+    </div>
+
+    <div class="promise-grid">
+      <div class="pillar reveal">
+        <div class="pillar-mark">✦</div>
+        <h3>
+          <span class="hi" data-i18n="promise.swaad.lat">Swaad</span>
+          Taste
+        </h3>
+        <div class="pillar-en" data-i18n="promise.swaad.en">Taste</div>
+        <p data-i18n="promise.swaad.body">Recipes written generations ago, untouched. The masalas that made Alwar's chaat famous — still ground in the same proportions, by the same hands.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-mark">✦</div>
+        <h3>
+          <span class="hi" data-i18n="promise.suvidha.lat">Suvidha</span>
+          Convenience
+        </h3>
+        <div class="pillar-en" data-i18n="promise.suvidha.en">Convenience</div>
+        <p data-i18n="promise.suvidha.body">Bhalle in fifteen minutes. Chaat masala that needs nothing else. Premixes designed for working kitchens — without trading anything for the ease.</p>
+      </div>
+      <div class="pillar reveal">
+        <div class="pillar-mark">✦</div>
+        <h3>
+          <span class="hi" data-i18n="promise.gunvatta.lat">Gunvatta</span>
+          Quality
+        </h3>
+        <div class="pillar-en" data-i18n="promise.gunvatta.en">Quality</div>
+        <p data-i18n="promise.gunvatta.body">Whole spices we still buy in person. Small batches. No artificial colour. No filler. FSSAI certified, family certified — in that order.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ STORY ════════════ -->
+<section class="section story" id="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-portrait reveal">
+        <div class="portrait-inner"></div>
+        <div class="portrait-label">
+          <div class="founder-name" data-i18n="story.portrait.founder">Shri Moti Lal Ji · Pansari</div>
+          <div class="portrait-year">1918</div>
+          <div class="portrait-sub" data-i18n="story.portrait.sub">— Alwar · Rajasthan —</div>
+        </div>
+        <div class="portrait-stamp"><span data-i18n="story.portrait.stamp">Since</span> · 1918</div>
+      </div>
+
+      <div class="story-content reveal">
+        <span class="eyebrow" data-i18n="story.eyebrow">Our Story</span>
+        <h2 data-i18n="story.h2"><span class="roman">One shop.</span> One promise.<br/><span class="roman">A hundred</span> <span style="color:var(--terracotta)">and seven years.</span></h2>
+
+        <div class="story-body">
+          <p class="lead" data-i18n="story.p1">In 1918, in <b style="color:var(--terracotta); font-weight:500">Sarafa Bazaar, Alwar</b>, a young man named Shri Moti Lal Ji opened the doors of a small spice shop. He brought a copper weighing scale, a few muslin sacks, and a belief he refused to compromise on — that no kitchen in Rajasthan should ever have to choose between flavour, freshness, and quality.</p>
+
+          <p data-i18n="story.p2">The neighbourhood came to know him by his trade. <em>Moti Lal Ji Pansari</em> — the spice man. He weighed every gram twice. He never sold what he wouldn't cook with himself. And he taught his children to do the same.</p>
+
+          <p data-i18n="story.p3">The world has turned many times since. The bazaar has grown louder. The scales have changed. The pansari's name has passed through the family, hand to hand. But the promise has not.</p>
+
+          <p data-i18n="story.p4">The spices are still selected one harvest at a time. The masalas are still ground in small batches, the way Moti Lal Ji ground them. The recipes — for Dahi Vada Premix, for Chaat Masala, for Doodh Bahaar — still come from the same notebook, in the same hand, in the same ink.</p>
+
+          <p data-i18n="story.p5">What has changed is who we can reach. The one shop in Sarafa Bazaar became four across Alwar. His blends now sit on the shelves of trusted shopkeepers in cities across India. And today — through this — they arrive directly in your kitchen.</p>
+        </div>
+
+        <div class="story-sig">
+          <div data-i18n="story.sig">From our family. For yours.</div>
+          <small data-i18n="story.sig.sub">— The Family of Shri Moti Lal Ji Pansari · Est. 1918</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ CRAFT ════════════ -->
+<section class="section craft" id="craft">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center; margin:0 auto 0">
+      <span class="eyebrow" style="justify-content:center" data-i18n="craft.eyebrow">The Craft</span>
+      <h2 class="section-h" style="text-align:center" data-i18n="craft.h2"><span class="roman">From the soil</span> <span class="acc">of Alwar.</span></h2>
+      <p style="margin-left:auto; margin-right:auto; text-align:center" data-i18n="craft.lede">Four quiet steps. The same four since 1918.</p>
+    </div>
+
+    <div class="craft-grid">
+      <div class="step reveal">
+        <div class="step-num" data-i18n="craft.s1.n">01 · Source</div>
+        <h4 data-i18n="craft.s1.t">Hand-picked, harvest by harvest</h4>
+        <p data-i18n="craft.s1.p">We still travel to the mandis ourselves — to kachri farms outside Bikaner, to anardana growers in the hills, to chilli markets in Jodhpur — and select by smell, not by spec.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num" data-i18n="craft.s2.n">02 · Sun-dry</div>
+        <h4 data-i18n="craft.s2.t">Slow heat, never artificial</h4>
+        <p data-i18n="craft.s2.p">Spices are sun-dried on terraces, the way they always have been. Heat draws out moisture and locks in oil — the soul of any masala.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num" data-i18n="craft.s3.n">03 · Blend</div>
+        <h4 data-i18n="craft.s3.t">Small batches, by recipe</h4>
+        <p data-i18n="craft.s3.p">Every blend is measured against the original recipe book — pages soft with use, ink faded in places, formulas unchanged. Spice content minimum 58%. Always.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num" data-i18n="craft.s4.n">04 · Pack</div>
+        <h4 data-i18n="craft.s4.t">Sealed within 48 hours</h4>
+        <p data-i18n="craft.s4.p">From grind to bag in under two days. We do not stockpile finished masala — freshness has a shelf life, and we honour it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FOOTPRINT ════════════ -->
+<section class="section footprint">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center; margin:0 auto 72px">
+      <span class="eyebrow" style="justify-content:center" data-i18n="foot.eyebrow">The Footprint</span>
+      <h2 class="section-h" style="text-align:center" data-i18n="foot.h2"><span class="roman">From Sarafa Bazaar,</span><br/><span class="acc">to your kitchen.</span></h2>
+      <p style="margin-left:auto; margin-right:auto; text-align:center" data-i18n="foot.lede">One shop in 1918. Four across Alwar today. Stocked by trusted shopkeepers in cities across India. And now — direct.</p>
+    </div>
+
+    <div class="milestones">
+      <div class="milestone reveal">
+        <div class="m-year" data-i18n="foot.m1.y">1918 · Origin</div>
+        <div class="m-dot"></div>
+        <div class="m-num">01</div>
+        <h4 data-i18n="foot.m1.t">Sarafa Bazaar</h4>
+        <div class="m-place" data-i18n="foot.m1.p">Alwar · Rajasthan</div>
+        <p data-i18n="foot.m1.d">The original shop. Same lane. Same family. Still open every morning.</p>
+      </div>
+
+      <div class="milestone reveal">
+        <div class="m-year" data-i18n="foot.m2.y">Today · The Family</div>
+        <div class="m-dot"></div>
+        <div class="m-num">04</div>
+        <h4 data-i18n="foot.m2.t">Shops across Alwar</h4>
+        <div class="m-place" data-i18n="foot.m2.p">Alwar District</div>
+        <p data-i18n="foot.m2.d">The flagship grew. Three more storefronts joined it. All still family-run, all still hand-blended.</p>
+      </div>
+
+      <div class="milestone reveal">
+        <div class="m-year" data-i18n="foot.m3.y">Stocked · India</div>
+        <div class="m-dot"></div>
+        <div class="m-num">✦</div>
+        <h4 data-i18n="foot.m3.t">Select cities</h4>
+        <div class="m-place" data-i18n="foot.m3.p">Across India</div>
+        <p data-i18n="foot.m3.d">Local pansaris and shopkeepers in cities across India carry the GLP blends on their shelves.</p>
+      </div>
+
+      <div class="milestone reveal">
+        <div class="m-year" data-i18n="foot.m4.y">2026 · Direct</div>
+        <div class="m-dot"></div>
+        <div class="m-num">∞</div>
+        <h4 data-i18n="foot.m4.t">Your kitchen</h4>
+        <div class="m-place" data-i18n="foot.m4.p">Anywhere in India</div>
+        <p data-i18n="foot.m4.d">For the first time in 107 years, you can buy directly from the family — shipped from Alwar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ BUNDLE ════════════ -->
+<section class="section bundle">
+  <div class="container">
+    <div class="bundle-card reveal">
+      <div>
+        <div class="bundle-eyebrow" data-i18n="bundle.eyebrow">First-Time Box</div>
+        <h2 data-i18n="bundle.h2"><span style="font-style:normal">The Alwar</span> <em>Starter.</em></h2>
+        <p data-i18n="bundle.lede">Our three most-loved heirlooms in one box — Dahi Vada Premix, Chaat Masala &amp; Doodh Bahaar. The easiest way to taste a century of recipes.</p>
+        <div class="bundle-price">
+          <div class="new">₹399</div>
+          <div class="old">₹440</div>
+          <div class="save" data-i18n="bundle.save">Save ₹41 + free shipping</div>
+        </div>
+        <div class="bundle-ctas">
+          <a href="#" class="btn btn-primary" data-i18n="bundle.cta.primary">Add Starter to Bag</a>
+          <a href="#" class="btn btn-ghost" data-i18n="bundle.cta.ghost">What's inside</a>
+        </div>
+      </div>
+      <div class="bundle-visual">
+        <div class="bundle-visual-inner"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ VOICES ════════════ -->
+<section class="section voices">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center; margin:0 auto 0">
+      <span class="eyebrow" style="justify-content:center" data-i18n="voices.eyebrow">Voices from the Kitchen</span>
+      <h2 class="section-h" style="text-align:center" data-i18n="voices.h2"><span class="roman">What kitchens</span> <span class="acc">are saying.</span></h2>
+    </div>
+
+    <div class="voices-grid">
+      <div class="voice reveal">
+        <p data-i18n="voices.q1">My nani would smell the masala and know if it was good. She tried this Chaat Masala and asked for the dukaan's address. That's all I have to say.</p>
+        <div class="who" data-i18n="voices.q1.who">Priya R.</div>
+        <div class="who-sub" data-i18n="voices.q1.sub">Jaipur · Verified buyer</div>
+      </div>
+      <div class="voice reveal">
+        <p data-i18n="voices.q2">The Dahi Vada premix is genuinely a 15-minute affair. No soaking, no grinding, no second-guessing. Tastes like a Sunday at my grandmother's.</p>
+        <div class="who" data-i18n="voices.q2.who">Aditya M.</div>
+        <div class="who-sub" data-i18n="voices.q2.sub">Bengaluru · Verified buyer</div>
+      </div>
+      <div class="voice reveal">
+        <p data-i18n="voices.q3">Doodh Bahaar with hot milk on a cold morning is what I now look forward to all week. The kesar is real. The pistachios are whole. Worth every rupee.</p>
+        <div class="who" data-i18n="voices.q3.who">Sneha K.</div>
+        <div class="who-sub" data-i18n="voices.q3.sub">Mumbai · Verified buyer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ LETTERS ════════════ -->
+<section class="section letters">
+  <div class="container">
+    <div class="letters-inner reveal">
+      <span class="eyebrow" style="justify-content:center" data-i18n="letters.eyebrow">Letters from the Pansari</span>
+      <h2 class="section-h" data-i18n="letters.h2"><span class="roman">Recipes,</span> <span style="color:var(--terracotta); font-style:italic">stories,</span> <span class="roman">and the occasional</span> <span style="color:var(--terracotta); font-style:italic">secret.</span></h2>
+      <p data-i18n="letters.lede">One letter a month. A recipe from the family book, a story from the Alwar shop, and 10% off your first order — for joining the family.</p>
+
+      <form class="letters-form" id="letters-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent = window.GLP_I18N.t('letters.btn.done');">
+        <input type="email" required data-i18n-placeholder="letters.placeholder" placeholder="your@email.com" />
+        <button type="submit" data-i18n="letters.btn">Subscribe</button>
+      </form>
+      <div class="fine" data-i18n="letters.fine">No spam · Unsubscribe anytime</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="foot-brand">
+        <img src="/GLP_Logo.png" alt="GLP" />
+        <p data-i18n="footer.tagline">Heritage spices and premixes, hand-blended by the same Alwar family since 1918. Four shops across Alwar, stockists in cities across India, and now shipping direct.</p>
+        <div class="tag">— Swaad · Suvidha · Gunvatta —</div>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.shop">Shop</h5>
+        <ul>
+          <li><a href="#" data-i18n="footer.shop.all">All Products</a></li>
+          <li><a href="#" data-i18n="footer.shop.premix">Premixes</a></li>
+          <li><a href="#" data-i18n="footer.shop.masala">Masalas</a></li>
+          <li><a href="#" data-i18n="footer.shop.festive">Festive Specials</a></li>
+          <li><a href="#" data-i18n="footer.shop.gift">Gift Boxes</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.family">The Family</h5>
+        <ul>
+          <li><a href="#story" data-i18n="footer.family.story">Our Story</a></li>
+          <li><a href="#craft" data-i18n="footer.family.craft">The Craft</a></li>
+          <li><a href="#" data-i18n="footer.family.recipes">Recipes</a></li>
+          <li><a href="#" data-i18n="footer.family.stockists">Stockists</a></li>
+          <li><a href="#" data-i18n="footer.family.press">Press</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 data-i18n="footer.help">Help</h5>
+        <ul>
+          <li><a href="#" data-i18n="footer.help.shipping">Shipping &amp; Delivery</a></li>
+          <li><a href="#" data-i18n="footer.help.returns">Returns</a></li>
+          <li><a href="#" data-i18n="footer.help.faq">FAQ</a></li>
+          <li><a href="tel:+917014887496" data-i18n="footer.help.contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-entities">
+      <div class="entity">
+        <h6 data-i18n="footer.entity.mfg">Manufactured by</h6>
+        <p data-i18n="footer.entity.mfg.body">Ram Sharda Products<br/>Sarafa Bazaar, Alwar — 301001<br/>FSSAI LIC No. 12218010000194</p>
+      </div>
+      <div class="entity">
+        <h6 data-i18n="footer.entity.mkt">Marketed by</h6>
+        <p data-i18n="footer.entity.mkt.body">GLP Food Company<br/>Khasra No. 307, Ganga Lahri Pansari Farm House,<br/>SH 25, Dadar, Alwar — 301001<br/>FSSAI LIC No. 12224020000275</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div data-i18n="footer.copy">© 2026 Ganga Lehari Pansari · Estd. 1918 · All rights reserved</div>
+      <div style="opacity:.5">VISA · MC · UPI · COD</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script src="/js/translations.js"></script>
+<script src="/js/i18n.js"></script>
+<script src="/js/chatbot.js"></script>
+
+<script>
+// reveal-on-scroll
+(function(){
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+
+// mobile menu
+(function(){
+  const btn = document.getElementById('hamburger-btn');
+  const overlay = document.getElementById('menu-overlay');
+  const menu = document.getElementById('mobile-menu');
+  if (!btn) return;
+
+  function close(){ document.body.classList.remove('menu-open'); menu.setAttribute('aria-hidden', 'true'); }
+  function open(){ document.body.classList.add('menu-open'); menu.setAttribute('aria-hidden', 'false'); }
+
+  btn.addEventListener('click', () => {
+    if (document.body.classList.contains('menu-open')) close(); else open();
+  });
+  overlay.addEventListener('click', close);
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+
+// product filters (visual only for now)
+document.querySelectorAll('.filters button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
