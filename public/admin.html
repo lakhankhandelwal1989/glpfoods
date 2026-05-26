@@ -425,7 +425,7 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
                 <div class="pstrip" id="sv-hero" data-pid="hero" data-mt="video" style="min-height:110px"></div>
                 <div class="cntrow" id="cv-hero" style="margin-bottom:10px"><b>0</b>/1 video</div>
                 <!-- Explicit remove button -->
-                <button id="hero-remove-btn" class="actbtn ghost" style="width:100%;justify-content:center;display:none;border-color:var(--rd);color:var(--rd)">
+                <button id="hero-remove-btn" class="actbtn ghost" style="width:100%;justify-content:center;border-color:var(--rd);color:var(--rd)">
                   ✕ &nbsp;Remove Hero Video
                 </button>
                 <div class="uprog" id="up-hero"><div class="pbar"><div class="pfill" id="pf-hero"></div></div><div class="pstat" id="ps-hero"></div></div>
@@ -1042,10 +1042,11 @@ async function loadAllMedia(){for(const p of MPIDS)await loadMedia(p);}
 async function loadMedia(pid){
   try{const r=await api('/api/photos/'+pid);if(!r.ok)return;const{photos}=await r.json();mstate[pid].images=photos.filter(p=>p.media_type!=='video');mstate[pid].videos=photos.filter(p=>p.media_type==='video');renderMed(pid);}catch(e){console.error(e);}
 }
-function renderMed(pid){renderMStrip(pid,'image');renderMStrip(pid,'video');}
+function renderMed(pid){if(pid!=='hero')renderMStrip(pid,'image');renderMStrip(pid,'video');}
 function renderMStrip(pid,mt){
   const isV=mt==='video',items=isV?mstate[pid].videos:mstate[pid].images,max=isV?1:5;
   const strip=$(`#s${isV?'v':'i'}-${pid}`),cnt=$(`#c${isV?'v':'i'}-${pid}`),dz=$(`#dz${isV?'v':'i'}-${pid}`);
+  if(!strip)return; // element doesn't exist for this pid/mt combo — skip silently
   strip.innerHTML='';
   if(!items.length)strip.innerHTML=`<div class="pempty">No ${isV?'video':'photos'} yet.</div>`;
   else items.forEach((m,i)=>{
@@ -1171,7 +1172,65 @@ init();
 (function(){
   let curOpacity = 0.55, curSpeed = 0.75;
 
-  // Load current settings from API
+  // Update the remove button state based on current mstate
+  function syncRemoveBtn(){
+    const btn = document.getElementById('hero-remove-btn');
+    if(!btn) return;
+    const hasVideo = mstate.hero && mstate.hero.videos && mstate.hero.videos.length > 0;
+    btn.disabled = !hasVideo;
+    btn.style.opacity = hasVideo ? '1' : '0.4';
+    btn.title = hasVideo ? 'Remove the hero background video' : 'No video uploaded yet';
+    btn.innerHTML = hasVideo
+      ? '✕ &nbsp;Remove Hero Video'
+      : '— No video uploaded yet';
+  }
+
+  // Hook into loadMedia so we sync after every load
+  const _origLoadMedia = window.loadMedia;
+  // We override via a post-load check instead (safer)
+  // Poll after Photos tab opens and after any media load
+  function scheduleSync(){ setTimeout(syncRemoveBtn, 300); }
+  document.querySelectorAll('.tabs button').forEach(b=>{
+    b.addEventListener('click', ()=>{ if(b.dataset.tab==='photos') scheduleSync(); });
+  });
+  const heroStrip = document.getElementById('sv-hero');
+  if(heroStrip){
+    new MutationObserver(scheduleSync).observe(heroStrip, { childList:true, subtree:true });
+  }
+  // Also check 0.8s and 2s after page load (covers async loadAllMedia)
+  setTimeout(syncRemoveBtn, 800);
+  setTimeout(syncRemoveBtn, 2000);
+
+  // Remove button click
+  const removeBtn = document.getElementById('hero-remove-btn');
+  if(removeBtn){
+    removeBtn.addEventListener('click', async ()=>{
+      if(removeBtn.disabled) return;
+      if(!confirm('Remove the hero background video?\nThe animated brand story will play instead until you upload a new one.')) return;
+      // Get video id directly from mstate — no DOM hunting needed
+      const vid = mstate.hero?.videos?.[0];
+      if(!vid){ alert('No video found.'); return; }
+      removeBtn.disabled = true; removeBtn.innerHTML = 'Removing…';
+      try{
+        const r = await fetch('/admin/api/photos/'+vid.id, {
+          method:'DELETE', credentials:'same-origin',
+          headers:{'Content-Type':'application/json'}
+        });
+        if(r.ok){
+          await loadMedia('hero');   // refresh strip + mstate
+          syncRemoveBtn();
+        } else {
+          alert('Could not remove video. Please try again.');
+          removeBtn.disabled = false; removeBtn.innerHTML = '✕ &nbsp;Remove Hero Video';
+        }
+      }catch(e){
+        alert('Network error. Please try again.');
+        removeBtn.disabled = false; removeBtn.innerHTML = '✕ &nbsp;Remove Hero Video';
+      }
+    });
+  }
+
+  // Opacity slider
   async function loadVidSettings(){
     try{
       const r = await fetch('/api/settings');
@@ -1190,10 +1249,9 @@ init();
           b.classList.toggle('active', parseFloat(b.dataset.spd) === curSpeed);
         });
       }
-    }catch(e){ console.warn('Could not load settings', e); }
+    }catch(e){}
   }
 
-  // Opacity slider live feedback
   const slider = document.getElementById('hero-opacity');
   if(slider){
     slider.addEventListener('input', ()=>{
@@ -1203,7 +1261,6 @@ init();
     });
   }
 
-  // Speed buttons
   document.querySelectorAll('.speed-opt').forEach(btn => {
     btn.addEventListener('click', ()=>{
       document.querySelectorAll('.speed-opt').forEach(b=>b.classList.remove('active'));
@@ -1213,7 +1270,6 @@ init();
     });
   });
 
-  // Save settings
   const saveBtn = document.getElementById('save-vid-settings');
   const savedMsg = document.getElementById('settings-saved');
   if(saveBtn){
@@ -1228,52 +1284,12 @@ init();
             hero_video_speed: curSpeed.toString()
           })
         });
-        if(r.ok){
-          savedMsg.style.display = 'inline';
-          setTimeout(()=>{ savedMsg.style.display='none'; }, 5000);
-        }
+        if(r.ok){ savedMsg.style.display='inline'; setTimeout(()=>savedMsg.style.display='none',5000); }
       }catch(e){ alert('Failed to save settings'); }
       finally{ saveBtn.disabled=false; saveBtn.textContent='Save Settings'; }
     });
   }
 
-  // Remove hero video button — shown once a video is detected
-  const removeBtn = document.getElementById('hero-remove-btn');
-  if(removeBtn){
-    removeBtn.addEventListener('click', async ()=>{
-      if(!confirm('Remove the hero background video? The animated fallback will play instead until you upload a new video.')) return;
-      // Get the hero video id from the strip
-      const strip = document.getElementById('sv-hero');
-      const delBtn = strip?.querySelector('.dbtn');
-      if(delBtn){ delBtn.click(); }
-      else { alert('No video found to remove.'); }
-    });
-  }
-
-  // Show/hide remove button based on whether a video is loaded
-  // Called after renderMed('hero')
-  const origLoadMedia = window.__loadMediaHook;
-  function checkHeroRemove(){
-    const strip = document.getElementById('sv-hero');
-    const btn   = document.getElementById('hero-remove-btn');
-    if(!strip || !btn) return;
-    const hasVideo = strip.querySelector('.pthumb') !== null;
-    btn.style.display = hasVideo ? 'flex' : 'none';
-  }
-  // Poll briefly on Photos tab activation
-  document.querySelectorAll('.tabs button').forEach(b=>{
-    b.addEventListener('click', ()=>{ if(b.dataset.tab==='photos') setTimeout(checkHeroRemove,400); });
-  });
-  // Also check after a short delay on boot
-  setTimeout(checkHeroRemove, 1200);
-  // Re-check after any upload/delete in hero strip
-  const heroStrip = document.getElementById('sv-hero');
-  if(heroStrip){
-    const obs = new MutationObserver(checkHeroRemove);
-    obs.observe(heroStrip, { childList:true, subtree:true });
-  }
-
-  // Kick off
   loadVidSettings();
 })();
 
