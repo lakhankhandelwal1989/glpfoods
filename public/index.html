@@ -1595,9 +1595,10 @@ document.querySelectorAll('.filters button').forEach(btn => {
   });
 });
 
-// ── Load product photos from API ──
+// ── Load product photos + videos from API ──
 (function(){
   const PRODUCTS = ['dv','cm','db'];
+
   PRODUCTS.forEach(async pid => {
     try {
       const res = await fetch('/api/photos/' + pid);
@@ -1605,64 +1606,136 @@ document.querySelectorAll('.filters button').forEach(btn => {
       const { photos } = await res.json();
       if (!photos || photos.length === 0) return;
 
-      const container = document.getElementById('card-img-' + pid);
+      const container   = document.getElementById('card-img-' + pid);
       const placeholder = document.getElementById('card-placeholder-' + pid);
       if (!container) return;
 
-      // Hide placeholder
-      if (placeholder) placeholder.style.display = 'none';
+      // Separate images from video
+      const images = photos.filter(p => p.media_type !== 'video');
+      const video  = photos.find(p  => p.media_type === 'video');
 
-      // Create photo strip
-      const strip = document.createElement('div');
-      strip.className = 'card-photos';
-      photos.forEach(ph => {
-        const img = document.createElement('img');
-        img.src = '/api/photo/' + ph.id;
-        img.alt = ph.filename || 'Product photo';
-        img.loading = 'lazy';
-        strip.appendChild(img);
-      });
-      container.insertBefore(strip, container.querySelector('.card-tag'));
+      // ── Images carousel ──────────────────────────────────
+      if (images.length > 0) {
+        if (placeholder) placeholder.style.display = 'none';
 
-      if (photos.length === 1) return; // no nav needed
+        const strip = document.createElement('div');
+        strip.className = 'card-photos';
 
-      // Arrows
-      const prev = document.createElement('button');
-      prev.className = 'card-photo-arrow prev'; prev.innerHTML = '‹'; prev.type = 'button';
-      const next = document.createElement('button');
-      next.className = 'card-photo-arrow next'; next.innerHTML = '›'; next.type = 'button';
-      container.appendChild(prev); container.appendChild(next);
+        images.forEach((ph, i) => {
+          const img = document.createElement('img');
+          img.src     = '/api/photo/' + ph.id;
+          img.alt     = ph.filename || 'Product photo';
+          img.loading = i === 0 ? 'eager' : 'lazy';
+          img.style.opacity = i === 0 ? '1' : '0';
+          // object-fit:contain + background set via CSS
+          strip.appendChild(img);
+        });
 
-      // Dots
-      const nav = document.createElement('div'); nav.className = 'card-photo-nav';
-      photos.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.className = 'card-photo-dot' + (i===0?' active':'');
-        dot.type = 'button';
-        dot.addEventListener('click', () => goto(i));
-        nav.appendChild(dot);
-      });
-      container.appendChild(nav);
+        container.insertBefore(strip, container.querySelector('.card-tag'));
 
-      let cur = 0;
-      const imgs = strip.querySelectorAll('img');
-      const dots = nav.querySelectorAll('.card-photo-dot');
+        if (images.length > 1) {
+          // Arrows
+          const prev = document.createElement('button');
+          prev.className = 'card-photo-arrow prev'; prev.innerHTML = '‹'; prev.type = 'button';
+          const next = document.createElement('button');
+          next.className = 'card-photo-arrow next'; next.innerHTML = '›'; next.type = 'button';
+          container.appendChild(prev);
+          container.appendChild(next);
 
-      function goto(n) {
-        cur = (n + photos.length) % photos.length;
-        imgs.forEach((img, i) => img.style.transform = `translateX(${(i - cur) * 100}%)`);
-        dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+          // Dots
+          const nav = document.createElement('div');
+          nav.className = 'card-photo-nav';
+          // Extra dot for video if present
+          const totalSlides = images.length + (video ? 1 : 0);
+          for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'card-photo-dot' + (i === 0 ? ' active' : '');
+            dot.type = 'button';
+            dot.addEventListener('click', () => goto(i));
+            nav.appendChild(dot);
+          }
+          container.appendChild(nav);
+
+          const imgEls  = [...strip.querySelectorAll('img')];
+          const dotEls  = [...nav.querySelectorAll('.card-photo-dot')];
+          let cur = 0;
+
+          // Inject video wrap once (hidden by default)
+          let videoWrap = null;
+          if (video) {
+            videoWrap = document.createElement('div');
+            videoWrap.className = 'card-video-wrap';
+            videoWrap.style.display = 'none';
+            const vid = document.createElement('video');
+            vid.src     = '/api/photo/' + video.id;
+            vid.muted   = true;
+            vid.loop    = true;
+            vid.playsInline = true;
+            vid.preload = 'none';
+            videoWrap.appendChild(vid);
+            const badge = document.createElement('div');
+            badge.className = 'card-video-badge';
+            badge.textContent = '▶ Video';
+            videoWrap.appendChild(badge);
+            container.insertBefore(videoWrap, container.querySelector('.card-tag'));
+          }
+
+          function goto(n) {
+            const totalImg = images.length;
+            const totalAll = totalImg + (video ? 1 : 0);
+            cur = (n + totalAll) % totalAll;
+
+            const isVideoSlide = video && cur === totalImg;
+
+            // Show/hide images
+            imgEls.forEach((img, i) => img.style.opacity = (!isVideoSlide && i === cur) ? '1' : '0');
+
+            // Show/hide video
+            if (videoWrap) {
+              const v = videoWrap.querySelector('video');
+              if (isVideoSlide) {
+                videoWrap.style.display = 'flex';
+                v.play().catch(() => {});
+              } else {
+                videoWrap.style.display = 'none';
+                v.pause();
+              }
+            }
+
+            // Dots
+            dotEls.forEach((d, i) => d.classList.toggle('active', i === cur));
+          }
+
+          prev.addEventListener('click', () => { clearInterval(timer); goto(cur - 1); });
+          next.addEventListener('click', () => { clearInterval(timer); goto(cur + 1); });
+
+          let timer = setInterval(() => goto(cur + 1), 4500);
+          container.addEventListener('mouseenter', () => clearInterval(timer));
+          container.addEventListener('mouseleave', () => { timer = setInterval(() => goto(cur + 1), 4500); });
+        }
+
+      } else if (video) {
+        // ── Video only (no photos) ────────────────────────
+        if (placeholder) placeholder.style.display = 'none';
+
+        const videoWrap = document.createElement('div');
+        videoWrap.className = 'card-video-wrap';
+        const vid = document.createElement('video');
+        vid.src        = '/api/photo/' + video.id;
+        vid.muted      = true;
+        vid.autoplay   = true;
+        vid.loop       = true;
+        vid.playsInline = true;
+        vid.preload    = 'metadata';
+        videoWrap.appendChild(vid);
+
+        const badge = document.createElement('div');
+        badge.className   = 'card-video-badge';
+        badge.textContent = '▶ Video';
+        videoWrap.appendChild(badge);
+
+        container.insertBefore(videoWrap, container.querySelector('.card-tag'));
       }
-      // Init positions
-      imgs.forEach((img, i) => img.style.transform = `translateX(${i * 100}%)`);
-
-      prev.addEventListener('click', () => goto(cur - 1));
-      next.addEventListener('click', () => goto(cur + 1));
-
-      // Auto-advance every 4s
-      let timer = setInterval(() => goto(cur + 1), 4000);
-      container.addEventListener('mouseenter', () => clearInterval(timer));
-      container.addEventListener('mouseleave', () => { timer = setInterval(() => goto(cur + 1), 4000); });
 
     } catch(e) { /* silently fall back to placeholder */ }
   });

@@ -94,7 +94,20 @@ tbody tr:hover{background:var(--paper)}tbody tr:last-child td{border-bottom:none
 /* thumbnails */
 .photo-strip{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;min-height:72px;align-items:flex-start}
 .photo-thumb{position:relative;width:74px;height:74px;border-radius:6px;overflow:hidden;border:1.5px solid rgba(154,80,40,.15);cursor:grab;flex-shrink:0;background:var(--paper)}
-.photo-thumb img,.photo-thumb video{width:100%;height:100%;object-fit:cover;display:block}
+.photo-thumb img{
+  width:100%;height:100%;
+  object-fit:contain;    /* show full image, no cropping */
+  object-position:center;
+  background:var(--paper);
+  display:block;
+}
+.photo-thumb video{
+  width:100%;height:100%;
+  object-fit:contain;    /* show full video frame */
+  object-position:center;
+  background:var(--ink); /* dark bg suits landscape video */
+  display:block;
+}
 .photo-thumb .del-btn{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(42,31,24,.75);color:#fff;display:grid;place-items:center;font-size:9px;cursor:pointer;transition:background .2s;line-height:1;border:none}
 .photo-thumb .del-btn:hover{background:var(--red)}
 .photo-thumb .order-badge{position:absolute;bottom:3px;left:3px;background:rgba(42,31,24,.65);color:#fff;font-size:8px;font-weight:700;padding:2px 4px;border-radius:3px;letter-spacing:.06em}
@@ -699,7 +712,7 @@ async function renderPreviewFrame(data) {
   const buildCard = () => {
     const hasPhotos = images.length > 0;
     const imgHTML = hasPhotos
-      ? images.map((p,i)=>`<img src="/api/photo/${p.id}" alt="" style="width:100%;height:100%;object-fit:cover;flex-shrink:0;position:absolute;top:0;left:0;transition:opacity .4s ease;opacity:${i===0?1:0}" data-idx="${i}"/>`).join('')
+      ? images.map((p,i)=>`<img src="/api/photo/${p.id}" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:center;background:var(--paper);transition:opacity .4s ease;opacity:${i===0?1:0}" data-idx="${i}"/>`).join('')
       : `<div style="width:100%;height:100%;display:grid;place-items:center;opacity:.25;font-size:32px">🌿</div>`;
 
     const dotsHTML = images.length > 1
@@ -726,9 +739,12 @@ async function renderPreviewFrame(data) {
   };
 
   const videoHTML = videoId
-    ? `<div style="background:var(--ink);padding:16px;text-align:center">
-        <div style="font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px">Product Video</div>
-        <video src="/api/photo/${videoId}" controls style="max-width:100%;max-height:320px;border-radius:6px;display:block;margin:0 auto"></video>
+    ? `<div style="background:var(--ink);padding:20px 16px;text-align:center">
+        <div style="font-size:9px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px">▶ Product Video</div>
+        <video src="/api/photo/${videoId}" controls muted playsinline
+          style="width:100%;max-height:360px;border-radius:6px;display:block;margin:0 auto;
+                 object-fit:contain;background:#000;"></video>
+        <div style="font-size:10px;color:rgba(245,236,218,.45);margin-top:10px;letter-spacing:.14em">Full video frame · no cropping</div>
        </div>` : '';
 
   const cardCount = currentDevice==='desktop' ? 3 : 1;
