@@ -63,9 +63,10 @@ const IS_PROD    = process.env.NODE_ENV === 'production';
 const DEFAULT_ADMIN_USERNAME = 'Lakhan';
 const DEFAULT_ADMIN_PASSWORD = 'Lakhan';
 
-const VALID_MEDIA_PRODUCTS  = ['dv','cm','db']; // legacy photo system
+const VALID_MEDIA_PRODUCTS  = ['dv','cm','db','hero']; // hero = brand intro video
 const MAX_IMAGES_PER_PRODUCT = 5;
 const MAX_VIDEOS_PER_PRODUCT = 1;
+const MAX_HERO_VIDEO_BYTES    = 50 * 1024 * 1024; // 50 MB for hero
 const MAX_IMAGE_BYTES        = 4  * 1024 * 1024;
 const MAX_VIDEO_BYTES        = 15 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES    = ['image/jpeg','image/jpg','image/png','image/webp','image/avif'];
@@ -260,7 +261,7 @@ function computeSalePrice(price, discount) {
 // ── App ──────────────────────────────────────────────────────────────────────
 const app = express();
 app.disable('x-powered-by');
-app.use(express.json({ limit: '30mb' }));
+app.use(express.json({ limit: '65mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname,'public'), { extensions:['html'] }));
 
@@ -456,7 +457,8 @@ app.post('/admin/api/photos/:productId', requireAdmin, async (req,res) => {
       const isVideo=ALLOWED_VIDEO_TYPES.includes(mimetype)||media_type==='video';
       if(isVideo){
         if(currentVids>=MAX_VIDEOS_PER_PRODUCT){errors.push(`${filename}: video limit reached`);continue;}
-        if(approxBytes>MAX_VIDEO_BYTES){errors.push(`${filename}: exceeds 15MB`);continue;}
+        const videoLimit = pid==='hero' ? MAX_HERO_VIDEO_BYTES : MAX_VIDEO_BYTES;
+        if(approxBytes>videoLimit){errors.push(`${filename}: exceeds ${pid==='hero'?'50':'15'}MB limit`);continue;}
         if(!ALLOWED_VIDEO_TYPES.includes(mimetype)){errors.push(`${filename}: unsupported video type`);continue;}
       } else {
         if(currentImgs>=MAX_IMAGES_PER_PRODUCT){errors.push(`${filename}: image limit reached`);continue;}

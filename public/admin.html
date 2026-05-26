@@ -394,6 +394,43 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
         <p style="font-size:13px;color:var(--si)">Up to 5 photos + 1 video per product. Drag to reorder. Click <b>Preview</b> to check across devices.</p>
       </div>
       <div class="pgrid">
+
+        <!-- Hero Video -->
+        <div class="ppanel" style="grid-column:1/-1">
+          <div class="pphead" style="background:linear-gradient(135deg,var(--ink),#3a2518)">
+            <div class="ppicon" style="background:rgba(201,134,62,.22);font-size:24px">🎬</div>
+            <div>
+              <h3 style="color:var(--iv)">Hero Background Video</h3>
+              <div class="ppsub" style="color:var(--gd)">Plays behind the brand introduction at the top of the website</div>
+            </div>
+            <div style="margin-left:auto;font-size:12px;color:rgba(245,236,218,.55);max-width:360px;line-height:1.5">
+              Upload a single MP4 or WebM clip up to <b style="color:var(--gd)">50 MB</b>. Recommended: 15–45 seconds, landscape 16:9, no audio needed. The video loops silently behind the hero text.
+            </div>
+          </div>
+          <div class="ppbody" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+            <div>
+              <div class="mslabel">Current Hero Video</div>
+              <div class="pstrip" id="sv-hero" data-pid="hero" data-mt="video" style="min-height:120px"></div>
+              <div class="cntrow" id="cv-hero"><b>0</b>/1 video</div>
+              <div class="uprog" id="up-hero"><div class="pbar"><div class="pfill" id="pf-hero"></div></div><div class="pstat" id="ps-hero"></div></div>
+            </div>
+            <div>
+              <div class="mslabel">Upload New Video</div>
+              <div class="dz" id="dzv-hero" data-pid="hero" data-mt="video" style="min-height:120px">
+                <input type="file" accept="video/mp4,video/webm,video/quicktime" data-pid="hero" data-mt="video"/>
+                <div class="dzicon" style="font-size:32px">🎥</div>
+                <p style="font-size:13px">Drop video or click to browse</p>
+                <small>MP4 · WebM · MOV · Max 50 MB · 1 video</small>
+              </div>
+              <div style="margin-top:12px;font-size:12px;color:var(--si);line-height:1.7">
+                <b style="color:var(--tc)">Story concept for the video:</b><br/>
+                An Indian grocery store in 1918 transforming to a modern retail store in 2026 — products sold locally in Alwar, spreading to other cities, and now available across India via e-commerce.<br/><br/>
+                <span style="opacity:.75">Tip: A slow-motion or time-lapse montage works well. Keep text-free so the GLP hero text overlays cleanly.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="ppanel">
           <div class="pphead"><div class="ppicon">DV</div><div><h3>Dahi Vada</h3><div class="ppsub">Premix · ₹120</div></div></div>
           <div class="ppbody">
@@ -931,8 +968,8 @@ $('#pkgclose').addEventListener('click',()=>{$('#pkgmodal').classList.remove('op
 $('#pkgcancel').addEventListener('click',()=>{$('#pkgmodal').classList.remove('open');document.body.style.overflow='';});
 
 // ── PHOTOS ────────────────────────────────────────────────────────────────────
-const MPIDS=['dv','cm','db'];
-const mstate={dv:{images:[],videos:[]},cm:{images:[],videos:[]},db:{images:[],videos:[]}};
+const MPIDS=['dv','cm','db','hero'];
+const mstate={dv:{images:[],videos:[]},cm:{images:[],videos:[]},db:{images:[],videos:[]},hero:{images:[],videos:[]}};
 async function loadAllMedia(){for(const p of MPIDS)await loadMedia(p);}
 async function loadMedia(pid){
   try{const r=await api('/api/photos/'+pid);if(!r.ok)return;const{photos}=await r.json();mstate[pid].images=photos.filter(p=>p.media_type!=='video');mstate[pid].videos=photos.filter(p=>p.media_type==='video');renderMed(pid);}catch(e){console.error(e);}
