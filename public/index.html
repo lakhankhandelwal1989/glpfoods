@@ -1622,19 +1622,18 @@ document.querySelectorAll('.filters button').forEach(btn => {
         strip.className = 'card-photos';
         strip.style.cssText = 'position:absolute;inset:0;overflow:hidden';
 
+        // ── All images: eager loading, all styles inline ─────────────────────
         images.forEach((ph, i) => {
           const img = document.createElement('img');
           img.src     = '/api/photo/' + ph.id;
           img.alt     = ph.filename || 'Product photo';
-          img.loading = i === 0 ? 'eager' : 'lazy';
-          // All display styles inline — bypass CSS caching entirely
+          img.loading = 'eager';   // never lazy — hidden images won't trigger lazy load
           img.style.cssText = [
-            'position:absolute',
-            'top:0', 'left:0',
+            'position:absolute', 'top:0', 'left:0',
             'width:100%', 'height:100%',
-            'object-fit:contain',        // full image, no cropping
+            'object-fit:contain',
             'object-position:center',
-            'background:var(--paper)',   // warm cream letterbox
+            'background:var(--paper)',
             'transition:opacity .45s ease',
             `opacity:${i === 0 ? '1' : '0'}`
           ].join(';');
@@ -1643,68 +1642,91 @@ document.querySelectorAll('.filters button').forEach(btn => {
 
         container.insertBefore(strip, container.querySelector('.card-tag'));
 
-        if (images.length > 1) {
-          // Arrows
-          const prev = document.createElement('button');
-          prev.className = 'card-photo-arrow prev'; prev.innerHTML = '‹'; prev.type = 'button';
-          const next = document.createElement('button');
-          next.className = 'card-photo-arrow next'; next.innerHTML = '›'; next.type = 'button';
-          container.appendChild(prev);
-          container.appendChild(next);
-
-          // Dots
-          const nav = document.createElement('div');
-          nav.className = 'card-photo-nav';
-          // Extra dot for video if present
+        if (images.length > 1 || video) {
           const totalSlides = images.length + (video ? 1 : 0);
+          const imgEls = [...strip.querySelectorAll('img')];
+          let cur = 0;
+
+          // ── Dot nav — fully inline styled, always visible ───────────────
+          const nav = document.createElement('div');
+          nav.style.cssText = [
+            'position:absolute', 'bottom:10px', 'left:50%',
+            'transform:translateX(-50%)',
+            'display:flex', 'gap:5px', 'z-index:4',
+            'padding:4px 6px',
+            'background:rgba(42,31,24,.28)',
+            'border-radius:999px'
+          ].join(';');
+          const dotEls = [];
           for (let i = 0; i < totalSlides; i++) {
             const dot = document.createElement('button');
-            dot.className = 'card-photo-dot' + (i === 0 ? ' active' : '');
             dot.type = 'button';
-            dot.addEventListener('click', () => goto(i));
+            dot.style.cssText = [
+              'width:7px', 'height:7px', 'border-radius:50%',
+              'border:none', 'cursor:pointer', 'padding:0',
+              'transition:background .2s, transform .2s',
+              i === 0
+                ? 'background:rgba(255,251,241,.95);transform:scale(1.25)'
+                : 'background:rgba(255,251,241,.4)'
+            ].join(';');
+            dot.addEventListener('click', () => { clearInterval(timer); goto(i); });
             nav.appendChild(dot);
+            dotEls.push(dot);
           }
           container.appendChild(nav);
 
-          const imgEls  = [...strip.querySelectorAll('img')];
-          const dotEls  = [...nav.querySelectorAll('.card-photo-dot')];
-          let cur = 0;
+          // ── Arrows — always visible, large enough to tap ────────────────
+          const arrowCSS = [
+            'position:absolute', 'top:50%', 'transform:translateY(-50%)',
+            'width:32px', 'height:32px', 'border-radius:50%',
+            'background:rgba(255,251,241,.82)',
+            'border:none', 'cursor:pointer', 'z-index:4',
+            'display:grid', 'place-items:center',
+            'font-size:16px', 'color:#2A1F18',
+            'transition:background .2s',
+            'opacity:0.85'          // always visible, slight transparency
+          ].join(';');
+          const prev = document.createElement('button');
+          prev.type = 'button'; prev.innerHTML = '&#8249;';
+          prev.style.cssText = arrowCSS + ';left:8px';
+          const next = document.createElement('button');
+          next.type = 'button'; next.innerHTML = '&#8250;';
+          next.style.cssText = arrowCSS + ';right:8px';
+          container.appendChild(prev);
+          container.appendChild(next);
 
-          // Inject video wrap once (hidden by default)
+          // ── Video wrap (lazy — only created if video exists) ────────────
           let videoWrap = null;
           if (video) {
             videoWrap = document.createElement('div');
-            videoWrap.className = 'card-video-wrap';
             videoWrap.style.cssText = 'position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#1a0f08';
             const vid = document.createElement('video');
-            vid.src        = '/api/photo/' + video.id;
-            vid.muted      = true;
-            vid.loop       = true;
+            vid.src         = '/api/photo/' + video.id;
+            vid.muted       = true;
+            vid.loop        = true;
             vid.playsInline = true;
-            vid.preload    = 'none';
+            vid.preload     = 'none';
             vid.style.cssText = 'width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:#000';
             videoWrap.appendChild(vid);
             const badge = document.createElement('div');
-            badge.className = 'card-video-badge';
+            badge.style.cssText = 'position:absolute;top:10px;right:10px;background:rgba(201,134,62,.9);color:#fff;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:3px 7px;border-radius:3px';
             badge.textContent = '▶ Video';
             videoWrap.appendChild(badge);
             container.insertBefore(videoWrap, container.querySelector('.card-tag'));
           }
 
+          // ── goto: the single source of truth for slide state ───────────
           function goto(n) {
-            const totalImg = images.length;
-            const totalAll = totalImg + (video ? 1 : 0);
-            cur = (n + totalAll) % totalAll;
+            cur = ((n % totalSlides) + totalSlides) % totalSlides;
+            const isVid = video && cur === images.length;
 
-            const isVideoSlide = video && cur === totalImg;
+            imgEls.forEach((img, i) => {
+              img.style.opacity = (!isVid && i === cur) ? '1' : '0';
+            });
 
-            // Show/hide images
-            imgEls.forEach((img, i) => img.style.opacity = (!isVideoSlide && i === cur) ? '1' : '0');
-
-            // Show/hide video
             if (videoWrap) {
               const v = videoWrap.querySelector('video');
-              if (isVideoSlide) {
+              if (isVid) {
                 videoWrap.style.display = 'flex';
                 v.play().catch(() => {});
               } else {
@@ -1713,16 +1735,34 @@ document.querySelectorAll('.filters button').forEach(btn => {
               }
             }
 
-            // Dots
-            dotEls.forEach((d, i) => d.classList.toggle('active', i === cur));
+            dotEls.forEach((d, i) => {
+              d.style.background = i === cur
+                ? 'rgba(255,251,241,.95)'
+                : 'rgba(255,251,241,.4)';
+              d.style.transform = i === cur ? 'scale(1.25)' : 'scale(1)';
+            });
           }
 
-          prev.addEventListener('click', () => { clearInterval(timer); goto(cur - 1); });
-          next.addEventListener('click', () => { clearInterval(timer); goto(cur + 1); });
+          // ── Controls ───────────────────────────────────────────────────
+          let timer = setInterval(() => goto(cur + 1), 4000);
 
-          let timer = setInterval(() => goto(cur + 1), 4500);
+          prev.addEventListener('click', () => { clearInterval(timer); goto(cur - 1); timer = setInterval(() => goto(cur + 1), 4000); });
+          next.addEventListener('click', () => { clearInterval(timer); goto(cur + 1); timer = setInterval(() => goto(cur + 1), 4000); });
+
+          // Pause on hover (desktop only — touch devices skip this)
           container.addEventListener('mouseenter', () => clearInterval(timer));
-          container.addEventListener('mouseleave', () => { timer = setInterval(() => goto(cur + 1), 4500); });
+          container.addEventListener('mouseleave', () => { timer = setInterval(() => goto(cur + 1), 4000); });
+
+          // Swipe support for mobile
+          let touchStartX = 0;
+          container.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive:true });
+          container.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) < 30) return;   // ignore tiny taps
+            clearInterval(timer);
+            goto(dx < 0 ? cur + 1 : cur - 1);
+            timer = setInterval(() => goto(cur + 1), 4000);
+          }, { passive:true });
         }
 
       } else if (video) {
