@@ -309,7 +309,18 @@ app.get('/api/photo/:id', async (req,res) => {
   } catch(e) { res.status(500).send('Server error'); }
 });
 
-// ── PUBLIC: product catalog ────────────────────────────────────────────────
+// ── PUBLIC: site settings ────────────────────────────────────────────────────
+app.get('/api/settings', async (req,res) => {
+  try {
+    const { rows } = await pool.query('SELECT key, value FROM site_settings');
+    const settings = {};
+    rows.forEach(r => settings[r.key] = r.value);
+    res.setHeader('Cache-Control','public,max-age=30'); // 30s cache
+    res.json({ settings });
+  } catch(e) { res.status(500).json({ error:'Server error' }); }
+});
+
+// ── PUBLIC: product catalog ────────────────────────────────────────────────────
 app.get('/api/products', async (req,res) => {
   try {
     const { rows: prods } = await pool.query(
@@ -485,6 +496,24 @@ app.patch('/admin/api/photos/reorder', requireAdmin, async (req,res) => {
   if(!VALID_MEDIA_PRODUCTS.includes(productId)||!Array.isArray(order))return res.status(400).json({error:'Invalid payload'});
   try{for(let i=0;i<order.length;i++)await pool.query('UPDATE product_photos SET sort_order=$1 WHERE id=$2 AND product_id=$3',[i,order[i],productId]);res.json({ok:true});}
   catch(e){res.status(500).json({error:'Server error'});}
+});
+
+// ── Admin: site settings ─────────────────────────────────────────────────────
+app.post('/admin/api/settings', requireAdmin, async (req,res) => {
+  try {
+    const allowed = ['hero_video_opacity','hero_video_speed'];
+    const updates = Object.entries(req.body||{}).filter(([k]) => allowed.includes(k));
+    if (!updates.length) return res.status(400).json({ error:'No valid settings provided' });
+    for (const [key, value] of updates) {
+      await pool.query(
+        `INSERT INTO site_settings (key, value, updated_at)
+         VALUES ($1, $2, NOW())
+         ON CONFLICT (key) DO UPDATE SET value=$2, updated_at=NOW()`,
+        [key, String(value)]
+      );
+    }
+    res.json({ ok:true });
+  } catch(e) { console.error(e); res.status(500).json({ error:'Server error' }); }
 });
 
 // ── Admin: catalog CRUD ──────────────────────────────────────────────────────

@@ -1089,7 +1089,7 @@ html[data-lang="hi"] .chatbot-msg{font-family:var(--devanagari); font-size:15px}
     opacity:0;
     transition:opacity 1.2s ease;
   }
-  .hero-bg-video.loaded { opacity:1; }
+  .hero-bg-video.loaded { opacity:var(--hero-vid-opacity, 0.55); }
 
   /* Overlay scrim so text stays readable */
   .hero-scrim {
@@ -2390,26 +2390,62 @@ document.querySelectorAll('.filters button').forEach(btn => {
   }
   setInterval(updateDots, 8000);
 
-  // Load hero video from API
+  // Load settings (opacity + speed) then load hero video
   async function loadHeroVideo() {
     try {
-      const res = await fetch('/api/photos/hero');
-      if (!res.ok) return;
-      const { photos } = await res.json();
+      // Fetch site settings (opacity, speed) in parallel with photo metadata
+      const [settingsRes, photosRes] = await Promise.all([
+        fetch('/api/settings').catch(()=>null),
+        fetch('/api/photos/hero').catch(()=>null)
+      ]);
+
+      // Apply settings to video and scrim
+      let targetOpacity = 0.55;   // default: 55%
+      let targetSpeed   = 0.75;   // default: 0.75×
+
+      if (settingsRes?.ok) {
+        const { settings } = await settingsRes.json();
+        if (settings.hero_video_opacity) {
+          targetOpacity = parseFloat(settings.hero_video_opacity);
+        }
+        if (settings.hero_video_speed) {
+          targetSpeed = parseFloat(settings.hero_video_speed);
+        }
+      }
+
+      // The scrim sits on top of the video.
+      // Opacity of the VIDEO controls how much video shows through.
+      // We already have a fixed scrim overlay. So we set the video element
+      // opacity directly — and also update the scrim to compensate.
+      // Lower video opacity = more paper background, less video = more readable.
+      // This is stored as hero_video_opacity = how visible the video is (0.1–1.0).
+      video.style.setProperty('--hero-vid-opacity', targetOpacity);
+
+      // Load the actual video file
+      if (!photosRes?.ok) return;
+      const { photos } = await photosRes.json();
       const vid = photos.find(p => p.media_type === 'video');
       if (!vid) return;
 
       video.src = '/api/photo/' + vid.id;
+      video.playbackRate = targetSpeed;
       video.load();
 
       video.addEventListener('canplaythrough', () => {
+        // Apply opacity via inline style (overrides .loaded CSS opacity:1)
+        video.style.opacity = targetOpacity;
+        video.playbackRate  = targetSpeed;  // re-apply after load
         video.classList.add('loaded');
-        fallback.classList.add('with-video'); // hide animated fallback
-        ctrl.classList.remove('hidden-ctrl'); // show pause button
+        fallback.classList.add('with-video');
+        ctrl.classList.remove('hidden-ctrl');
       }, { once: true });
 
+      // Ensure speed is applied once playback starts (some browsers reset it)
+      video.addEventListener('play', () => {
+        video.playbackRate = targetSpeed;
+      });
+
       video.addEventListener('error', () => {
-        // silently fall back to CSS animation
         video.classList.remove('loaded');
       });
 

@@ -288,6 +288,15 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
 
 @media(max-width:960px){.pgrid{grid-template-columns:1fr 1fr}.sgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.pgrid,.prodgrid,.pkggrid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.rkrow{gap:8px}.dframe.tablet,.dframe.desktop{width:100%}.frow,.frow.s3{grid-template-columns:1fr}.lc{padding:32px 24px}}
+
+  .speed-opt{
+    padding:7px 12px;border-radius:5px;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:600;
+    border:1px solid rgba(154,80,40,.22);color:var(--si);background:var(--iv);
+    cursor:pointer;transition:all .2s;
+  }
+  .speed-opt.active{background:var(--tc);color:var(--iv);border-color:var(--tc);}
+  .speed-opt:hover:not(.active){border-color:var(--tc);color:var(--tc);}
 </style>
 </head>
 <body>
@@ -407,25 +416,84 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
               Upload a single MP4 or WebM clip up to <b style="color:var(--gd)">50 MB</b>. Recommended: 15–45 seconds, landscape 16:9, no audio needed. The video loops silently behind the hero text.
             </div>
           </div>
-          <div class="ppbody" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
-            <div>
-              <div class="mslabel">Current Hero Video</div>
-              <div class="pstrip" id="sv-hero" data-pid="hero" data-mt="video" style="min-height:120px"></div>
-              <div class="cntrow" id="cv-hero"><b>0</b>/1 video</div>
-              <div class="uprog" id="up-hero"><div class="pbar"><div class="pfill" id="pf-hero"></div></div><div class="pstat" id="ps-hero"></div></div>
-            </div>
-            <div>
-              <div class="mslabel">Upload New Video</div>
-              <div class="dz" id="dzv-hero" data-pid="hero" data-mt="video" style="min-height:120px">
-                <input type="file" accept="video/mp4,video/webm,video/quicktime" data-pid="hero" data-mt="video"/>
-                <div class="dzicon" style="font-size:32px">🎥</div>
-                <p style="font-size:13px">Drop video or click to browse</p>
-                <small>MP4 · WebM · MOV · Max 50 MB · 1 video</small>
+          <div class="ppbody">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-bottom:24px">
+
+              <!-- Current video + remove -->
+              <div>
+                <div class="mslabel">Current Hero Video</div>
+                <div class="pstrip" id="sv-hero" data-pid="hero" data-mt="video" style="min-height:110px"></div>
+                <div class="cntrow" id="cv-hero" style="margin-bottom:10px"><b>0</b>/1 video</div>
+                <!-- Explicit remove button -->
+                <button id="hero-remove-btn" class="actbtn ghost" style="width:100%;justify-content:center;display:none;border-color:var(--rd);color:var(--rd)">
+                  ✕ &nbsp;Remove Hero Video
+                </button>
+                <div class="uprog" id="up-hero"><div class="pbar"><div class="pfill" id="pf-hero"></div></div><div class="pstat" id="ps-hero"></div></div>
               </div>
-              <div style="margin-top:12px;font-size:12px;color:var(--si);line-height:1.7">
-                <b style="color:var(--tc)">Story concept for the video:</b><br/>
-                An Indian grocery store in 1918 transforming to a modern retail store in 2026 — products sold locally in Alwar, spreading to other cities, and now available across India via e-commerce.<br/><br/>
-                <span style="opacity:.75">Tip: A slow-motion or time-lapse montage works well. Keep text-free so the GLP hero text overlays cleanly.</span>
+
+              <!-- Upload new -->
+              <div>
+                <div class="mslabel">Upload New Video</div>
+                <div class="dz" id="dzv-hero" data-pid="hero" data-mt="video" style="min-height:110px">
+                  <input type="file" accept="video/mp4,video/webm,video/quicktime" data-pid="hero" data-mt="video"/>
+                  <div class="dzicon" style="font-size:28px">🎥</div>
+                  <p style="font-size:13px">Drop video or click to browse</p>
+                  <small>MP4 · WebM · MOV · Max 50 MB · 1 video</small>
+                </div>
+                <div style="margin-top:10px;font-size:11.5px;color:var(--si);line-height:1.6;opacity:.8">
+                  Story: 1918 pansari shop → modern retail 2026 → local Alwar → city stockists → e-commerce.<br/>
+                  <em>Tip: Text-free, landscape 16:9, 15–45 seconds.</em>
+                </div>
+              </div>
+            </div>
+
+            <!-- Playback settings -->
+            <div style="border-top:1px solid rgba(154,80,40,.1);padding-top:20px">
+              <div class="mslabel" style="margin-bottom:16px">Video Playback Settings</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+
+                <!-- Opacity -->
+                <div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <label style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--si)">Background Opacity</label>
+                    <span id="opacity-val" style="font-size:13px;font-weight:700;color:var(--tc)">55%</span>
+                  </div>
+                  <input type="range" id="hero-opacity" min="10" max="100" value="55" step="5"
+                    style="width:100%;accent-color:var(--tc);cursor:pointer"/>
+                  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--si);opacity:.6;margin-top:4px;letter-spacing:.1em">
+                    <span>10% subtle</span><span>55% default</span><span>100% full</span>
+                  </div>
+                  <div style="margin-top:8px;font-size:11.5px;color:var(--si);line-height:1.5;opacity:.75">
+                    Lower opacity lets the brand text stand out more. Higher makes the video more prominent.
+                  </div>
+                </div>
+
+                <!-- Speed -->
+                <div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                    <label style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--si)">Playback Speed</label>
+                    <span id="speed-val" style="font-size:13px;font-weight:700;color:var(--tc)">0.75×</span>
+                  </div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap" id="speed-btns">
+                    <button class="speed-opt" data-spd="0.25">0.25×</button>
+                    <button class="speed-opt" data-spd="0.5">0.5×</button>
+                    <button class="speed-opt active" data-spd="0.75">0.75×</button>
+                    <button class="speed-opt" data-spd="1">1×</button>
+                    <button class="speed-opt" data-spd="1.25">1.25×</button>
+                    <button class="speed-opt" data-spd="1.5">1.5×</button>
+                    <button class="speed-opt" data-spd="2">2×</button>
+                  </div>
+                  <div style="margin-top:8px;font-size:11.5px;color:var(--si);line-height:1.5;opacity:.75">
+                    0.5–0.75× gives a cinematic slow-motion feel suited to the brand's heritage tone.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Save + live preview -->
+              <div style="display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap">
+                <button class="actbtn prim" id="save-vid-settings">Save Settings</button>
+                <span id="settings-saved" style="font-size:12.5px;color:var(--gn);display:none">✓ Saved — takes effect on next page load</span>
+                <span style="font-size:11.5px;color:var(--si);opacity:.7;margin-left:auto">Changes are applied globally across all visitors.</span>
               </div>
             </div>
           </div>
@@ -1098,6 +1166,117 @@ $('#cform').addEventListener('submit',async e=>{
 function showCA(k,m){const a=$('#calert');a.className=`alert ${k} show`;a.textContent=m;if(k==='success')setTimeout(()=>a.classList.remove('show'),6000);}
 
 init();
+
+// ── Hero video settings ──────────────────────────────────────────────────────
+(function(){
+  let curOpacity = 0.55, curSpeed = 0.75;
+
+  // Load current settings from API
+  async function loadVidSettings(){
+    try{
+      const r = await fetch('/api/settings');
+      if(!r.ok) return;
+      const {settings} = await r.json();
+      if(settings.hero_video_opacity){
+        curOpacity = parseFloat(settings.hero_video_opacity);
+        const pct = Math.round(curOpacity * 100);
+        const slider = document.getElementById('hero-opacity');
+        if(slider){ slider.value = pct; document.getElementById('opacity-val').textContent = pct+'%'; }
+      }
+      if(settings.hero_video_speed){
+        curSpeed = parseFloat(settings.hero_video_speed);
+        document.getElementById('speed-val').textContent = curSpeed+'×';
+        document.querySelectorAll('.speed-opt').forEach(b=>{
+          b.classList.toggle('active', parseFloat(b.dataset.spd) === curSpeed);
+        });
+      }
+    }catch(e){ console.warn('Could not load settings', e); }
+  }
+
+  // Opacity slider live feedback
+  const slider = document.getElementById('hero-opacity');
+  if(slider){
+    slider.addEventListener('input', ()=>{
+      const pct = parseInt(slider.value);
+      document.getElementById('opacity-val').textContent = pct + '%';
+      curOpacity = pct / 100;
+    });
+  }
+
+  // Speed buttons
+  document.querySelectorAll('.speed-opt').forEach(btn => {
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.speed-opt').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      curSpeed = parseFloat(btn.dataset.spd);
+      document.getElementById('speed-val').textContent = curSpeed + '×';
+    });
+  });
+
+  // Save settings
+  const saveBtn = document.getElementById('save-vid-settings');
+  const savedMsg = document.getElementById('settings-saved');
+  if(saveBtn){
+    saveBtn.addEventListener('click', async ()=>{
+      saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+      try{
+        const r = await fetch('/admin/api/settings', {
+          method:'POST', credentials:'same-origin',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            hero_video_opacity: curOpacity.toFixed(2),
+            hero_video_speed: curSpeed.toString()
+          })
+        });
+        if(r.ok){
+          savedMsg.style.display = 'inline';
+          setTimeout(()=>{ savedMsg.style.display='none'; }, 5000);
+        }
+      }catch(e){ alert('Failed to save settings'); }
+      finally{ saveBtn.disabled=false; saveBtn.textContent='Save Settings'; }
+    });
+  }
+
+  // Remove hero video button — shown once a video is detected
+  const removeBtn = document.getElementById('hero-remove-btn');
+  if(removeBtn){
+    removeBtn.addEventListener('click', async ()=>{
+      if(!confirm('Remove the hero background video? The animated fallback will play instead until you upload a new video.')) return;
+      // Get the hero video id from the strip
+      const strip = document.getElementById('sv-hero');
+      const delBtn = strip?.querySelector('.dbtn');
+      if(delBtn){ delBtn.click(); }
+      else { alert('No video found to remove.'); }
+    });
+  }
+
+  // Show/hide remove button based on whether a video is loaded
+  // Called after renderMed('hero')
+  const origLoadMedia = window.__loadMediaHook;
+  function checkHeroRemove(){
+    const strip = document.getElementById('sv-hero');
+    const btn   = document.getElementById('hero-remove-btn');
+    if(!strip || !btn) return;
+    const hasVideo = strip.querySelector('.pthumb') !== null;
+    btn.style.display = hasVideo ? 'flex' : 'none';
+  }
+  // Poll briefly on Photos tab activation
+  document.querySelectorAll('.tabs button').forEach(b=>{
+    b.addEventListener('click', ()=>{ if(b.dataset.tab==='photos') setTimeout(checkHeroRemove,400); });
+  });
+  // Also check after a short delay on boot
+  setTimeout(checkHeroRemove, 1200);
+  // Re-check after any upload/delete in hero strip
+  const heroStrip = document.getElementById('sv-hero');
+  if(heroStrip){
+    const obs = new MutationObserver(checkHeroRemove);
+    obs.observe(heroStrip, { childList:true, subtree:true });
+  }
+
+  // Kick off
+  loadVidSettings();
+})();
+
 </script>
 </body>
 </html>
