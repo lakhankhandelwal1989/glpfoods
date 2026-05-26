@@ -1183,8 +1183,8 @@ html[data-lang="hi"] .chatbot-msg{font-family:var(--devanagari); font-size:15px}
 
     <div class="product-grid">
       <div class="card reveal">
-        <div class="card-img">
-          <div class="card-img-inner"></div>
+        <div class="card-img" id="card-img-dv" data-product="dv">
+          <div class="card-img-inner" id="card-placeholder-dv"></div>
           <div class="card-tag" data-i18n="p.dv.name">Dahi Vada Premix</div>
         </div>
         <div class="card-body">
@@ -1205,8 +1205,8 @@ html[data-lang="hi"] .chatbot-msg{font-family:var(--devanagari); font-size:15px}
       </div>
 
       <div class="card reveal">
-        <div class="card-img">
-          <div class="card-img-inner"></div>
+        <div class="card-img" id="card-img-cm" data-product="cm">
+          <div class="card-img-inner" id="card-placeholder-cm"></div>
           <div class="card-tag" data-i18n="p.cm.name">Chaat Masala</div>
         </div>
         <div class="card-body">
@@ -1227,8 +1227,8 @@ html[data-lang="hi"] .chatbot-msg{font-family:var(--devanagari); font-size:15px}
       </div>
 
       <div class="card reveal">
-        <div class="card-img">
-          <div class="card-img-inner"></div>
+        <div class="card-img" id="card-img-db" data-product="db">
+          <div class="card-img-inner" id="card-placeholder-db"></div>
           <div class="card-tag" data-i18n="p.db.name">Doodh Bahaar</div>
         </div>
         <div class="card-body">
@@ -1594,6 +1594,80 @@ document.querySelectorAll('.filters button').forEach(btn => {
     btn.classList.add('active');
   });
 });
+
+// ── Load product photos from API ──
+(function(){
+  const PRODUCTS = ['dv','cm','db'];
+  PRODUCTS.forEach(async pid => {
+    try {
+      const res = await fetch('/api/photos/' + pid);
+      if (!res.ok) return;
+      const { photos } = await res.json();
+      if (!photos || photos.length === 0) return;
+
+      const container = document.getElementById('card-img-' + pid);
+      const placeholder = document.getElementById('card-placeholder-' + pid);
+      if (!container) return;
+
+      // Hide placeholder
+      if (placeholder) placeholder.style.display = 'none';
+
+      // Create photo strip
+      const strip = document.createElement('div');
+      strip.className = 'card-photos';
+      photos.forEach(ph => {
+        const img = document.createElement('img');
+        img.src = '/api/photo/' + ph.id;
+        img.alt = ph.filename || 'Product photo';
+        img.loading = 'lazy';
+        strip.appendChild(img);
+      });
+      container.insertBefore(strip, container.querySelector('.card-tag'));
+
+      if (photos.length === 1) return; // no nav needed
+
+      // Arrows
+      const prev = document.createElement('button');
+      prev.className = 'card-photo-arrow prev'; prev.innerHTML = '‹'; prev.type = 'button';
+      const next = document.createElement('button');
+      next.className = 'card-photo-arrow next'; next.innerHTML = '›'; next.type = 'button';
+      container.appendChild(prev); container.appendChild(next);
+
+      // Dots
+      const nav = document.createElement('div'); nav.className = 'card-photo-nav';
+      photos.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'card-photo-dot' + (i===0?' active':'');
+        dot.type = 'button';
+        dot.addEventListener('click', () => goto(i));
+        nav.appendChild(dot);
+      });
+      container.appendChild(nav);
+
+      let cur = 0;
+      const imgs = strip.querySelectorAll('img');
+      const dots = nav.querySelectorAll('.card-photo-dot');
+
+      function goto(n) {
+        cur = (n + photos.length) % photos.length;
+        imgs.forEach((img, i) => img.style.transform = `translateX(${(i - cur) * 100}%)`);
+        dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+      }
+      // Init positions
+      imgs.forEach((img, i) => img.style.transform = `translateX(${i * 100}%)`);
+
+      prev.addEventListener('click', () => goto(cur - 1));
+      next.addEventListener('click', () => goto(cur + 1));
+
+      // Auto-advance every 4s
+      let timer = setInterval(() => goto(cur + 1), 4000);
+      container.addEventListener('mouseenter', () => clearInterval(timer));
+      container.addEventListener('mouseleave', () => { timer = setInterval(() => goto(cur + 1), 4000); });
+
+    } catch(e) { /* silently fall back to placeholder */ }
+  });
+})();
+
 </script>
 
 </body>

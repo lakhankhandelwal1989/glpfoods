@@ -7,238 +7,143 @@
 <meta name="robots" content="noindex, nofollow" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 :root{
   --ivory:#FFFBF1; --cream:#F5ECDA; --paper:#FAF3E1; --mist:#E6D8B9;
   --terracotta:#9A5028; --terracotta-2:#7E3F1F; --brick:#5A2812;
   --ink:#2A1F18; --soft-ink:#4A3A2E; --gold:#C9863E;
   --green:#2F5538; --red:#A8362A;
-  --serif:"Cormorant Garamond", serif;
-  --body:"Manrope", system-ui, sans-serif;
+  --serif:"Cormorant Garamond",serif; --body:"Manrope",system-ui,sans-serif;
 }
-*{box-sizing:border-box; margin:0; padding:0}
-body{
-  background:var(--paper); color:var(--ink); font-family:var(--body); font-size:14px;
-  line-height:1.5; min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-}
-a{color:inherit; text-decoration:none}
-button{font:inherit; cursor:pointer; border:none; background:none; color:inherit}
-input, select{font:inherit; color:inherit}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font:inherit;color:inherit}
+.hidden{display:none!important}
 
-/* ───── Login ───── */
-.login-wrap{
-  min-height:100vh; display:grid; place-items:center; padding:24px;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(154,80,40,.08), transparent 60%),
-    var(--paper);
-}
-.login-card{
-  width:100%; max-width:440px;
-  background:var(--ivory); padding:48px 40px; border-radius:8px;
-  border:1px solid rgba(154,80,40,.15);
-  box-shadow:0 24px 60px -24px rgba(42,31,24,.2);
-}
-.login-card .brand{
-  text-align:center; margin-bottom:32px;
-}
-.login-card .brand img{height:80px; margin:0 auto 16px; display:block}
-.login-card h1{
-  font-family:var(--serif); font-style:italic; font-weight:500;
-  font-size:28px; color:var(--ink); margin-bottom:6px;
-}
-.login-card .sub{
-  font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--terracotta);
-}
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,rgba(154,80,40,.08),transparent 60%),var(--paper)}
+.login-card{width:100%;max-width:440px;background:var(--ivory);padding:48px 40px;border-radius:8px;border:1px solid rgba(154,80,40,.15);box-shadow:0 24px 60px -24px rgba(42,31,24,.2)}
+.login-card .brand{text-align:center;margin-bottom:32px}
+.login-card .brand img{height:80px;margin:0 auto 16px;display:block}
+.login-card h1{font-family:var(--serif);font-style:italic;font-weight:500;font-size:28px;color:var(--ink);margin-bottom:6px}
+.login-card .sub{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--terracotta)}
 .field{margin-bottom:18px}
-.field label{
-  display:block; font-size:11px; letter-spacing:.22em; text-transform:uppercase;
-  font-weight:600; color:var(--soft-ink); margin-bottom:8px;
-}
-.field input{
-  width:100%; padding:14px 16px; border:1px solid rgba(154,80,40,.25); border-radius:6px;
-  background:var(--paper); outline:none; font-size:14px; transition:border .2s ease;
-}
-.field input:focus{border-color:var(--terracotta); background:var(--ivory)}
-.btn-primary{
-  width:100%; padding:14px; background:var(--terracotta); color:var(--ivory);
-  border-radius:6px; font-size:12.5px; letter-spacing:.22em;
-  text-transform:uppercase; font-weight:600; transition:background .2s ease;
-}
+.field label{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--soft-ink);margin-bottom:8px}
+.field input{width:100%;padding:14px 16px;border:1px solid rgba(154,80,40,.25);border-radius:6px;background:var(--paper);outline:none;font-size:14px;transition:border .2s}
+.field input:focus{border-color:var(--terracotta);background:var(--ivory)}
+.field input[disabled]{background:var(--cream);color:var(--soft-ink);cursor:not-allowed}
+.btn-primary{width:100%;padding:14px;background:var(--terracotta);color:var(--ivory);border-radius:6px;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;transition:background .2s}
 .btn-primary:hover{background:var(--brick)}
-.btn-primary:disabled{opacity:.5; cursor:wait}
-.alert{
-  padding:12px 14px; border-radius:6px; margin-bottom:18px; font-size:13px;
-  display:none;
-}
+.btn-primary:disabled{opacity:.5;cursor:wait}
+.alert{padding:12px 14px;border-radius:6px;margin-bottom:18px;font-size:13px;display:none}
 .alert.show{display:block}
-.alert.error{background:#FCE9E5; color:var(--red); border:1px solid rgba(168,54,42,.2)}
-.alert.success{background:#E5F1E7; color:var(--green); border:1px solid rgba(47,85,56,.2)}
-.login-hint{
-  margin-top:20px; padding:14px; background:var(--paper); border-radius:6px;
-  font-size:12px; color:var(--soft-ink); text-align:center;
-  border:1px dashed rgba(154,80,40,.25);
-}
+.alert.error{background:#FCE9E5;color:var(--red);border:1px solid rgba(168,54,42,.2)}
+.alert.success{background:#E5F1E7;color:var(--green);border:1px solid rgba(47,85,56,.2)}
+.login-hint{margin-top:20px;padding:14px;background:var(--paper);border-radius:6px;font-size:12px;color:var(--soft-ink);text-align:center;border:1px dashed rgba(154,80,40,.25)}
 .login-hint b{color:var(--terracotta)}
 
-/* ───── App ───── */
-.hidden{display:none !important}
-
-.app-header{
-  background:var(--ivory); border-bottom:1px solid rgba(154,80,40,.15);
-  position:sticky; top:0; z-index:10;
-}
-.app-header-inner{
-  max-width:1200px; margin:0 auto; padding:14px 24px;
-  display:flex; align-items:center; gap:16px;
-}
+/* ── LAYOUT ── */
+.app-header{background:var(--ivory);border-bottom:1px solid rgba(154,80,40,.15);position:sticky;top:0;z-index:10}
+.app-header-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
 .app-header img{height:42px}
-.app-header .name{
-  font-family:var(--serif); font-style:italic; font-size:20px; color:var(--ink);
-}
-.app-header .sub{
-  font-size:10.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--terracotta); font-weight:600;
-}
+.app-header .name{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink)}
+.app-header .sub{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--terracotta);font-weight:600}
 .app-header .spacer{flex:1}
-.app-header .who{
-  font-size:12px; color:var(--soft-ink);
-  padding-right:16px; border-right:1px solid rgba(154,80,40,.15);
-}
+.app-header .who{font-size:12px;color:var(--soft-ink);padding-right:16px;border-right:1px solid rgba(154,80,40,.15)}
 .app-header .who b{color:var(--ink)}
-.app-header .logout{
-  font-size:11px; letter-spacing:.22em; text-transform:uppercase; font-weight:600;
-  color:var(--terracotta); padding:8px 14px; border:1px solid rgba(154,80,40,.3);
-  border-radius:999px; transition:all .2s ease;
-}
-.app-header .logout:hover{background:var(--terracotta); color:var(--ivory)}
+.app-header .logout{font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--terracotta);padding:8px 14px;border:1px solid rgba(154,80,40,.3);border-radius:999px;transition:all .2s}
+.app-header .logout:hover{background:var(--terracotta);color:var(--ivory)}
+.app{max-width:1200px;margin:0 auto;padding:32px 24px 80px}
 
-.app{max-width:1200px; margin:0 auto; padding:32px 24px 80px}
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;margin-bottom:32px;background:var(--ivory);padding:6px;border-radius:999px;border:1px solid rgba(154,80,40,.15);width:fit-content}
+.tabs button{padding:10px 22px;border-radius:999px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--soft-ink);transition:all .2s}
+.tabs button.active{background:var(--terracotta);color:var(--ivory)}
 
-.tabs{
-  display:flex; gap:4px; margin-bottom:32px;
-  background:var(--ivory); padding:6px; border-radius:999px;
-  border:1px solid rgba(154,80,40,.15); width:fit-content;
-}
-.tabs button{
-  padding:10px 22px; border-radius:999px;
-  font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:600;
-  color:var(--soft-ink); transition:all .2s ease;
-}
-.tabs button.active{background:var(--terracotta); color:var(--ivory)}
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.stat{background:var(--ivory);padding:24px;border-radius:8px;border:1px solid rgba(154,80,40,.12)}
+.stat .label{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--terracotta);font-weight:600;margin-bottom:12px}
+.stat .value{font-family:var(--serif);font-size:38px;font-weight:500;color:var(--ink);line-height:1}
+.stat .delta{font-size:12px;color:var(--soft-ink);margin-top:6px}
 
-.stats{
-  display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:32px;
-}
-.stat{
-  background:var(--ivory); padding:24px; border-radius:8px;
-  border:1px solid rgba(154,80,40,.12);
-}
-.stat .label{
-  font-size:10.5px; letter-spacing:.28em; text-transform:uppercase;
-  color:var(--terracotta); font-weight:600; margin-bottom:12px;
-}
-.stat .value{
-  font-family:var(--serif); font-size:38px; font-weight:500; color:var(--ink);
-  line-height:1;
-}
-.stat .delta{
-  font-size:12px; color:var(--soft-ink); margin-top:6px;
-}
-
-.toolbar{
-  display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px; align-items:center;
-}
-.toolbar .search{
-  flex:1; min-width:240px; padding:12px 16px; background:var(--ivory);
-  border:1px solid rgba(154,80,40,.18); border-radius:6px;
-  font-size:14px; outline:none;
-}
+/* ── TABLE ── */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.toolbar .search{flex:1;min-width:240px;padding:12px 16px;background:var(--ivory);border:1px solid rgba(154,80,40,.18);border-radius:6px;font-size:14px;outline:none}
 .toolbar .search:focus{border-color:var(--terracotta)}
-.toolbar .btn{
-  padding:11px 18px; border-radius:6px; background:var(--ivory);
-  border:1px solid rgba(154,80,40,.25); color:var(--soft-ink);
-  font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; font-weight:600;
-  display:inline-flex; align-items:center; gap:8px;
-}
-.toolbar .btn:hover{border-color:var(--terracotta); color:var(--terracotta)}
-.toolbar .btn.solid{background:var(--terracotta); color:var(--ivory); border-color:var(--terracotta)}
-.toolbar .btn.solid:hover{background:var(--brick); color:var(--ivory)}
-
-.table-wrap{
-  background:var(--ivory); border-radius:8px; overflow:hidden;
-  border:1px solid rgba(154,80,40,.12);
-}
+.toolbar .btn{padding:11px 18px;border-radius:6px;background:var(--ivory);border:1px solid rgba(154,80,40,.25);color:var(--soft-ink);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;display:inline-flex;align-items:center;gap:8px}
+.toolbar .btn:hover{border-color:var(--terracotta);color:var(--terracotta)}
+.toolbar .btn.solid{background:var(--terracotta);color:var(--ivory);border-color:var(--terracotta)}
+.toolbar .btn.solid:hover{background:var(--brick);color:var(--ivory)}
+.table-wrap{background:var(--ivory);border-radius:8px;overflow:hidden;border:1px solid rgba(154,80,40,.12)}
 .table-scroll{overflow-x:auto}
-table{width:100%; border-collapse:collapse; min-width:720px}
-thead th{
-  text-align:left; padding:14px 18px; background:var(--paper);
-  font-size:10.5px; letter-spacing:.28em; text-transform:uppercase;
-  color:var(--soft-ink); font-weight:600; border-bottom:1px solid rgba(154,80,40,.12);
-}
-tbody td{
-  padding:14px 18px; border-bottom:1px solid rgba(154,80,40,.08);
-  font-size:13.5px; color:var(--ink);
-}
+table{width:100%;border-collapse:collapse;min-width:720px}
+thead th{text-align:left;padding:14px 18px;background:var(--paper);font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--soft-ink);font-weight:600;border-bottom:1px solid rgba(154,80,40,.12)}
+tbody td{padding:14px 18px;border-bottom:1px solid rgba(154,80,40,.08);font-size:13.5px;color:var(--ink)}
 tbody tr:hover{background:var(--paper)}
 tbody tr:last-child td{border-bottom:none}
 .cell-name{font-weight:600}
-.cell-phone{font-variant-numeric:tabular-nums; color:var(--terracotta); font-weight:500}
-.cell-lang{
-  display:inline-block; padding:3px 10px; border-radius:999px;
-  background:var(--cream); font-size:10.5px; letter-spacing:.18em;
-  text-transform:uppercase; color:var(--terracotta-2); font-weight:600;
-}
-.cell-date{color:var(--soft-ink); font-size:12.5px; font-variant-numeric:tabular-nums}
-.row-delete{
-  color:var(--soft-ink); padding:4px 10px; border-radius:4px;
-  font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
-  transition:color .2s ease;
-}
+.cell-phone{font-variant-numeric:tabular-nums;color:var(--terracotta);font-weight:500}
+.cell-lang{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--cream);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--terracotta-2);font-weight:600}
+.cell-date{color:var(--soft-ink);font-size:12.5px;font-variant-numeric:tabular-nums}
+.row-delete{color:var(--soft-ink);padding:4px 10px;border-radius:4px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;transition:color .2s}
 .row-delete:hover{color:var(--red)}
+.empty{padding:64px 24px;text-align:center;color:var(--soft-ink)}
+.empty h3{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--ink);margin-bottom:8px}
 
-.empty{
-  padding:64px 24px; text-align:center; color:var(--soft-ink);
-}
-.empty h3{font-family:var(--serif); font-style:italic; font-size:24px; color:var(--ink); margin-bottom:8px}
+/* ── SETTINGS ── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.panel{background:var(--ivory);padding:32px;border-radius:8px;border:1px solid rgba(154,80,40,.12)}
+.panel h2{font-family:var(--serif);font-style:italic;font-size:24px;font-weight:500;color:var(--ink);margin-bottom:6px}
+.panel .panel-sub{font-size:13px;color:var(--soft-ink);margin-bottom:24px}
 
-/* ───── Settings ───── */
-.settings-grid{
-  display:grid; grid-template-columns:1fr 1fr; gap:24px;
-}
-.panel{
-  background:var(--ivory); padding:32px; border-radius:8px;
-  border:1px solid rgba(154,80,40,.12);
-}
-.panel h2{
-  font-family:var(--serif); font-style:italic; font-size:24px; font-weight:500;
-  color:var(--ink); margin-bottom:6px;
-}
-.panel .panel-sub{
-  font-size:13px; color:var(--soft-ink); margin-bottom:24px;
-}
-.panel .field input[disabled]{
-  background:var(--cream); color:var(--soft-ink); cursor:not-allowed;
-}
+/* ── PHOTOS TAB ── */
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.product-panel{background:var(--ivory);border-radius:8px;border:1px solid rgba(154,80,40,.12);overflow:hidden}
+.product-panel-header{padding:20px 24px 16px;border-bottom:1px solid rgba(154,80,40,.1);display:flex;align-items:center;gap:14px}
+.product-panel-header .prod-icon{width:48px;height:48px;background:var(--terracotta);border-radius:6px;display:grid;place-items:center;color:var(--ivory);font-family:var(--serif);font-style:italic;font-size:18px;flex-shrink:0}
+.product-panel-header h3{font-family:var(--serif);font-weight:500;font-size:20px;color:var(--ink);margin-bottom:3px}
+.product-panel-header .prod-sub{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--terracotta);font-weight:600}
+.product-panel-body{padding:20px 24px 24px}
 
-@media (max-width: 800px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .settings-grid{grid-template-columns:1fr}
-  .app-header-inner{flex-wrap:wrap}
-  .app-header .name{font-size:16px}
-}
-@media (max-width: 480px){
-  .stats{grid-template-columns:1fr 1fr}
-  .stat .value{font-size:28px}
-  .login-card{padding:32px 24px}
-}
+/* photo strip */
+.photo-strip{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;min-height:80px;align-items:flex-start}
+.photo-thumb{position:relative;width:80px;height:80px;border-radius:6px;overflow:hidden;border:1px solid rgba(154,80,40,.15);cursor:grab;flex-shrink:0}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-thumb .del-photo{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(42,31,24,.72);color:#fff;display:grid;place-items:center;font-size:10px;border:none;cursor:pointer;transition:background .2s;line-height:1}
+.photo-thumb .del-photo:hover{background:var(--red)}
+.photo-thumb .order-badge{position:absolute;bottom:4px;left:4px;background:rgba(42,31,24,.64);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;letter-spacing:.06em}
+.photo-thumb.dragging{opacity:.4;border:2px dashed var(--terracotta)}
+.photo-empty{color:var(--soft-ink);font-size:13px;font-style:italic;padding:12px 0;opacity:.7}
+
+/* drop zone */
+.drop-zone{border:2px dashed rgba(154,80,40,.3);border-radius:8px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .25s;background:var(--paper);position:relative}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--terracotta);background:rgba(154,80,40,.04)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-zone .dz-icon{font-size:28px;margin-bottom:8px;opacity:.55}
+.drop-zone p{font-size:13px;color:var(--soft-ink);margin-bottom:4px}
+.drop-zone small{font-size:11px;color:var(--soft-ink);opacity:.65;letter-spacing:.12em;text-transform:uppercase}
+.drop-zone.disabled{opacity:.45;pointer-events:none}
+.photo-count{font-size:11.5px;color:var(--soft-ink);margin-top:12px;letter-spacing:.12em;text-transform:uppercase}
+.photo-count b{color:var(--terracotta)}
+
+/* upload progress */
+.upload-progress{margin-top:12px;display:none}
+.upload-progress.show{display:block}
+.progress-bar{height:4px;background:var(--mist);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--terracotta);border-radius:2px;transition:width .3s ease;width:0}
+.upload-status{font-size:12px;color:var(--soft-ink);margin-top:6px;text-align:center}
+
+@media(max-width:900px){.photos-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.settings-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.stat .value{font-size:28px}.login-card{padding:32px 24px}.app-header-inner{flex-wrap:wrap}}
 </style>
 </head>
-
 <body>
 
-<!-- ────────── LOGIN ────────── -->
+<!-- LOGIN -->
 <div id="login-view" class="login-wrap">
   <div class="login-card">
     <div class="brand">
@@ -246,37 +151,22 @@ tbody tr:last-child td{border-bottom:none}
       <h1>Admin · Ganga Lehari</h1>
       <div class="sub">Family Console</div>
     </div>
-
     <div id="login-alert" class="alert error"></div>
-
     <form id="login-form">
-      <div class="field">
-        <label for="login-username">Username</label>
-        <input id="login-username" type="text" autocomplete="username" required />
-      </div>
-      <div class="field">
-        <label for="login-password">Password</label>
-        <input id="login-password" type="password" autocomplete="current-password" required />
-      </div>
+      <div class="field"><label for="login-username">Username</label><input id="login-username" type="text" autocomplete="username" required /></div>
+      <div class="field"><label for="login-password">Password</label><input id="login-password" type="password" autocomplete="current-password" required /></div>
       <button class="btn-primary" type="submit" id="login-btn">Sign In</button>
     </form>
-
-    <div class="login-hint">
-      Default credentials: <b>Lakhan / Lakhan</b><br/>
-      <span style="opacity:.7">Please change these immediately after first login.</span>
-    </div>
+    <div class="login-hint">Default credentials: <b>Lakhan / Lakhan</b><br/><span style="opacity:.7">Change these immediately after first login.</span></div>
   </div>
 </div>
 
-<!-- ────────── APP ────────── -->
+<!-- APP -->
 <div id="app-view" class="hidden">
   <header class="app-header">
     <div class="app-header-inner">
       <img src="/GLP_Logo.png" alt="GLP" />
-      <div>
-        <div class="name">Family Console</div>
-        <div class="sub">Ganga Lehari Pansari · Admin</div>
-      </div>
+      <div><div class="name">Family Console</div><div class="sub">Ganga Lehari Pansari · Admin</div></div>
       <div class="spacer"></div>
       <div class="who">Signed in as <b id="header-username">—</b></div>
       <button id="logout-btn" class="logout">Logout</button>
@@ -286,104 +176,128 @@ tbody tr:last-child td{border-bottom:none}
   <main class="app">
     <div class="tabs">
       <button data-tab="leads" class="active">Leads</button>
+      <button data-tab="photos">Photos</button>
       <button data-tab="settings">Settings</button>
     </div>
 
-    <!-- LEADS TAB -->
+    <!-- LEADS -->
     <section id="tab-leads">
       <div class="stats">
-        <div class="stat">
-          <div class="label">Total Leads</div>
-          <div class="value" id="stat-total">—</div>
-          <div class="delta">All-time chatbot signups</div>
-        </div>
-        <div class="stat">
-          <div class="label">Today</div>
-          <div class="value" id="stat-today">—</div>
-          <div class="delta">Captured today</div>
-        </div>
-        <div class="stat">
-          <div class="label">English</div>
-          <div class="value" id="stat-en">—</div>
-          <div class="delta">Preferred EN</div>
-        </div>
-        <div class="stat">
-          <div class="label">Hindi</div>
-          <div class="value" id="stat-hi">—</div>
-          <div class="delta">Preferred HI</div>
-        </div>
+        <div class="stat"><div class="label">Total Leads</div><div class="value" id="stat-total">—</div><div class="delta">All-time chatbot signups</div></div>
+        <div class="stat"><div class="label">Today</div><div class="value" id="stat-today">—</div><div class="delta">Captured today</div></div>
+        <div class="stat"><div class="label">English</div><div class="value" id="stat-en">—</div><div class="delta">Preferred EN</div></div>
+        <div class="stat"><div class="label">Hindi</div><div class="value" id="stat-hi">—</div><div class="delta">Preferred HI</div></div>
       </div>
-
       <div class="toolbar">
         <input id="search" class="search" type="search" placeholder="Search by name, phone, city…" />
         <button id="refresh-btn" class="btn">↻ Refresh</button>
         <a id="export-btn" class="btn solid" href="/admin/api/leads.csv" download>↓ Export CSV</a>
       </div>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Lang</th><th>Source</th><th>Captured</th><th style="text-align:right">Action</th></tr></thead>
+          <tbody id="leads-body"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+        </table>
+      </div></div>
+    </section>
 
-      <div class="table-wrap">
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>City</th>
-                <th>Lang</th>
-                <th>Source</th>
-                <th>Captured</th>
-                <th style="text-align:right">Action</th>
-              </tr>
-            </thead>
-            <tbody id="leads-body">
-              <tr><td colspan="7" class="empty">Loading…</td></tr>
-            </tbody>
-          </table>
+    <!-- PHOTOS -->
+    <section id="tab-photos" class="hidden">
+      <div style="margin-bottom:24px">
+        <h2 style="font-family:var(--serif);font-style:italic;font-size:26px;font-weight:500;color:var(--ink);margin-bottom:6px">Product Photos</h2>
+        <p style="font-size:13px;color:var(--soft-ink)">Upload up to 5 photos per product. Drag thumbnails to reorder. Photos are served directly on the storefront.</p>
+      </div>
+      <div class="photos-grid">
+
+        <!-- Dahi Vada -->
+        <div class="product-panel">
+          <div class="product-panel-header">
+            <div class="prod-icon">DV</div>
+            <div><h3>Dahi Vada</h3><div class="prod-sub">Premix · ₹120</div></div>
+          </div>
+          <div class="product-panel-body">
+            <div class="photo-strip" id="strip-dv" data-product="dv"></div>
+            <div class="drop-zone" id="dz-dv" data-product="dv">
+              <input type="file" accept="image/jpeg,image/png,image/webp" multiple id="file-dv" data-product="dv" />
+              <div class="dz-icon">📷</div>
+              <p>Drop photos here or click to browse</p>
+              <small>JPEG · PNG · WEBP · Max 4 MB each</small>
+            </div>
+            <div class="photo-count" id="count-dv"><b>0</b> / 5 photos</div>
+            <div class="upload-progress" id="prog-dv">
+              <div class="progress-bar"><div class="progress-fill" id="fill-dv"></div></div>
+              <div class="upload-status" id="status-dv">Uploading…</div>
+            </div>
+          </div>
         </div>
+
+        <!-- Chaat Masala -->
+        <div class="product-panel">
+          <div class="product-panel-header">
+            <div class="prod-icon">CM</div>
+            <div><h3>Chaat Masala</h3><div class="prod-sub">Classic · ₹100</div></div>
+          </div>
+          <div class="product-panel-body">
+            <div class="photo-strip" id="strip-cm" data-product="cm"></div>
+            <div class="drop-zone" id="dz-cm" data-product="cm">
+              <input type="file" accept="image/jpeg,image/png,image/webp" multiple id="file-cm" data-product="cm" />
+              <div class="dz-icon">📷</div>
+              <p>Drop photos here or click to browse</p>
+              <small>JPEG · PNG · WEBP · Max 4 MB each</small>
+            </div>
+            <div class="photo-count" id="count-cm"><b>0</b> / 5 photos</div>
+            <div class="upload-progress" id="prog-cm">
+              <div class="progress-bar"><div class="progress-fill" id="fill-cm"></div></div>
+              <div class="upload-status" id="status-cm">Uploading…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doodh Bahaar -->
+        <div class="product-panel">
+          <div class="product-panel-header">
+            <div class="prod-icon">DB</div>
+            <div><h3>Doodh Bahaar</h3><div class="prod-sub">Saffron Milk · ₹220</div></div>
+          </div>
+          <div class="product-panel-body">
+            <div class="photo-strip" id="strip-db" data-product="db"></div>
+            <div class="drop-zone" id="dz-db" data-product="db">
+              <input type="file" accept="image/jpeg,image/png,image/webp" multiple id="file-db" data-product="db" />
+              <div class="dz-icon">📷</div>
+              <p>Drop photos here or click to browse</p>
+              <small>JPEG · PNG · WEBP · Max 4 MB each</small>
+            </div>
+            <div class="photo-count" id="count-db"><b>0</b> / 5 photos</div>
+            <div class="upload-progress" id="prog-db">
+              <div class="progress-bar"><div class="progress-fill" id="fill-db"></div></div>
+              <div class="upload-status" id="status-db">Uploading…</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- SETTINGS TAB -->
+    <!-- SETTINGS -->
     <section id="tab-settings" class="hidden">
       <div class="settings-grid">
         <div class="panel">
           <h2>Change Credentials</h2>
-          <p class="panel-sub">Update your admin username and/or password. Current password is required to confirm.</p>
-
+          <p class="panel-sub">Update your admin username and/or password. Current password required to confirm.</p>
           <div id="cred-alert" class="alert"></div>
-
           <form id="cred-form">
-            <div class="field">
-              <label for="cur-pass">Current Password</label>
-              <input id="cur-pass" type="password" autocomplete="current-password" required />
-            </div>
-            <div class="field">
-              <label for="new-user">New Username (optional)</label>
-              <input id="new-user" type="text" autocomplete="username" placeholder="Leave blank to keep current" />
-            </div>
-            <div class="field">
-              <label for="new-pass">New Password (optional)</label>
-              <input id="new-pass" type="password" autocomplete="new-password" placeholder="Leave blank to keep current" />
-            </div>
+            <div class="field"><label for="cur-pass">Current Password</label><input id="cur-pass" type="password" autocomplete="current-password" required /></div>
+            <div class="field"><label for="new-user">New Username (optional)</label><input id="new-user" type="text" autocomplete="username" placeholder="Leave blank to keep current" /></div>
+            <div class="field"><label for="new-pass">New Password (optional)</label><input id="new-pass" type="password" autocomplete="new-password" placeholder="Leave blank to keep current" /></div>
             <button class="btn-primary" type="submit">Save Changes</button>
           </form>
         </div>
-
         <div class="panel">
           <h2>System</h2>
           <p class="panel-sub">Database connection and current admin account.</p>
-
-          <div class="field">
-            <label>Current Username</label>
-            <input id="settings-username" type="text" disabled />
-          </div>
-          <div class="field">
-            <label>Database Status</label>
-            <input type="text" value="Connected · PostgreSQL" disabled />
-          </div>
-          <div class="field">
-            <label>Site URL</label>
-            <input id="settings-url" type="text" disabled />
-          </div>
+          <div class="field"><label>Current Username</label><input id="settings-username" type="text" disabled /></div>
+          <div class="field"><label>Database Status</label><input type="text" value="Connected · PostgreSQL" disabled /></div>
+          <div class="field"><label>Site URL</label><input id="settings-url" type="text" disabled /></div>
         </div>
       </div>
     </section>
@@ -392,219 +306,272 @@ tbody tr:last-child td{border-bottom:none}
 
 <script>
 'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
 
-const $ = sel => document.querySelector(sel);
-const $$ = sel => document.querySelectorAll(sel);
-
-// ───── Auth check on load ─────
+// ── Auth ──
 async function init() {
   try {
     const res = await fetch('/admin/api/me', { credentials: 'same-origin' });
-    if (res.ok) {
-      const me = await res.json();
-      showApp(me.username);
-      loadLeads();
-    } else {
-      showLogin();
-    }
-  } catch {
-    showLogin();
-  }
+    if (res.ok) { const me = await res.json(); showApp(me.username); loadLeads(); loadAllPhotos(); }
+    else showLogin();
+  } catch { showLogin(); }
+}
+function showLogin() { $('#login-view').classList.remove('hidden'); $('#app-view').classList.add('hidden'); }
+function showApp(u) {
+  $('#login-view').classList.add('hidden'); $('#app-view').classList.remove('hidden');
+  $('#header-username').textContent = u; $('#settings-username').value = u; $('#settings-url').value = location.origin;
 }
 
-function showLogin() {
-  $('#login-view').classList.remove('hidden');
-  $('#app-view').classList.add('hidden');
-}
-
-function showApp(username) {
-  $('#login-view').classList.add('hidden');
-  $('#app-view').classList.remove('hidden');
-  $('#header-username').textContent = username;
-  $('#settings-username').value = username;
-  $('#settings-url').value = location.origin;
-}
-
-// ───── Login form ─────
 $('#login-form').addEventListener('submit', async e => {
   e.preventDefault();
-  const username = $('#login-username').value.trim();
-  const password = $('#login-password').value;
-  const btn = $('#login-btn');
-  const alertBox = $('#login-alert');
-
-  btn.disabled = true; btn.textContent = 'Signing in…';
-  alertBox.classList.remove('show');
-
+  const btn = $('#login-btn'); const al = $('#login-alert');
+  btn.disabled = true; btn.textContent = 'Signing in…'; al.classList.remove('show');
   try {
-    const res = await fetch('/admin/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin',
-      body: JSON.stringify({ username, password })
-    });
+    const res = await fetch('/admin/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin', body: JSON.stringify({ username: $('#login-username').value.trim(), password: $('#login-password').value }) });
     const data = await res.json();
-
-    if (res.ok) {
-      showApp(data.username);
-      loadLeads();
-      $('#login-form').reset();
-    } else {
-      alertBox.textContent = data.error || 'Login failed';
-      alertBox.classList.add('show');
-    }
-  } catch (err) {
-    alertBox.textContent = 'Network error. Please try again.';
-    alertBox.classList.add('show');
-  } finally {
-    btn.disabled = false; btn.textContent = 'Sign In';
-  }
+    if (res.ok) { showApp(data.username); loadLeads(); loadAllPhotos(); $('#login-form').reset(); }
+    else { al.textContent = data.error || 'Login failed'; al.classList.add('show'); }
+  } catch { al.textContent = 'Network error.'; al.classList.add('show'); }
+  finally { btn.disabled = false; btn.textContent = 'Sign In'; }
 });
+$('#logout-btn').addEventListener('click', async () => { await fetch('/admin/api/logout',{method:'POST',credentials:'same-origin'}); showLogin(); });
 
-// ───── Logout ─────
-$('#logout-btn').addEventListener('click', async () => {
-  await fetch('/admin/api/logout', { method: 'POST', credentials: 'same-origin' });
-  showLogin();
-});
+// ── Tabs ──
+$$('.tabs button').forEach(btn => btn.addEventListener('click', () => {
+  $$('.tabs button').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+  const t = btn.dataset.tab;
+  $('#tab-leads').classList.toggle('hidden', t !== 'leads');
+  $('#tab-photos').classList.toggle('hidden', t !== 'photos');
+  $('#tab-settings').classList.toggle('hidden', t !== 'settings');
+}));
 
-// ───── Tabs ─────
-$$('.tabs button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    $$('.tabs button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const tab = btn.dataset.tab;
-    $('#tab-leads').classList.toggle('hidden', tab !== 'leads');
-    $('#tab-settings').classList.toggle('hidden', tab !== 'settings');
-  });
-});
-
-// ───── Leads ─────
+// ── Leads ──
 let allLeads = [];
-
 async function loadLeads() {
   try {
-    const res = await fetch('/admin/api/leads?limit=500', { credentials: 'same-origin' });
+    const res = await fetch('/admin/api/leads?limit=500', { credentials:'same-origin' });
     if (!res.ok) { if (res.status === 401) showLogin(); return; }
-    const data = await res.json();
-    allLeads = data.leads;
-    renderStats(data, allLeads);
+    const data = await res.json(); allLeads = data.leads;
+    $('#stat-total').textContent = data.total ?? allLeads.length;
+    $('#stat-today').textContent = data.today ?? 0;
+    $('#stat-en').textContent = allLeads.filter(l => l.language==='en').length;
+    $('#stat-hi').textContent = allLeads.filter(l => l.language==='hi').length;
     renderLeads(allLeads);
-  } catch (err) {
-    console.error(err);
-  }
+  } catch(e) { console.error(e); }
 }
-
-function renderStats(data, leads) {
-  $('#stat-total').textContent = data.total ?? leads.length;
-  $('#stat-today').textContent = data.today ?? 0;
-  const en = leads.filter(l => l.language === 'en').length;
-  const hi = leads.filter(l => l.language === 'hi').length;
-  $('#stat-en').textContent = en;
-  $('#stat-hi').textContent = hi;
-}
-
 function renderLeads(leads) {
   const body = $('#leads-body');
-  if (!leads.length) {
-    body.innerHTML = `<tr><td colspan="7" class="empty">
-      <h3>No leads yet</h3>
-      <p>When customers chat with the bot on the homepage, they'll appear here.</p>
-    </td></tr>`;
-    return;
-  }
-  body.innerHTML = leads.map(lead => `
-    <tr data-id="${lead.id}">
-      <td class="cell-name">${escapeHtml(lead.name)}</td>
-      <td class="cell-phone">${escapeHtml(lead.phone)}</td>
-      <td>${escapeHtml(lead.location || '—')}</td>
-      <td><span class="cell-lang">${escapeHtml(lead.language || 'en')}</span></td>
-      <td style="color:var(--soft-ink); font-size:12.5px">${escapeHtml(lead.source || 'chatbot')}</td>
-      <td class="cell-date">${formatDate(lead.created_at)}</td>
-      <td style="text-align:right">
-        <button class="row-delete" data-delete="${lead.id}">Delete</button>
-      </td>
-    </tr>
-  `).join('');
+  if (!leads.length) { body.innerHTML = `<tr><td colspan="7" class="empty"><h3>No leads yet</h3><p>Customers who chat will appear here.</p></td></tr>`; return; }
+  body.innerHTML = leads.map(l => `<tr data-id="${l.id}">
+    <td class="cell-name">${esc(l.name)}</td><td class="cell-phone">${esc(l.phone)}</td>
+    <td>${esc(l.location||'—')}</td><td><span class="cell-lang">${esc(l.language||'en')}</span></td>
+    <td style="color:var(--soft-ink);font-size:12.5px">${esc(l.source||'chatbot')}</td>
+    <td class="cell-date">${fmt(l.created_at)}</td>
+    <td style="text-align:right"><button class="row-delete" data-delete="${l.id}">Delete</button></td>
+  </tr>`).join('');
+  body.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', async () => {
+    if (!confirm('Delete this lead permanently?')) return;
+    const res = await fetch(`/admin/api/leads/${btn.dataset.delete}`,{method:'DELETE',credentials:'same-origin'});
+    if (res.ok) loadLeads();
+  }));
+}
+function esc(s) { return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmt(d) { if(!d) return '—'; return new Date(d).toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+$('#search').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase().trim();
+  renderLeads(q ? allLeads.filter(l => (l.name||'').toLowerCase().includes(q)||(l.phone||'').includes(q)||(l.location||'').toLowerCase().includes(q)) : allLeads);
+});
+$('#refresh-btn').addEventListener('click', loadLeads);
 
-  body.querySelectorAll('[data-delete]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!confirm('Delete this lead permanently?')) return;
-      const id = btn.dataset.delete;
-      const res = await fetch(`/admin/api/leads/${id}`, {
-        method: 'DELETE', credentials: 'same-origin'
-      });
-      if (res.ok) loadLeads();
+// ── Photos ──
+const PRODUCTS = ['dv','cm','db'];
+// photoState[pid] = array of {id, filename, mimetype, sort_order}
+const photoState = { dv:[], cm:[], db:[] };
+
+async function loadAllPhotos() {
+  for (const pid of PRODUCTS) await loadPhotos(pid);
+}
+
+async function loadPhotos(pid) {
+  try {
+    const res = await fetch(`/api/photos/${pid}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    photoState[pid] = data.photos;
+    renderPhotos(pid);
+  } catch(e) { console.error(e); }
+}
+
+function renderPhotos(pid) {
+  const strip = $(`#strip-${pid}`);
+  const count = $(`#count-${pid}`);
+  const dz = $(`#dz-${pid}`);
+  const photos = photoState[pid];
+
+  strip.innerHTML = '';
+  if (photos.length === 0) {
+    strip.innerHTML = '<div class="photo-empty">No photos yet — upload below.</div>';
+  } else {
+    photos.forEach((ph, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'photo-thumb';
+      thumb.draggable = true;
+      thumb.dataset.id = ph.id;
+      thumb.dataset.pid = pid;
+      thumb.innerHTML = `
+        <img src="/api/photo/${ph.id}" alt="${esc(ph.filename)}" loading="lazy"/>
+        <button class="del-photo" data-id="${ph.id}" data-pid="${pid}" title="Delete">✕</button>
+        <div class="order-badge">${i+1}</div>
+      `;
+      strip.appendChild(thumb);
+    });
+  }
+
+  // count badge
+  count.innerHTML = `<b>${photos.length}</b> / 5 photos`;
+
+  // disable drop zone if at limit
+  if (photos.length >= 5) {
+    dz.classList.add('disabled');
+    dz.querySelector('p').textContent = 'Limit reached — delete a photo to upload more';
+  } else {
+    dz.classList.remove('disabled');
+    dz.querySelector('p').textContent = 'Drop photos here or click to browse';
+  }
+
+  // delete buttons
+  strip.querySelectorAll('.del-photo').forEach(btn => btn.addEventListener('click', async () => {
+    if (!confirm('Delete this photo?')) return;
+    const res = await fetch(`/admin/api/photos/${btn.dataset.id}`,{method:'DELETE',credentials:'same-origin'});
+    if (res.ok) await loadPhotos(btn.dataset.pid);
+  }));
+
+  // drag-to-reorder
+  setupDrag(pid);
+}
+
+function setupDrag(pid) {
+  const strip = $(`#strip-${pid}`);
+  let dragSrc = null;
+  strip.querySelectorAll('.photo-thumb').forEach(el => {
+    el.addEventListener('dragstart', () => { dragSrc = el; el.classList.add('dragging'); });
+    el.addEventListener('dragend', () => { el.classList.remove('dragging'); dragSrc = null; });
+    el.addEventListener('dragover', e => e.preventDefault());
+    el.addEventListener('drop', async e => {
+      e.preventDefault();
+      if (!dragSrc || dragSrc === el) return;
+      const thumbs = [...strip.querySelectorAll('.photo-thumb')];
+      const fromIdx = thumbs.indexOf(dragSrc);
+      const toIdx = thumbs.indexOf(el);
+      thumbs.splice(fromIdx, 1); thumbs.splice(toIdx, 0, dragSrc);
+      thumbs.forEach(t => strip.appendChild(t));
+      // update badges
+      strip.querySelectorAll('.order-badge').forEach((b,i) => b.textContent = i+1);
+      // persist to server
+      const order = thumbs.map(t => parseInt(t.dataset.id));
+      await fetch('/admin/api/photos/reorder',{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({productId:pid,order})});
+      photoState[pid] = order.map(id => photoState[pid].find(p => p.id === id));
     });
   });
 }
 
-function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-}
-function formatDate(d) {
-  if (!d) return '—';
-  const dt = new Date(d);
-  return dt.toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
-}
-
-$('#search').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase().trim();
-  if (!q) return renderLeads(allLeads);
-  const filtered = allLeads.filter(l =>
-    (l.name || '').toLowerCase().includes(q) ||
-    (l.phone || '').includes(q) ||
-    (l.location || '').toLowerCase().includes(q)
-  );
-  renderLeads(filtered);
+// File input change handler
+$$('input[type=file]').forEach(input => {
+  input.addEventListener('change', () => handleFiles(input.dataset.product, input.files));
 });
 
-$('#refresh-btn').addEventListener('click', loadLeads);
+// Drag-over/drop on drop zone
+$$('.drop-zone').forEach(dz => {
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('drag-over');
+    if (dz.classList.contains('disabled')) return;
+    handleFiles(dz.dataset.product, e.dataTransfer.files);
+  });
+});
 
-// ───── Credentials change ─────
+async function handleFiles(pid, fileList) {
+  const existing = photoState[pid].length;
+  const slots = 5 - existing;
+  if (slots <= 0) { alert('This product already has 5 photos. Delete one first.'); return; }
+
+  const files = [...fileList].slice(0, slots);
+  if (!files.length) return;
+
+  const prog = $(`#prog-${pid}`);
+  const fill = $(`#fill-${pid}`);
+  const status = $(`#status-${pid}`);
+  prog.classList.add('show');
+  fill.style.width = '10%';
+  status.textContent = `Reading ${files.length} file${files.length>1?'s':''}…`;
+
+  const photos = [];
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (!file.type.startsWith('image/')) { alert(`"${file.name}" is not an image. Skipped.`); continue; }
+    if (file.size > 4 * 1024 * 1024) { alert(`"${file.name}" is larger than 4 MB. Skipped.`); continue; }
+    const base64 = await readAsBase64(file);
+    photos.push({ filename: file.name, mimetype: file.type, data: base64 });
+    fill.style.width = `${10 + ((i+1)/files.length)*40}%`;
+  }
+
+  if (!photos.length) { prog.classList.remove('show'); return; }
+
+  status.textContent = 'Uploading…';
+  fill.style.width = '60%';
+
+  try {
+    const res = await fetch(`/admin/api/photos/${pid}`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, credentials:'same-origin',
+      body: JSON.stringify({ photos })
+    });
+    fill.style.width = '90%';
+    const data = await res.json();
+    if (res.ok) {
+      status.textContent = `✓ ${data.inserted.length} photo${data.inserted.length!==1?'s':''} uploaded${data.skipped>0?` (${data.skipped} skipped — limit reached)`:''}.`;
+      fill.style.width = '100%';
+      await loadPhotos(pid);
+      // reset file input
+      const fi = $(`#file-${pid}`); if (fi) fi.value = '';
+    } else {
+      status.textContent = `Error: ${data.error}`;
+      fill.style.width = '0';
+    }
+  } catch(e) {
+    status.textContent = 'Upload failed. Please try again.';
+    fill.style.width = '0';
+  }
+  setTimeout(() => { prog.classList.remove('show'); fill.style.width='0'; }, 4000);
+}
+
+function readAsBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result); // includes data:mime;base64, prefix — server strips it
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── Credentials ──
 $('#cred-form').addEventListener('submit', async e => {
   e.preventDefault();
   const currentPassword = $('#cur-pass').value;
   const newUsername = $('#new-user').value.trim();
   const newPassword = $('#new-pass').value;
-
-  if (!newUsername && !newPassword) {
-    showCredAlert('error', 'Provide a new username or password to update.');
-    return;
-  }
-
+  if (!newUsername && !newPassword) { showCredAlert('error','Provide a new username or password.'); return; }
   try {
-    const res = await fetch('/admin/api/credentials', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin',
-      body: JSON.stringify({ currentPassword, newUsername: newUsername || null, newPassword: newPassword || null })
-    });
+    const res = await fetch('/admin/api/credentials',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({currentPassword,newUsername:newUsername||null,newPassword:newPassword||null})});
     const data = await res.json();
-
-    if (res.ok) {
-      showCredAlert('success', `Updated successfully${data.username ? ` — your username is now ${data.username}` : ''}. New credentials apply on next login.`);
-      $('#cred-form').reset();
-      if (data.username) {
-        $('#header-username').textContent = data.username;
-        $('#settings-username').value = data.username;
-      }
-    } else {
-      showCredAlert('error', data.error || 'Could not update credentials');
-    }
-  } catch {
-    showCredAlert('error', 'Network error. Please try again.');
-  }
+    if (res.ok) { showCredAlert('success',`Updated${data.username?` — username is now ${data.username}`:''}.`); $('#cred-form').reset(); if(data.username){$('#header-username').textContent=data.username;$('#settings-username').value=data.username;} }
+    else showCredAlert('error', data.error||'Could not update');
+  } catch { showCredAlert('error','Network error.'); }
 });
-
-function showCredAlert(kind, msg) {
-  const a = $('#cred-alert');
-  a.className = `alert ${kind} show`;
-  a.textContent = msg;
-  if (kind === 'success') setTimeout(() => a.classList.remove('show'), 6000);
-}
+function showCredAlert(kind,msg){const a=$('#cred-alert');a.className=`alert ${kind} show`;a.textContent=msg;if(kind==='success')setTimeout(()=>a.classList.remove('show'),6000);}
 
 init();
 </script>
-
 </body>
 </html>
