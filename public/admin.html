@@ -402,7 +402,7 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
         <h2 style="font-family:var(--sf);font-style:italic;font-size:24px;font-weight:500;margin-bottom:6px">Photos &amp; Video</h2>
         <p style="font-size:13px;color:var(--si)">Up to 5 photos + 1 video per product. Drag to reorder. Click <b>Preview</b> to check across devices.</p>
       </div>
-      <div class="pgrid">
+      <div class="pgrid" id="photos-grid">
 
         <!-- Hero Video -->
         <div class="ppanel" style="grid-column:1/-1">
@@ -499,58 +499,17 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
           </div>
         </div>
 
-        <div class="ppanel">
-          <div class="pphead"><div class="ppicon">DV</div><div><h3>Dahi Vada</h3><div class="ppsub">Premix · ₹120</div></div></div>
-          <div class="ppbody">
-            <div class="mslabel">Photos</div>
-            <div class="pstrip" id="si-dv" data-pid="dv" data-mt="image"></div>
-            <div class="dz" id="dzi-dv" data-pid="dv" data-mt="image"><input type="file" accept="image/jpeg,image/png,image/webp" multiple data-pid="dv" data-mt="image"/><div class="dzicon">🖼</div><p>Drop photos or click</p><small>JPEG·PNG·WEBP·4MB</small></div>
-            <div class="cntrow" id="ci-dv"><b>0</b>/5</div>
-            <hr class="mdiv"/>
-            <div class="mslabel">Video</div>
-            <div class="pstrip" id="sv-dv" data-pid="dv" data-mt="video"></div>
-            <div class="dz" id="dzv-dv" data-pid="dv" data-mt="video"><input type="file" accept="video/mp4,video/webm" data-pid="dv" data-mt="video"/><div class="dzicon">🎬</div><p>Drop clip or click</p><small>MP4·WebM·15MB</small></div>
-            <div class="cntrow" id="cv-dv"><b>0</b>/1</div>
-            <div class="uprog" id="up-dv"><div class="pbar"><div class="pfill" id="pf-dv"></div></div><div class="pstat" id="ps-dv"></div></div>
-            <button class="prevbtn" data-pid="dv" data-name="Dahi Vada" data-price="₹120" data-sub="Premix" data-desc="Black-eyed bean batter, ready in three steps." data-tags="5 Servings|Veg|3-Step Ready"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 4v16M16 4v16"/></svg>Preview on Site</button>
-          </div>
+        <!-- Dynamic product panels — rendered by JS from /admin/api/catalog -->
+        <!-- Placeholder shown while loading -->
+        <div id="photos-loading" style="grid-column:1/-1;padding:40px;text-align:center;color:var(--si);font-style:italic;font-size:13px">
+          Loading products…
         </div>
-        <div class="ppanel">
-          <div class="pphead"><div class="ppicon">CM</div><div><h3>Chaat Masala</h3><div class="ppsub">Classic · ₹100</div></div></div>
-          <div class="ppbody">
-            <div class="mslabel">Photos</div>
-            <div class="pstrip" id="si-cm" data-pid="cm" data-mt="image"></div>
-            <div class="dz" id="dzi-cm" data-pid="cm" data-mt="image"><input type="file" accept="image/jpeg,image/png,image/webp" multiple data-pid="cm" data-mt="image"/><div class="dzicon">🖼</div><p>Drop photos or click</p><small>JPEG·PNG·WEBP·4MB</small></div>
-            <div class="cntrow" id="ci-cm"><b>0</b>/5</div>
-            <hr class="mdiv"/>
-            <div class="mslabel">Video</div>
-            <div class="pstrip" id="sv-cm" data-pid="cm" data-mt="video"></div>
-            <div class="dz" id="dzv-cm" data-pid="cm" data-mt="video"><input type="file" accept="video/mp4,video/webm" data-pid="cm" data-mt="video"/><div class="dzicon">🎬</div><p>Drop clip or click</p><small>MP4·WebM·15MB</small></div>
-            <div class="cntrow" id="cv-cm"><b>0</b>/1</div>
-            <div class="uprog" id="up-cm"><div class="pbar"><div class="pfill" id="pf-cm"></div></div><div class="pstat" id="ps-cm"></div></div>
-            <button class="prevbtn" data-pid="cm" data-name="Chaat Masala" data-price="₹100" data-sub="Classic" data-desc="Sixteen-spice blend with kachri, anardana & black salt." data-tags="16 Spices|Min. 58% Spice|Veg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 4v16M16 4v16"/></svg>Preview on Site</button>
-          </div>
-        </div>
-        <div class="ppanel">
-          <div class="pphead"><div class="ppicon">DB</div><div><h3>Doodh Bahaar</h3><div class="ppsub">Saffron Milk · ₹220</div></div></div>
-          <div class="ppbody">
-            <div class="mslabel">Photos</div>
-            <div class="pstrip" id="si-db" data-pid="db" data-mt="image"></div>
-            <div class="dz" id="dzi-db" data-pid="db" data-mt="image"><input type="file" accept="image/jpeg,image/png,image/webp" multiple data-pid="db" data-mt="image"/><div class="dzicon">🖼</div><p>Drop photos or click</p><small>JPEG·PNG·WEBP·4MB</small></div>
-            <div class="cntrow" id="ci-db"><b>0</b>/5</div>
-            <hr class="mdiv"/>
-            <div class="mslabel">Video</div>
-            <div class="pstrip" id="sv-db" data-pid="db" data-mt="video"></div>
-            <div class="dz" id="dzv-db" data-pid="db" data-mt="video"><input type="file" accept="video/mp4,video/webm" data-pid="db" data-mt="video"/><div class="dzicon">🎬</div><p>Drop clip or click</p><small>MP4·WebM·15MB</small></div>
-            <div class="cntrow" id="cv-db"><b>0</b>/1</div>
-            <div class="uprog" id="up-db"><div class="pbar"><div class="pfill" id="pf-db"></div></div><div class="pstat" id="ps-db"></div></div>
-            <button class="prevbtn" data-pid="db" data-name="Doodh Bahaar" data-price="₹220" data-sub="Saffron Milk Mix" data-desc="Almonds, pistachios, kesar and Rajasthani warmth." data-tags="Saffron|Pistachio|Limited Batch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 4v16M16 4v16"/></svg>Preview on Site</button>
-          </div>
-        </div>
+
       </div>
     </section>
 
     <!-- SETTINGS -->
+  
     <section id="tab-settings" class="hidden">
       <div class="sgrid">
         <div class="panel">
@@ -1036,9 +995,88 @@ $('#pkgclose').addEventListener('click',()=>{$('#pkgmodal').classList.remove('op
 $('#pkgcancel').addEventListener('click',()=>{$('#pkgmodal').classList.remove('open');document.body.style.overflow='';});
 
 // ── PHOTOS ────────────────────────────────────────────────────────────────────
-const MPIDS=['dv','cm','db','hero'];
-const mstate={dv:{images:[],videos:[]},cm:{images:[],videos:[]},db:{images:[],videos:[]},hero:{images:[],videos:[]}};
-async function loadAllMedia(){for(const p of MPIDS)await loadMedia(p);}
+// mstate keyed by sku — populated dynamically from catalog + hero
+const mstate={hero:{images:[],videos:[]}};
+
+function buildProductPanel(p) {
+  const pid=p.sku;
+  if(!mstate[pid])mstate[pid]={images:[],videos:[]};
+  const price=p.variants&&p.variants[0]?'₹'+parseFloat(p.variants[0].price).toFixed(0):'—';
+  const initials=(p.name_en||'??').replace(/[^A-Za-zऀ-ॿ ]/g,'').trim().split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'??';
+  const tags=(p.tags||[]).map(t=>esc(t.tag_en)).join('|');
+  const desc=esc((p.description_en||'').slice(0,120));
+  return `<div class="ppanel" id="ppanel-${pid}">
+    <div class="pphead">
+      <div class="ppicon">${initials}</div>
+      <div><h3>${esc(p.name_en)}</h3><div class="ppsub">${esc(p.name_hi||'')}${price!=='—'?' · '+price:''}</div></div>
+      <span class="sbadge ${p.status}" style="margin-left:auto;flex-shrink:0;font-size:9px">${p.status}</span>
+    </div>
+    <div class="ppbody">
+      <div class="mslabel">Photos</div>
+      <div class="pstrip" id="si-${pid}" data-pid="${pid}" data-mt="image"></div>
+      <div class="dz" id="dzi-${pid}" data-pid="${pid}" data-mt="image">
+        <input type="file" accept="image/jpeg,image/png,image/webp" multiple data-pid="${pid}" data-mt="image"/>
+        <div class="dzicon">🖼</div><p>Drop photos or click</p><small>JPEG · PNG · WEBP · 4MB</small>
+      </div>
+      <div class="cntrow" id="ci-${pid}"><b>0</b>/5</div>
+      <hr class="mdiv"/>
+      <div class="mslabel">Video</div>
+      <div class="pstrip" id="sv-${pid}" data-pid="${pid}" data-mt="video"></div>
+      <div class="dz" id="dzv-${pid}" data-pid="${pid}" data-mt="video">
+        <input type="file" accept="video/mp4,video/webm" data-pid="${pid}" data-mt="video"/>
+        <div class="dzicon">🎬</div><p>Drop clip or click</p><small>MP4 · WebM · 15MB</small>
+      </div>
+      <div class="cntrow" id="cv-${pid}"><b>0</b>/1</div>
+      <div class="uprog" id="up-${pid}"><div class="pbar"><div class="pfill" id="pf-${pid}"></div></div><div class="pstat" id="ps-${pid}"></div></div>
+      <button class="prevbtn" data-pid="${pid}" data-name="${esc(p.name_en)}" data-price="${price}" data-sub="${esc(p.name_hi||p.name_en)}" data-desc="${desc}" data-tags="${tags}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 4v16M16 4v16"/></svg>Preview on Site
+      </button>
+    </div>
+  </div>`;
+}
+
+function bindPanelEvents(pid) {
+  const imgInp=document.querySelector(`#dzi-${pid} input[type=file]`);
+  const vidInp=document.querySelector(`#dzv-${pid} input[type=file]`);
+  if(imgInp)imgInp.addEventListener('change',()=>handleMFiles(pid,'image',imgInp.files));
+  if(vidInp)vidInp.addEventListener('change',()=>handleMFiles(pid,'video',vidInp.files));
+  [`#dzi-${pid}`,`#dzv-${pid}`].forEach(sel=>{
+    const dz=document.querySelector(sel); if(!dz)return;
+    dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dover');});
+    dz.addEventListener('dragleave',()=>dz.classList.remove('dover'));
+    dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dover');if(dz.classList.contains('disabled'))return;handleMFiles(dz.dataset.pid,dz.dataset.mt,e.dataTransfer.files);});
+  });
+  const pb=document.querySelector(`#ppanel-${pid} .prevbtn`);
+  if(pb)pb.addEventListener('click',()=>{
+    prevPid=pb.dataset.pid;$('#pmlabel').textContent=(pb.dataset.sub||'')+' · '+(pb.dataset.price||'');
+    $('#pmtitle').textContent=pb.dataset.name||'';$('#pmovl').classList.add('open');document.body.style.overflow='hidden';renderPrev(pb.dataset);
+  });
+}
+
+async function loadAllMedia() {
+  if(!mstate.hero)mstate.hero={images:[],videos:[]};
+  await loadMedia('hero');
+  try {
+    const r=await api('/admin/api/catalog'); if(!r.ok)return;
+    const{products}=await r.json();
+    const grid=document.getElementById('photos-grid');
+    const loading=document.getElementById('photos-loading');
+    if(loading)loading.remove();
+    if(!products||!products.length){
+      grid&&grid.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--si);font-style:italic">No products yet. Add products in the Products tab first.</div>');
+      return;
+    }
+    for(const p of products){
+      const pid=p.sku; if(!pid)continue;
+      if(!mstate[pid])mstate[pid]={images:[],videos:[]};
+      if(grid&&!document.getElementById('ppanel-'+pid)){
+        grid.insertAdjacentHTML('beforeend',buildProductPanel(p));
+        bindPanelEvents(pid);
+      }
+      await loadMedia(pid);
+    }
+  }catch(e){console.error('[GLP] Photos tab load error:',e);}
+}
 async function loadMedia(pid){
   try{const r=await api('/api/photos/'+pid);if(!r.ok)return;const{photos}=await r.json();mstate[pid].images=photos.filter(p=>p.media_type!=='video');mstate[pid].videos=photos.filter(p=>p.media_type==='video');renderMed(pid);}catch(e){console.error(e);}
 }
