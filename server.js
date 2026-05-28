@@ -63,7 +63,16 @@ const IS_PROD    = process.env.NODE_ENV === 'production';
 const DEFAULT_ADMIN_USERNAME = 'Lakhan';
 const DEFAULT_ADMIN_PASSWORD = 'Lakhan';
 
-const VALID_MEDIA_PRODUCTS  = ['dv','cm','db','hero']; // hero = brand intro video
+// Photo product validation — checks catalog_products table so new products
+// added via admin CRUD are automatically accepted (no code change needed).
+// 'hero' is always valid (brand background video, not a catalog product).
+async function isValidMediaProduct(pid) {
+  if (pid === 'hero') return true;
+  const { rows } = await pool.query(
+    'SELECT 1 FROM catalog_products WHERE sku=$1 LIMIT 1', [pid]
+  );
+  return rows.length > 0;
+}
 const MAX_IMAGES_PER_PRODUCT = 5;
 const MAX_VIDEOS_PER_PRODUCT = 1;
 const MAX_HERO_VIDEO_BYTES    = 50 * 1024 * 1024; // 50 MB for hero
@@ -286,8 +295,8 @@ app.post('/api/leads', async (req,res) => {
 // ── PUBLIC: photos ─────────────────────────────────────────────────────────
 app.get('/api/photos/:productId', async (req,res) => {
   const pid = req.params.productId;
-  if (!VALID_MEDIA_PRODUCTS.includes(pid)) return res.status(400).json({ error:'Invalid product' });
   try {
+    if (!await isValidMediaProduct(pid)) return res.status(400).json({ error:'Invalid product' });
     const { rows } = await pool.query(
       'SELECT id,filename,mimetype,media_type,sort_order,uploaded_at FROM product_photos WHERE product_id=$1 ORDER BY media_type DESC,sort_order,id',
       [pid]
@@ -451,7 +460,7 @@ app.post('/admin/api/credentials', requireAdmin, async (req,res) => {
 // ── Admin: photos ─────────────────────────────────────────────────────────────
 app.post('/admin/api/photos/:productId', requireAdmin, async (req,res) => {
   const pid=req.params.productId;
-  if(!VALID_MEDIA_PRODUCTS.includes(pid)) return res.status(400).json({error:'Invalid product'});
+  if(!await isValidMediaProduct(pid)) return res.status(400).json({error:'Invalid product'});
   const { photos } = req.body||{};
   if(!Array.isArray(photos)||!photos.length) return res.status(400).json({error:'Provide photos array'});
   try {
@@ -493,7 +502,8 @@ app.delete('/admin/api/photos/:id', requireAdmin, async (req,res) => {
 });
 app.patch('/admin/api/photos/reorder', requireAdmin, async (req,res) => {
   const{productId,order}=req.body||{};
-  if(!VALID_MEDIA_PRODUCTS.includes(productId)||!Array.isArray(order))return res.status(400).json({error:'Invalid payload'});
+  if(!Array.isArray(order))return res.status(400).json({error:'Invalid payload'});
+  if(!await isValidMediaProduct(productId))return res.status(400).json({error:'Invalid product'});
   try{for(let i=0;i<order.length;i++)await pool.query('UPDATE product_photos SET sort_order=$1 WHERE id=$2 AND product_id=$3',[i,order[i],productId]);res.json({ok:true});}
   catch(e){res.status(500).json({error:'Server error'});}
 });
