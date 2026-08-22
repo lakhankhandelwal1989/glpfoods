@@ -102,6 +102,12 @@ async function initDb() {
     updated_at TIMESTAMPTZ DEFAULT NOW()
   );`);
 
+  await pool.query(`CREATE TABLE IF NOT EXISTS site_settings (
+    key        VARCHAR(100) PRIMARY KEY,
+    value      TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  );`);
+
   await pool.query(`CREATE TABLE IF NOT EXISTS product_photos (
     id SERIAL PRIMARY KEY, product_id VARCHAR(20) NOT NULL,
     filename VARCHAR(255) DEFAULT 'media', mimetype VARCHAR(80) DEFAULT 'image/jpeg',
@@ -511,7 +517,7 @@ app.patch('/admin/api/photos/reorder', requireAdmin, async (req,res) => {
 // ── Admin: site settings ─────────────────────────────────────────────────────
 app.post('/admin/api/settings', requireAdmin, async (req,res) => {
   try {
-    const allowed = ['hero_video_opacity','hero_video_speed'];
+    const allowed = ['hero_video_opacity','hero_video_speed','add_to_bag_enabled'];
     const updates = Object.entries(req.body||{}).filter(([k]) => allowed.includes(k));
     if (!updates.length) return res.status(400).json({ error:'No valid settings provided' });
     for (const [key, value] of updates) {

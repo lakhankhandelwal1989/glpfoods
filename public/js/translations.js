@@ -79,6 +79,7 @@ window.GLP_TRANSLATIONS = {
     'p.db.tag3': 'Limited Batch',
 
     'p.cta.add': 'Add to Bag',
+    'p.cta.unavailable': 'Currently Unavailable',
 
     // — promise —
     'promise.eyebrow': 'Our Promise · Since 1918',
@@ -296,6 +297,7 @@ window.GLP_TRANSLATIONS = {
     'p.db.tag3': 'सीमित बैच',
 
     'p.cta.add': 'थैले में जोड़ें',
+    'p.cta.unavailable': 'अभी उपलब्ध नहीं',
 
     // — promise —
     'promise.eyebrow': 'हमारा वादा · 1918 से',

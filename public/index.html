@@ -428,6 +428,10 @@ body.menu-open{overflow:hidden}
   border-radius:999px; transition:all .25s ease;
 }
 .card-add:hover{background:var(--terracotta); color:var(--ivory)}
+.card-add.is-disabled{
+  color:var(--soft-ink); border-color:rgba(154,80,40,.25); cursor:not-allowed; opacity:.7;
+}
+.card-add.is-disabled:hover{background:none; color:var(--soft-ink)}
 
 .see-all{text-align:center; margin-top:64px}
 .see-all a{
@@ -2061,6 +2065,28 @@ document.querySelectorAll('.filters button').forEach(btn => {
 
 // ── Dynamic products from API ──────────────────────────────────────────────
 (function() {
+  let addToBagEnabled = true;
+
+  function applyAddToBagState() {
+    document.querySelectorAll('.card-add').forEach(btn => {
+      btn.disabled = !addToBagEnabled;
+      btn.classList.toggle('is-disabled', !addToBagEnabled);
+      btn.textContent = addToBagEnabled
+        ? (window.GLP_I18N?.t('p.cta.add') || 'Add to Bag')
+        : (window.GLP_I18N?.t('p.cta.unavailable') || 'Currently Unavailable');
+    });
+  }
+
+  async function loadAddToBagSetting() {
+    try {
+      const r = await fetch('/api/settings');
+      if (!r.ok) return;
+      const { settings } = await r.json();
+      addToBagEnabled = settings.add_to_bag_enabled !== 'false';
+    } catch(e) {}
+    applyAddToBagState();
+  }
+
   function computeDisc(price, disc) {
     if (!disc || !disc.is_active) return null;
     const now = new Date();
@@ -2176,7 +2202,11 @@ document.querySelectorAll('.filters button').forEach(btn => {
 
     const addBtn = document.createElement('button');
     addBtn.className = 'card-add';
-    addBtn.textContent = window.GLP_I18N?.t('p.cta.add') || 'Add to Bag';
+    addBtn.disabled = !addToBagEnabled;
+    addBtn.classList.toggle('is-disabled', !addToBagEnabled);
+    addBtn.textContent = addToBagEnabled
+      ? (window.GLP_I18N?.t('p.cta.add') || 'Add to Bag')
+      : (window.GLP_I18N?.t('p.cta.unavailable') || 'Currently Unavailable');
     cta.appendChild(addBtn);
 
     body.appendChild(cta);
@@ -2366,13 +2396,15 @@ document.querySelectorAll('.filters button').forEach(btn => {
   }
 
   // Expose reveal observer for dynamic cards
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     if ('IntersectionObserver' in window) {
       window.__glpRevealIO = new IntersectionObserver(entries => {
         entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('in');window.__glpRevealIO.unobserve(e.target);} });
       }, { threshold:0.08, rootMargin:'0px 0px -60px 0px' });
     }
-    loadDynamicProducts();
+    await loadAddToBagSetting();
+    await loadDynamicProducts();
+    applyAddToBagState();
   });
 })();
 
