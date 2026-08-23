@@ -347,8 +347,8 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
         <a class="tbtn solid" href="/admin/api/leads.csv" download>↓ Export CSV</a>
       </div>
       <div class="tw"><div class="tscroll">
-        <table><thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Lang</th><th>Source</th><th>Captured</th><th style="text-align:right">Delete</th></tr></thead>
-        <tbody id="ltbody"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+        <table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>City</th><th>Lang</th><th>Source</th><th>Captured</th><th style="text-align:right">Delete</th></tr></thead>
+        <tbody id="ltbody"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
         </table>
       </div></div>
     </section>
@@ -713,11 +713,11 @@ async function loadLeads(){
 }
 function renderLeads(list){
   const b=$('#ltbody');
-  if(!list.length){b.innerHTML='<tr><td colspan="7" class="empty"><h3>No leads yet</h3></td></tr>';return;}
-  b.innerHTML=list.map(l=>`<tr><td><b>${esc(l.name)}</b></td><td style="color:var(--tc);font-weight:500">${esc(l.phone)}</td><td>${esc(l.location||'—')}</td><td><span class="clang">${esc(l.language||'en')}</span></td><td style="font-size:12px;color:var(--si)">${esc(l.source||'chatbot')}</td><td style="font-size:12px;color:var(--si)">${fmt(l.created_at)}</td><td style="text-align:right"><button class="rdbtn" data-ldel="${l.id}">Delete</button></td></tr>`).join('');
+  if(!list.length){b.innerHTML='<tr><td colspan="8" class="empty"><h3>No leads yet</h3></td></tr>';return;}
+  b.innerHTML=list.map(l=>`<tr><td><b>${esc(l.name||'—')}</b></td><td style="color:var(--tc);font-weight:500">${esc(l.phone)}</td><td>${esc(l.email||'—')}</td><td>${esc(l.location||'—')}</td><td><span class="clang">${esc(l.language||'en')}</span></td><td style="font-size:12px;color:var(--si)">${esc(l.source||'chatbot')}</td><td style="font-size:12px;color:var(--si)">${fmt(l.created_at)}</td><td style="text-align:right"><button class="rdbtn" data-ldel="${l.id}">Delete</button></td></tr>`).join('');
   b.querySelectorAll('[data-ldel]').forEach(btn=>btn.addEventListener('click',async()=>{if(!confirm('Delete?'))return;const r=await api(`/admin/api/leads/${btn.dataset.ldel}`,{method:'DELETE'});if(r.ok)loadLeads();}));
 }
-$('#lsearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();renderLeads(q?allLeads.filter(l=>(l.name||'').toLowerCase().includes(q)||(l.phone||'').includes(q)||(l.location||'').toLowerCase().includes(q)):allLeads);});
+$('#lsearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();renderLeads(q?allLeads.filter(l=>(l.name||'').toLowerCase().includes(q)||(l.phone||'').includes(q)||(l.email||'').toLowerCase().includes(q)||(l.location||'').toLowerCase().includes(q)):allLeads);});
 $('#lrefresh').addEventListener('click',loadLeads);
 
 // ── CATALOG ───────────────────────────────────────────────────────────────────

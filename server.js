@@ -95,6 +95,10 @@ async function initDb() {
     source VARCHAR(50) DEFAULT 'chatbot', created_at TIMESTAMPTZ DEFAULT NOW()
   );`);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_customers_created_at ON customers(created_at DESC);`);
+  // Name is optional for "Notify Me" leads; only phone is required.
+  await pool.query(`ALTER TABLE customers ALTER COLUMN name DROP NOT NULL;`);
+  await pool.query(`ALTER TABLE customers ADD COLUMN IF NOT EXISTS email VARCHAR(200);`);
+  await pool.query(`ALTER TABLE customers ALTER COLUMN source TYPE VARCHAR(150);`);
 
   await pool.query(`CREATE TABLE IF NOT EXISTS admins (
     id SERIAL PRIMARY KEY, username VARCHAR(100) UNIQUE NOT NULL,
@@ -283,16 +287,26 @@ app.use(express.static(path.join(__dirname,'public'), { extensions:['html'] }));
 // ── PUBLIC: leads ──────────────────────────────────────────────────────────
 app.post('/api/leads', async (req,res) => {
   try {
-    const { name, phone, location, language } = req.body || {};
-    if (typeof name !== 'string' || name.trim().length < 2 || name.length > 200)
+    const { name, phone, location, language, email, source } = req.body || {};
+    if (name != null && (typeof name !== 'string' || name.length > 200))
       return res.status(400).json({ error:'Invalid name' });
     const cleanPhone = String(phone||'').replace(/[^0-9]/g,'');
     if (cleanPhone.length < 10 || cleanPhone.length > 13)
       return res.status(400).json({ error:'Invalid phone' });
+    let cleanEmail = null;
+    if (typeof email === 'string' && email.trim()) {
+      const e = email.trim();
+      if (e.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))
+        return res.status(400).json({ error:'Invalid email' });
+      cleanEmail = e;
+    }
     const lang = ['en','hi'].includes(language) ? language : 'en';
+    const cleanSource = typeof source === 'string' && source.trim()
+      ? source.trim().replace(/[\r\n]+/g,' ').slice(0,150)
+      : 'chatbot';
     const { rows:[r] } = await pool.query(
-      'INSERT INTO customers (name,phone,location,language) VALUES ($1,$2,$3,$4) RETURNING id',
-      [name.trim().slice(0,200), cleanPhone, (location||'').slice(0,200)||null, lang]
+      'INSERT INTO customers (name,phone,location,language,email,source) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id',
+      [(name||'').trim().slice(0,200), cleanPhone, (location||'').slice(0,200)||null, lang, cleanEmail, cleanSource]
     );
     res.json({ ok:true, id:r.id });
   } catch(e) { console.error(e); res.status(500).json({ error:'Server error' }); }
@@ -415,7 +429,7 @@ app.get('/admin/api/leads', requireAdmin, async (req,res) => {
   try {
     const limit=Math.min(parseInt(req.query.limit)||100,500), offset=parseInt(req.query.offset)||0;
     const { rows } = await pool.query(
-      'SELECT id,name,phone,location,language,source,created_at FROM customers ORDER BY created_at DESC LIMIT $1 OFFSET $2',
+      'SELECT id,name,phone,email,location,language,source,created_at FROM customers ORDER BY created_at DESC LIMIT $1 OFFSET $2',
       [limit,offset]
     );
     const total = await pool.query('SELECT COUNT(*)::int AS count FROM customers');
@@ -427,8 +441,8 @@ app.get('/admin/api/leads.csv', requireAdmin, async (req,res) => {
   try {
     const { rows } = await pool.query('SELECT * FROM customers ORDER BY created_at DESC');
     const esc = v => { const s=String(v??''); return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:''+s; };
-    let csv='ID,Name,Phone,Location,Language,Source,Created At\n';
-    for (const r of rows) csv+=[r.id,esc(r.name),esc(r.phone),esc(r.location),esc(r.language),esc(r.source),esc(r.created_at?.toISOString())].join(',')+'\n';
+    let csv='ID,Name,Phone,Email,Location,Language,Source,Created At\n';
+    for (const r of rows) csv+=[r.id,esc(r.name),esc(r.phone),esc(r.email),esc(r.location),esc(r.language),esc(r.source),esc(r.created_at?.toISOString())].join(',')+'\n';
     res.setHeader('Content-Type','text/csv;charset=utf-8');
     res.setHeader('Content-Disposition',`attachment;filename="glp-leads-${new Date().toISOString().slice(0,10)}.csv"`);
     res.send(csv);
