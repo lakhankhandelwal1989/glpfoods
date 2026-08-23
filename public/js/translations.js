@@ -79,7 +79,21 @@ window.GLP_TRANSLATIONS = {
     'p.db.tag3': 'Limited Batch',
 
     'p.cta.add': 'Add to Bag',
-    'p.cta.unavailable': 'Currently Unavailable',
+    'p.cta.notify': 'Notify Me',
+
+    'notify.eyebrow': 'Notify Me',
+    'notify.subtitle': 'Leave your number and we\'ll let you know the moment it\'s back.',
+    'notify.name': 'Name',
+    'notify.optional': '(optional)',
+    'notify.phone': 'Phone',
+    'notify.email': 'Email',
+    'notify.city': 'City',
+    'notify.city.placeholder': 'Select city',
+    'notify.submit': 'Notify Me',
+    'notify.sending': 'Sending…',
+    'notify.success': 'Thank you! We\'ll notify you the moment this is back.',
+    'notify.error.phone': 'Please enter a valid phone number.',
+    'notify.error.generic': 'Something went wrong. Please try again.',
 
     // — promise —
     'promise.eyebrow': 'Our Promise · Since 1918',
@@ -297,7 +311,21 @@ window.GLP_TRANSLATIONS = {
     'p.db.tag3': 'सीमित बैच',
 
     'p.cta.add': 'थैले में जोड़ें',
-    'p.cta.unavailable': 'अभी उपलब्ध नहीं',
+    'p.cta.notify': 'सूचित करें',
+
+    'notify.eyebrow': 'सूचित करें',
+    'notify.subtitle': 'अपना नंबर छोड़ें — वापस उपलब्ध होते ही हम आपको बताएँगे।',
+    'notify.name': 'नाम',
+    'notify.optional': '(वैकल्पिक)',
+    'notify.phone': 'फ़ोन',
+    'notify.email': 'ईमेल',
+    'notify.city': 'शहर',
+    'notify.city.placeholder': 'शहर चुनें',
+    'notify.submit': 'सूचित करें',
+    'notify.sending': 'भेजा जा रहा है…',
+    'notify.success': 'धन्यवाद! उपलब्ध होते ही हम आपको सूचित करेंगे।',
+    'notify.error.phone': 'कृपया मान्य फ़ोन नंबर दर्ज करें।',
+    'notify.error.generic': 'कुछ गड़बड़ हुई। कृपया पुनः प्रयास करें।',
 
     // — promise —
     'promise.eyebrow': 'हमारा वादा · 1918 से',
