@@ -8,7 +8,6 @@ window.GLP_TRANSLATIONS = {
     // — announce —
     'announce.shipping': 'Complimentary shipping across India on orders above ₹999',
     'announce.cod': 'Cash on Delivery available',
-    'announce.handmade': 'Hand-blended in Alwar',
 
     // — nav —
     'nav.collection': 'The Collection',
@@ -32,11 +31,11 @@ window.GLP_TRANSLATIONS = {
     'hero.chip.batch': 'Small <b>batch</b> ground',
 
     // — marquee —
-    'strip.1': 'Hand-Ground in Alwar',
+    'strip.1': '',
     'strip.2': 'Family Run Since 1918',
     'strip.3': 'Four Shops in Alwar',
-    'strip.4': 'Stocked Across India',
-    'strip.5': 'No Artificial Colours',
+    'strip.4': 'Stocked Across India, with over 400 counters in Rajasthan',
+    'strip.5': '',
     'strip.6': 'Free Shipping ₹999+',
 
     // — collection —
