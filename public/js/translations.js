@@ -31,12 +31,10 @@ window.GLP_TRANSLATIONS = {
     'hero.chip.batch': 'Small <b>batch</b> ground',
 
     // — marquee —
-    'strip.1': '',
-    'strip.2': 'Family Run Since 1918',
-    'strip.3': 'Four Shops in Alwar',
-    'strip.4': 'Stocked Across India, with over 400 counters in Rajasthan',
-    'strip.5': '',
-    'strip.6': 'Free Shipping ₹999+',
+    'strip.1': 'Family Run Since 1918',
+    'strip.2': 'Four Shops in Alwar',
+    'strip.3': 'Stocked Across India, with over 400 counters in Rajasthan',
+    'strip.4': 'Free Shipping ₹999+',
 
     // — collection —
     'col.eyebrow': 'The Collection',
