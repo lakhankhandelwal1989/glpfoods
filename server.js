@@ -5,17 +5,25 @@
  *  GET  /                          landing page
  *  GET  /admin                     admin SPA
  *  GET  /healthz                   health check
- *  POST /api/leads                 chatbot lead capture
  *  GET  /api/photos/:productId     photo/video metadata list
  *  GET  /api/photo/:id             serve image or video binary
  *  GET  /api/products              public product catalog (visible only)
  *  GET  /api/packages              public packages (visible only)
+ *  GET  /api/settings              public site settings (add-to-bag toggle, UPI id, …)
+ *  POST /api/leads                 lead capture (chatbot + Notify Me)
+ *  POST /api/checkout              place an order (COD or UPI-manual)
  *
  * ADMIN ENDPOINTS (JWT cookie required):
  *  Auth:       POST /admin/api/login|logout   GET /admin/api/me
  *  Leads:      GET  /admin/api/leads          GET  /admin/api/leads.csv
  *              DELETE /admin/api/leads/:id
- *  Settings:   POST /admin/api/credentials
+ *  Settings:   POST /admin/api/credentials     POST /admin/api/settings
+ *
+ *  Orders:     GET    /admin/api/orders                    list orders (+items)
+ *              PATCH  /admin/api/orders/:id/status          update fulfillment status
+ *              PATCH  /admin/api/orders/:id/payment         update payment status (UPI)
+ *              DELETE /admin/api/orders/:id
+ *              GET    /admin/api/orders.csv                 export CSV
  *
  *  Photos:     POST   /admin/api/photos/:productId
  *              DELETE /admin/api/photos/:id
@@ -80,6 +88,12 @@ const MAX_IMAGE_BYTES        = 4  * 1024 * 1024;
 const MAX_VIDEO_BYTES        = 15 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES    = ['image/jpeg','image/jpg','image/png','image/webp','image/avif'];
 const ALLOWED_VIDEO_TYPES    = ['video/mp4','video/webm','video/quicktime'];
+
+// Checkout
+const FREE_SHIPPING_THRESHOLD = 999;
+const SHIPPING_FEE            = 49;
+const MAX_ORDER_ITEM_QTY      = 20;
+const MAX_ORDER_LINE_ITEMS    = 30;
 
 // ── DB ──────────────────────────────────────────────────────────────────────
 const pool = new Pool({
@@ -188,6 +202,42 @@ async function initDb() {
     variant_id INT REFERENCES product_variants(id) ON DELETE SET NULL,
     quantity   INT DEFAULT 1, sort_order INT DEFAULT 0
   );`);
+
+  // ── Orders (cart checkout) ──────────────────────────────────────────────
+  await pool.query(`CREATE TABLE IF NOT EXISTS orders (
+    id             SERIAL PRIMARY KEY,
+    customer_name  VARCHAR(200) DEFAULT '',
+    phone          VARCHAR(20) NOT NULL,
+    email          VARCHAR(200),
+    address_line   VARCHAR(300) NOT NULL,
+    city           VARCHAR(100) NOT NULL,
+    state          VARCHAR(100) DEFAULT '',
+    pincode        VARCHAR(10) DEFAULT '',
+    language       VARCHAR(10) DEFAULT 'en',
+    notes          VARCHAR(500) DEFAULT '',
+    subtotal       NUMERIC(10,2) NOT NULL,
+    shipping_fee   NUMERIC(10,2) DEFAULT 0,
+    total          NUMERIC(10,2) NOT NULL,
+    payment_method VARCHAR(20) DEFAULT 'cod',
+    payment_status VARCHAR(20) DEFAULT 'na',
+    status         VARCHAR(20) DEFAULT 'placed',
+    created_at     TIMESTAMPTZ DEFAULT NOW(),
+    updated_at     TIMESTAMPTZ DEFAULT NOW()
+  );`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at DESC);`);
+
+  await pool.query(`CREATE TABLE IF NOT EXISTS order_items (
+    id            SERIAL PRIMARY KEY,
+    order_id      INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id    INT REFERENCES catalog_products(id) ON DELETE SET NULL,
+    variant_id    INT REFERENCES product_variants(id) ON DELETE SET NULL,
+    product_name  VARCHAR(200) NOT NULL,
+    variant_label VARCHAR(100) DEFAULT '',
+    unit_price    NUMERIC(10,2) NOT NULL,
+    quantity      INT NOT NULL DEFAULT 1,
+    line_total    NUMERIC(10,2) NOT NULL
+  );`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);`);
 
   // ── Seed default admin ─────────────────────────────────────────────────
   const { rows: adminRows } = await pool.query('SELECT COUNT(*)::int AS count FROM admins');
@@ -399,6 +449,106 @@ app.get('/api/packages', async (req,res) => {
   } catch(e) { console.error(e); res.status(500).json({ error:'Server error' }); }
 });
 
+// ── PUBLIC: checkout ─────────────────────────────────────────────────────────
+// Prices, stock and the storewide on/off switch are all re-checked server-side —
+// the cart the client sends is only ever treated as a list of (sku, variant, qty).
+app.post('/api/checkout', async (req,res) => {
+  const { items, customer, paymentMethod } = req.body || {};
+  if (!Array.isArray(items) || !items.length) return res.status(400).json({ error:'Your bag is empty' });
+  if (items.length > MAX_ORDER_LINE_ITEMS) return res.status(400).json({ error:'Too many items in bag' });
+
+  const c = customer || {};
+  const phone = String(c.phone||'').replace(/[^0-9]/g,'');
+  if (phone.length < 10 || phone.length > 13) return res.status(400).json({ error:'Invalid phone number' });
+  const address = String(c.address||'').trim();
+  if (!address || address.length > 300) return res.status(400).json({ error:'Delivery address is required' });
+  const city = String(c.city||'').trim();
+  if (!city || city.length > 100) return res.status(400).json({ error:'City is required' });
+  let email = null;
+  if (typeof c.email === 'string' && c.email.trim()) {
+    const e = c.email.trim();
+    if (e.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) return res.status(400).json({ error:'Invalid email' });
+    email = e;
+  }
+  const lang = ['en','hi'].includes(c.language) ? c.language : 'en';
+
+  const client = await pool.connect();
+  try {
+    const { rows: settingRows } = await client.query(
+      `SELECT key,value FROM site_settings WHERE key IN ('add_to_bag_enabled','upi_id','upi_payee_name')`
+    );
+    const settings = {};
+    settingRows.forEach(r => settings[r.key] = r.value);
+    if (settings.add_to_bag_enabled === 'false') {
+      return res.status(403).json({ error:'Ordering is currently paused. Please check back soon.' });
+    }
+
+    let method = paymentMethod === 'upi' && settings.upi_id ? 'upi' : 'cod';
+
+    const lineItems = [];
+    for (const it of items) {
+      const sku = String(it?.sku || '').trim().toLowerCase();
+      const variantId = parseInt(it?.variantId);
+      const qty = Math.max(1, Math.min(MAX_ORDER_ITEM_QTY, parseInt(it?.quantity) || 1));
+      if (!sku || isNaN(variantId)) return res.status(400).json({ error:'Invalid item in bag' });
+
+      const { rows:[prod] } = await client.query(`SELECT * FROM catalog_products WHERE sku=$1 AND status='visible'`,[sku]);
+      if (!prod) return res.status(400).json({ error:`One of the items in your bag is no longer available` });
+      const { rows:[variant] } = await client.query(`SELECT * FROM product_variants WHERE id=$1 AND product_id=$2`,[variantId, prod.id]);
+      if (!variant) return res.status(400).json({ error:`The selected size for "${prod.name_en}" is no longer available` });
+      if (variant.stock_status === 'out_of_stock') return res.status(400).json({ error:`"${prod.name_en}" (${variant.label}) is out of stock` });
+
+      const { rows: discounts } = await client.query(
+        `SELECT * FROM product_discounts WHERE product_id=$1 AND is_active=true ORDER BY id LIMIT 1`,[prod.id]
+      );
+      const disc = discounts[0] && (!discounts[0].variant_id || discounts[0].variant_id === variant.id) ? discounts[0] : null;
+      const salePrice = disc ? computeSalePrice(parseFloat(variant.price), disc) : null;
+      const unitPrice = salePrice ?? parseFloat(variant.price);
+      const lineTotal = Math.round(unitPrice * qty * 100) / 100;
+
+      lineItems.push({
+        product_id: prod.id, variant_id: variant.id,
+        product_name: prod.name_en, variant_label: variant.label,
+        unit_price: unitPrice, quantity: qty, line_total: lineTotal
+      });
+    }
+
+    const subtotal     = Math.round(lineItems.reduce((s,i)=>s+i.line_total,0) * 100) / 100;
+    const shippingFee  = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+    const total         = Math.round((subtotal + shippingFee) * 100) / 100;
+    const paymentStatus = method === 'upi' ? 'pending' : 'na';
+
+    await client.query('BEGIN');
+    const { rows:[order] } = await client.query(
+      `INSERT INTO orders (customer_name,phone,email,address_line,city,state,pincode,language,notes,subtotal,shipping_fee,total,payment_method,payment_status)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING id,created_at`,
+      [(c.name||'').trim().slice(0,200), phone, email, address.slice(0,300), city.slice(0,100),
+       (c.state||'').trim().slice(0,100), (c.pincode||'').trim().slice(0,10), lang, (c.notes||'').trim().slice(0,500),
+       subtotal, shippingFee, total, method, paymentStatus]
+    );
+    for (const li of lineItems) {
+      await client.query(
+        `INSERT INTO order_items (order_id,product_id,variant_id,product_name,variant_label,unit_price,quantity,line_total)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        [order.id, li.product_id, li.variant_id, li.product_name, li.variant_label, li.unit_price, li.quantity, li.line_total]
+      );
+    }
+    await client.query('COMMIT');
+
+    res.json({
+      ok:true, orderId: order.id, subtotal, shippingFee, total,
+      paymentMethod: method, paymentStatus,
+      upi: method === 'upi' ? { id: settings.upi_id, payeeName: settings.upi_payee_name || 'Ganga Lehari Pansari' } : null
+    });
+  } catch(e) {
+    await client.query('ROLLBACK').catch(()=>{});
+    console.error(e);
+    res.status(500).json({ error:'Server error' });
+  } finally {
+    client.release();
+  }
+});
+
 // ── Admin auth ───────────────────────────────────────────────────────────────
 function requireAdmin(req,res,next){
   const token = req.cookies.glp_admin;
@@ -531,7 +681,7 @@ app.patch('/admin/api/photos/reorder', requireAdmin, async (req,res) => {
 // ── Admin: site settings ─────────────────────────────────────────────────────
 app.post('/admin/api/settings', requireAdmin, async (req,res) => {
   try {
-    const allowed = ['hero_video_opacity','hero_video_speed','add_to_bag_enabled'];
+    const allowed = ['hero_video_opacity','hero_video_speed','add_to_bag_enabled','upi_id','upi_payee_name'];
     const updates = Object.entries(req.body||{}).filter(([k]) => allowed.includes(k));
     if (!updates.length) return res.status(400).json({ error:'No valid settings provided' });
     for (const [key, value] of updates) {
@@ -744,6 +894,67 @@ app.delete('/admin/api/package-items/:id', requireAdmin, async (req,res) => {
   const id=parseInt(req.params.id);if(isNaN(id))return res.status(400).json({error:'Invalid id'});
   try{await pool.query('DELETE FROM package_items WHERE id=$1',[id]);res.json({ok:true});}
   catch(e){res.status(500).json({error:'Server error'});}
+});
+
+// ── Admin: orders ──────────────────────────────────────────────────────────────
+app.get('/admin/api/orders', requireAdmin, async (req,res) => {
+  try {
+    const limit=Math.min(parseInt(req.query.limit)||100,500), offset=parseInt(req.query.offset)||0;
+    const { rows: orders } = await pool.query(
+      'SELECT * FROM orders ORDER BY created_at DESC LIMIT $1 OFFSET $2',[limit,offset]
+    );
+    const result=[];
+    for (const o of orders) {
+      const { rows: items } = await pool.query('SELECT * FROM order_items WHERE order_id=$1 ORDER BY id',[o.id]);
+      result.push({ ...o, items });
+    }
+    const total   = await pool.query('SELECT COUNT(*)::int AS count FROM orders');
+    const today   = await pool.query("SELECT COUNT(*)::int AS count FROM orders WHERE created_at>=CURRENT_DATE");
+    const revenue = await pool.query("SELECT COALESCE(SUM(total),0)::float AS sum FROM orders WHERE status != 'cancelled'");
+    res.json({ orders:result, total:total.rows[0].count, today:today.rows[0].count, revenue:revenue.rows[0].sum });
+  } catch(e) { console.error(e); res.status(500).json({ error:'Server error' }); }
+});
+app.patch('/admin/api/orders/:id/status', requireAdmin, async (req,res) => {
+  const id=parseInt(req.params.id);if(isNaN(id))return res.status(400).json({error:'Invalid id'});
+  const { status } = req.body||{};
+  const allowedStatus=['placed','confirmed','shipped','delivered','cancelled'];
+  if(!allowedStatus.includes(status)) return res.status(400).json({error:'Invalid status'});
+  try {
+    const{rows:[o]}=await pool.query('UPDATE orders SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING *',[status,id]);
+    if(!o) return res.status(404).json({error:'Not found'});
+    res.json({ok:true,order:o});
+  } catch(e){res.status(500).json({error:'Server error'});}
+});
+app.patch('/admin/api/orders/:id/payment', requireAdmin, async (req,res) => {
+  const id=parseInt(req.params.id);if(isNaN(id))return res.status(400).json({error:'Invalid id'});
+  const { payment_status } = req.body||{};
+  const allowedPay=['na','pending','paid','failed'];
+  if(!allowedPay.includes(payment_status)) return res.status(400).json({error:'Invalid payment_status'});
+  try {
+    const{rows:[o]}=await pool.query('UPDATE orders SET payment_status=$1,updated_at=NOW() WHERE id=$2 RETURNING *',[payment_status,id]);
+    if(!o) return res.status(404).json({error:'Not found'});
+    res.json({ok:true,order:o});
+  } catch(e){res.status(500).json({error:'Server error'});}
+});
+app.delete('/admin/api/orders/:id', requireAdmin, async (req,res) => {
+  const id=parseInt(req.params.id);if(isNaN(id))return res.status(400).json({error:'Invalid id'});
+  try{await pool.query('DELETE FROM orders WHERE id=$1',[id]);res.json({ok:true});}
+  catch(e){res.status(500).json({error:'Server error'});}
+});
+app.get('/admin/api/orders.csv', requireAdmin, async (req,res) => {
+  try {
+    const{rows:orders}=await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
+    const esc=v=>{const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:''+s;};
+    let csv='Order ID,Name,Phone,Email,Address,City,State,Pincode,Items,Subtotal,Shipping,Total,Payment Method,Payment Status,Status,Placed At\n';
+    for(const o of orders){
+      const{rows:items}=await pool.query('SELECT * FROM order_items WHERE order_id=$1 ORDER BY id',[o.id]);
+      const itemsStr=items.map(i=>`${i.product_name}${i.variant_label?` (${i.variant_label})`:''} x${i.quantity}`).join('; ');
+      csv+=[o.id,esc(o.customer_name),esc(o.phone),esc(o.email),esc(o.address_line),esc(o.city),esc(o.state),esc(o.pincode),esc(itemsStr),esc(o.subtotal),esc(o.shipping_fee),esc(o.total),esc(o.payment_method),esc(o.payment_status),esc(o.status),esc(o.created_at?.toISOString())].join(',')+'\n';
+    }
+    res.setHeader('Content-Type','text/csv;charset=utf-8');
+    res.setHeader('Content-Disposition',`attachment;filename="glp-orders-${new Date().toISOString().slice(0,10)}.csv"`);
+    res.send(csv);
+  } catch(e){console.error(e);res.status(500).json({error:'Server error'});}
 });
 
 // ── Admin: CSV export ─────────────────────────────────────────────────────────

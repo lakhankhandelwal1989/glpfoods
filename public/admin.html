@@ -328,6 +328,7 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
   <main class="app">
     <div class="tabs">
       <button data-tab="leads" class="active">Leads</button>
+      <button data-tab="orders">Orders</button>
       <button data-tab="products">Products</button>
       <button data-tab="photos">Photos &amp; Video</button>
       <button data-tab="settings">Settings</button>
@@ -349,6 +350,26 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
       <div class="tw"><div class="tscroll">
         <table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>City</th><th>Lang</th><th>Source</th><th>Captured</th><th style="text-align:right">Delete</th></tr></thead>
         <tbody id="ltbody"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- ORDERS -->
+    <section id="tab-orders" class="hidden">
+      <div class="stats">
+        <div class="stat"><div class="sl">Total Orders</div><div class="sv" id="o-total">—</div><div class="sd">All-time</div></div>
+        <div class="stat"><div class="sl">Today</div><div class="sv" id="o-today">—</div><div class="sd">Placed today</div></div>
+        <div class="stat"><div class="sl">Revenue</div><div class="sv" id="o-revenue">—</div><div class="sd">Excl. cancelled</div></div>
+        <div class="stat"><div class="sl">UPI Awaiting Verification</div><div class="sv" id="o-pending-upi">—</div><div class="sd">Confirm once received</div></div>
+      </div>
+      <div class="tbar">
+        <input class="tsearch" id="osearch" type="search" placeholder="Search order #, name, phone, city…"/>
+        <button class="tbtn" id="orefresh">↻ Refresh</button>
+        <a class="tbtn solid" href="/admin/api/orders.csv" download>↓ Export CSV</a>
+      </div>
+      <div class="tw"><div class="tscroll">
+        <table><thead><tr><th>Order</th><th>Customer</th><th>Address</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Placed</th><th style="text-align:right">Delete</th></tr></thead>
+        <tbody id="otbody"><tr><td colspan="9" class="empty">Loading…</td></tr></tbody>
         </table>
       </div></div>
     </section>
@@ -540,6 +561,15 @@ tbody tr:hover{background:var(--pp)}tbody tr:last-child td{border-bottom:none}
           </div>
           <span id="atb-saved" style="font-size:12.5px;color:var(--gn);display:none">✓ Saved — takes effect on next page load</span>
         </div>
+        <div class="panel">
+          <h2>Payments</h2><p class="psub">Cash on Delivery is always available. Add a UPI ID to also let customers pay by scanning a QR code at checkout — until a full payment gateway is integrated.</p>
+          <div class="fd"><label for="upi-id">UPI ID</label><input id="upi-id" type="text" placeholder="yourname@upi — leave blank to hide UPI at checkout"/></div>
+          <div class="fd"><label for="upi-name">Payee Name shown to customers (optional)</label><input id="upi-name" type="text" placeholder="Ganga Lehari Pansari"/></div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button class="bp" id="upi-save" type="button" style="width:auto">Save Payment Settings</button>
+            <span id="upi-saved" style="font-size:12.5px;color:var(--gn);display:none">✓ Saved — takes effect on next page load</span>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -673,7 +703,7 @@ async function init(){
 }
 function showLogin(){$('#lview').classList.remove('hidden');$('#aview').classList.add('hidden');}
 function showApp(u){$('#lview').classList.add('hidden');$('#aview').classList.remove('hidden');$('#hwho').textContent=u;$('#sys-user').value=u;$('#sys-url').value=location.origin;}
-function boot(){loadLeads();loadAllMedia();loadCatalog();loadPackages();}
+function boot(){loadLeads();loadOrders();loadAllMedia();loadCatalog();loadPackages();}
 
 $('#lform').addEventListener('submit',async e=>{
   e.preventDefault();const btn=$('#lbtn'),al=$('#lalert');
@@ -689,7 +719,7 @@ $('#lobtn').addEventListener('click',async()=>{await api('/admin/api/logout',{me
 // ── TABS ──────────────────────────────────────────────────────────────────────
 $$('.tabs button').forEach(b=>b.addEventListener('click',()=>{
   $$('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
-  ['leads','products','photos','settings'].forEach(id=>$('#tab-'+id).classList.toggle('hidden',id!==b.dataset.tab));
+  ['leads','orders','products','photos','settings'].forEach(id=>$('#tab-'+id).classList.toggle('hidden',id!==b.dataset.tab));
 }));
 $$('.stab').forEach(b=>b.addEventListener('click',()=>{
   $$('.stab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
@@ -719,6 +749,59 @@ function renderLeads(list){
 }
 $('#lsearch').addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();renderLeads(q?allLeads.filter(l=>(l.name||'').toLowerCase().includes(q)||(l.phone||'').includes(q)||(l.email||'').toLowerCase().includes(q)||(l.location||'').toLowerCase().includes(q)):allLeads);});
 $('#lrefresh').addEventListener('click',loadLeads);
+
+// ── ORDERS ────────────────────────────────────────────────────────────────────
+let allOrders=[];
+const ORDER_STATUSES=['placed','confirmed','shipped','delivered','cancelled'];
+async function loadOrders(){
+  try{const r=await api('/admin/api/orders?limit=500');if(!r.ok){if(r.status===401)showLogin();return;}
+    const d=await r.json();allOrders=d.orders;
+    $('#o-total').textContent=d.total??allOrders.length;
+    $('#o-today').textContent=d.today??0;
+    $('#o-revenue').textContent='₹'+Math.round(d.revenue||0).toLocaleString('en-IN');
+    $('#o-pending-upi').textContent=allOrders.filter(o=>o.payment_method==='upi'&&o.payment_status==='pending').length;
+    renderOrders(allOrders);
+  }catch(e){console.error(e);}
+}
+function renderOrders(list){
+  const b=$('#otbody');
+  if(!list.length){b.innerHTML='<tr><td colspan="9" class="empty"><h3>No orders yet</h3></td></tr>';return;}
+  b.innerHTML=list.map(o=>{
+    const items=(o.items||[]).map(i=>`${esc(i.product_name)}${i.variant_label?` (${esc(i.variant_label)})`:''} ×${i.quantity}`).join(', ');
+    const payment=o.payment_method==='upi'
+      ? (o.payment_status==='paid'
+          ? `<span style="color:var(--gn);font-weight:600">UPI · Paid</span>`
+          : `<span style="color:var(--gd);font-weight:600">UPI · Pending</span><br/><button class="tbtn" data-opay="${o.id}" style="margin-top:4px;padding:4px 9px;font-size:11px">Mark Paid</button>`)
+      : `<span style="color:var(--si)">Cash on Delivery</span>`;
+    const statusOpts=ORDER_STATUSES.map(s=>`<option value="${s}"${s===o.status?' selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join('');
+    return `<tr>
+      <td><b>#${o.id}</b></td>
+      <td><b>${esc(o.customer_name||'—')}</b><br/><span style="font-size:11px;color:var(--si)">${esc(o.phone)}</span></td>
+      <td style="font-size:12px;max-width:200px">${esc(o.address_line)}, ${esc(o.city)}${o.pincode?' - '+esc(o.pincode):''}</td>
+      <td style="font-size:12px;max-width:220px">${items||'—'}</td>
+      <td><b>₹${Number(o.total).toFixed(0)}</b></td>
+      <td style="font-size:12px">${payment}</td>
+      <td><select data-ostatus="${o.id}" style="padding:6px 8px;border:1px solid rgba(154,80,40,.22);border-radius:6px;background:var(--iv);font-size:12px">${statusOpts}</select></td>
+      <td style="font-size:12px;color:var(--si)">${fmt(o.created_at)}</td>
+      <td style="text-align:right"><button class="rdbtn" data-odel="${o.id}">Delete</button></td>
+    </tr>`;
+  }).join('');
+  b.querySelectorAll('[data-ostatus]').forEach(sel=>sel.addEventListener('change',async()=>{
+    const r=await api(`/admin/api/orders/${sel.dataset.ostatus}/status`,{method:'PATCH',body:JSON.stringify({status:sel.value})});
+    if(r.ok){const o=allOrders.find(x=>x.id===+sel.dataset.ostatus);if(o)o.status=sel.value;}
+    else alert('Failed to update status');
+  }));
+  b.querySelectorAll('[data-opay]').forEach(btn=>btn.addEventListener('click',async()=>{
+    const r=await api(`/admin/api/orders/${btn.dataset.opay}/payment`,{method:'PATCH',body:JSON.stringify({payment_status:'paid'})});
+    if(r.ok)loadOrders(); else alert('Failed to update payment status');
+  }));
+  b.querySelectorAll('[data-odel]').forEach(btn=>btn.addEventListener('click',async()=>{if(!confirm('Delete this order?'))return;const r=await api(`/admin/api/orders/${btn.dataset.odel}`,{method:'DELETE'});if(r.ok)loadOrders();}));
+}
+$('#osearch').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase().trim();
+  renderOrders(q?allOrders.filter(o=>String(o.id).includes(q)||(o.customer_name||'').toLowerCase().includes(q)||(o.phone||'').includes(q)||(o.city||'').toLowerCase().includes(q)):allOrders);
+});
+$('#orefresh').addEventListener('click',loadOrders);
 
 // ── CATALOG ───────────────────────────────────────────────────────────────────
 let allProducts=[],prodFilter='all';
@@ -1368,6 +1451,40 @@ init();
         else { alert('Failed to save setting'); atbToggle.checked = !enabled; }
       } catch(e) { alert('Network error'); atbToggle.checked = !enabled; }
       finally { atbToggle.disabled = false; }
+    });
+  }
+
+  // UPI payment settings
+  const upiIdInput   = document.getElementById('upi-id');
+  const upiNameInput = document.getElementById('upi-name');
+  const upiSaveBtn   = document.getElementById('upi-save');
+  const upiSaved     = document.getElementById('upi-saved');
+  if (upiSaveBtn) {
+    (async () => {
+      try {
+        const r = await fetch('/api/settings');
+        if (r.ok) {
+          const { settings } = await r.json();
+          upiIdInput.value   = settings.upi_id || '';
+          upiNameInput.value = settings.upi_payee_name || '';
+        }
+      } catch(e) {}
+    })();
+    upiSaveBtn.addEventListener('click', async () => {
+      upiSaveBtn.disabled = true; upiSaveBtn.textContent = 'Saving…';
+      try {
+        const r = await fetch('/admin/api/settings', {
+          method:'POST', credentials:'same-origin',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            upi_id: upiIdInput.value.trim(),
+            upi_payee_name: upiNameInput.value.trim()
+          })
+        });
+        if (r.ok) { upiSaved.style.display='inline'; setTimeout(()=>upiSaved.style.display='none',5000); }
+        else { alert('Failed to save payment settings'); }
+      } catch(e) { alert('Network error'); }
+      finally { upiSaveBtn.disabled = false; upiSaveBtn.textContent = 'Save Payment Settings'; }
     });
   }
 })();
