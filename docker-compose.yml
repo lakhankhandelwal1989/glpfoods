@@ -1,0 +1,28 @@
+# Local development database only. The app itself runs directly with
+# `npm start` (see README → Local development) so you get normal
+# console output and can restart it instantly after code changes.
+#
+# Usage:
+#   docker compose up -d      # start Postgres
+#   docker compose down       # stop it (data persists in the named volume)
+#   docker compose down -v    # stop it AND wipe all local data (fresh slate)
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: glp
+      POSTGRES_PASSWORD: glp
+      POSTGRES_DB: glp
+    ports:
+      - "5432:5432"
+    volumes:
+      - glp_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U glp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  glp_pgdata:

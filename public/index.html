@@ -190,10 +190,10 @@ h2.section-h .roman{font-style:normal}
 }
 .nav-icon:hover{background:var(--cream); color:var(--terracotta)}
 .bag-badge{
-  position:relative;
+  position:relative; cursor:pointer;
 }
 .bag-badge::after{
-  content:"0"; position:absolute; top:6px; right:6px;
+  content:attr(data-count); position:absolute; top:6px; right:6px;
   background:var(--terracotta); color:var(--ivory);
   font-size:9px; font-weight:700; width:16px; height:16px;
   border-radius:50%; display:grid; place-items:center;
@@ -1226,7 +1226,7 @@ html[data-lang="hi"] .chatbot-msg{font-family:var(--devanagari); font-size:15px}
   .hero-story-strip { z-index:3; }
 
 /* ════════════ NOTIFY ME MODAL ════════════ */
-body.notify-lock{overflow:hidden}
+body.modal-lock{overflow:hidden}
 .notify-ovl{
   position:fixed; inset:0; z-index:900;
   background:rgba(42,31,24,.55);
@@ -1262,30 +1262,30 @@ body.notify-lock{overflow:hidden}
   font-size:24px; color:var(--ink); margin-bottom:8px;
 }
 .notify-subtitle{font-size:13px; color:var(--soft-ink); line-height:1.5}
-.notify-fd{margin-bottom:14px}
-.notify-fd label{
+.mform-fd{margin-bottom:14px}
+.mform-fd label{
   display:block; font-size:11.5px; font-weight:600; color:var(--soft-ink);
   margin-bottom:6px; letter-spacing:.02em;
 }
-.notify-fd .notify-opt{font-weight:400; color:var(--soft-ink); opacity:.7}
-.notify-fd .notify-req{color:var(--terracotta)}
-.notify-fd input, .notify-fd select{
+.mform-fd .mform-opt{font-weight:400; color:var(--soft-ink); opacity:.7}
+.mform-fd .mform-req{color:var(--terracotta)}
+.mform-fd input, .mform-fd select{
   width:100%; padding:12px 14px; border:1px solid rgba(154,80,40,.22);
   border-radius:8px; background:var(--paper); font:inherit; font-size:14px;
   color:var(--ink); outline:none; transition:border .2s ease;
 }
-.notify-fd input:focus, .notify-fd select:focus{border-color:var(--terracotta); background:var(--ivory)}
-.notify-error{
+.mform-fd input:focus, .mform-fd select:focus{border-color:var(--terracotta); background:var(--ivory)}
+.mform-error{
   font-size:12.5px; color:#B0362E; margin-bottom:10px; min-height:1px;
 }
-.notify-submit{
+.mform-submit{
   width:100%; padding:14px 18px; border:none; border-radius:999px;
   background:var(--terracotta); color:var(--ivory);
   font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:600;
   cursor:pointer; transition:background .2s ease;
 }
-.notify-submit:hover{background:var(--brick)}
-.notify-submit:disabled{opacity:.7; cursor:default}
+.mform-submit:hover{background:var(--brick)}
+.mform-submit:disabled{opacity:.7; cursor:default}
 .notify-success{
   display:none; text-align:center; padding:20px 4px 4px;
 }
@@ -1300,6 +1300,113 @@ body.notify-lock{overflow:hidden}
 html[data-lang="hi"] .notify-product{font-family:var(--devanagari); font-style:normal}
 html[data-lang="hi"] .notify-subtitle, html[data-lang="hi"] .notify-success p{font-family:var(--devanagari)}
 
+/* ════════════ CART / CHECKOUT DRAWER ════════════ */
+.cart-ovl{
+  position:fixed; inset:0; z-index:900;
+  background:rgba(42,31,24,.5);
+  display:flex; justify-content:flex-end;
+  opacity:0; pointer-events:none;
+  transition:opacity .3s ease;
+}
+.cart-ovl.open{opacity:1; pointer-events:auto}
+.cart-panel{
+  width:440px; max-width:100vw; height:100%;
+  background:var(--ivory);
+  display:flex; flex-direction:column;
+  box-shadow:-20px 0 60px -16px rgba(42,31,24,.35);
+  transform:translateX(100%); transition:transform .32s ease;
+}
+.cart-ovl.open .cart-panel{transform:translateX(0)}
+.cart-hd{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px 24px; border-bottom:1px solid rgba(154,80,40,.12); flex-shrink:0;
+}
+.cart-hd h3{font-family:var(--serif); font-style:italic; font-weight:500; font-size:22px; color:var(--ink)}
+.cart-close{
+  width:32px; height:32px; border-radius:50%; border:none;
+  background:var(--paper); color:var(--ink); font-size:18px; line-height:1;
+  display:grid; place-items:center; cursor:pointer; transition:background .2s ease; flex-shrink:0;
+}
+.cart-close:hover{background:var(--mist)}
+.cart-body{flex:1; overflow-y:auto; padding:20px 24px}
+.cart-view-confirm{text-align:center; padding-top:40px}
+.cart-view-confirm h4{font-family:var(--serif); font-style:italic; font-weight:500; font-size:22px; margin-bottom:10px}
+.cart-view-confirm p{font-size:14px; color:var(--soft-ink); line-height:1.6; margin-bottom:20px}
+
+.cart-item{
+  display:flex; justify-content:space-between; gap:12px;
+  padding:16px 0; border-bottom:1px solid rgba(154,80,40,.1);
+}
+.cart-item:first-child{padding-top:0}
+.cart-item-name{font-size:14px; font-weight:600; color:var(--ink)}
+.cart-item-variant{font-size:12px; color:var(--soft-ink); margin-top:2px}
+.cart-item-price{font-size:13px; color:var(--terracotta); font-weight:600; margin-top:6px}
+.cart-item-actions{display:flex; flex-direction:column; align-items:flex-end; gap:8px; flex-shrink:0}
+.cart-qty{
+  display:flex; align-items:center; gap:10px;
+  border:1px solid rgba(154,80,40,.22); border-radius:999px; padding:4px 10px;
+}
+.cart-qty-btn{
+  width:20px; height:20px; border:none; background:none; cursor:pointer;
+  font-size:15px; color:var(--terracotta); display:grid; place-items:center; line-height:1;
+}
+.cart-qty span{font-size:13px; font-weight:600; min-width:14px; text-align:center}
+.cart-remove{
+  border:none; background:none; cursor:pointer;
+  font-size:11px; letter-spacing:.05em; color:var(--soft-ink); text-decoration:underline;
+  opacity:.75;
+}
+.cart-remove:hover{opacity:1; color:var(--terracotta)}
+
+.cart-empty-state{text-align:center; padding:50px 10px; color:var(--soft-ink)}
+.cart-empty-state p{margin-bottom:16px; font-size:14px}
+.cart-continue{
+  padding:11px 20px; border-radius:999px; border:1px solid var(--terracotta);
+  background:none; color:var(--terracotta); font-size:11px; letter-spacing:.18em;
+  text-transform:uppercase; font-weight:600; cursor:pointer; transition:all .2s ease;
+}
+.cart-continue:hover{background:var(--terracotta); color:var(--ivory)}
+
+.cart-footer{
+  flex-shrink:0; padding:18px 24px 22px; border-top:1px solid rgba(154,80,40,.12);
+}
+.cart-row{display:flex; justify-content:space-between; font-size:13px; color:var(--soft-ink); margin-bottom:8px}
+.cart-row-total{font-size:16px; font-weight:700; color:var(--ink); margin-top:4px; margin-bottom:16px}
+.cart-back{
+  border:none; background:none; cursor:pointer; padding:0;
+  font-size:12px; letter-spacing:.05em; color:var(--terracotta); font-weight:600; margin-bottom:16px;
+}
+.checkout-row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.checkout-recap{
+  font-size:12.5px; color:var(--soft-ink); text-align:center;
+  padding:10px 0; border-top:1px dashed rgba(154,80,40,.22); margin-top:4px; margin-bottom:14px;
+}
+.pay-options{display:flex; flex-direction:column; gap:8px; margin-top:4px}
+.pay-option{
+  display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--ink);
+  border:1px solid rgba(154,80,40,.22); border-radius:8px; padding:11px 13px; cursor:pointer;
+}
+.pay-option input{accent-color:var(--terracotta)}
+.upi-panel{
+  text-align:center; background:var(--paper); border-radius:10px; padding:18px; margin:14px 0;
+}
+.upi-qr{display:flex; justify-content:center; margin-bottom:12px}
+.upi-qr svg{width:150px; height:150px}
+.upi-id-row{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  font-size:13px; font-weight:600; color:var(--ink); margin-bottom:8px;
+}
+.upi-copy{
+  border:1px solid rgba(154,80,40,.3); background:var(--ivory); border-radius:6px;
+  padding:3px 10px; font-size:11px; color:var(--terracotta); cursor:pointer;
+}
+.upi-instructions{font-size:11.5px; color:var(--soft-ink); line-height:1.5}
+
+@media (max-width:480px){
+  .cart-panel{width:100vw}
+  .checkout-row2{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 
@@ -1311,10 +1418,8 @@ html[data-lang="hi"] .notify-subtitle, html[data-lang="hi"] .notify-success p{fo
     <div class="announce-track-inner">
       <span data-i18n="announce.shipping">Complimentary shipping across India on orders above ₹999</span>
       <span data-i18n="announce.cod">Cash on Delivery available</span>
-      <span data-i18n="announce.handmade">Hand-blended in Alwar</span>
       <span data-i18n="announce.shipping">Complimentary shipping across India on orders above ₹999</span>
       <span data-i18n="announce.cod">Cash on Delivery available</span>
-      <span data-i18n="announce.handmade">Hand-blended in Alwar</span>
     </div>
   </div>
   <div class="lang-toggle" role="group" aria-label="Language">
@@ -1352,7 +1457,7 @@ html[data-lang="hi"] .notify-subtitle, html[data-lang="hi"] .notify-success p{fo
       <button class="nav-icon" data-i18n-aria="nav.account" aria-label="Account">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
       </button>
-      <button class="nav-icon bag-badge" data-i18n-aria="nav.bag" aria-label="Bag">
+      <button type="button" class="nav-icon bag-badge" id="bag-trigger" data-count="0" data-i18n-aria="nav.bag" aria-label="Bag">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
       </button>
       <button class="hamburger" aria-label="Menu" id="hamburger-btn"><span></span></button>
@@ -1487,18 +1592,14 @@ html[data-lang="hi"] .notify-subtitle, html[data-lang="hi"] .notify-success p{fo
 <!-- ════════════ STRIP ════════════ -->
 <div class="strip">
   <div class="strip-track">
-    <span data-i18n="strip.1">Hand-Ground in Alwar</span>
-    <span data-i18n="strip.2">Family Run Since 1918</span>
-    <span data-i18n="strip.3">Four Shops in Alwar</span>
-    <span data-i18n="strip.4">Stocked Across India</span>
-    <span data-i18n="strip.5">No Artificial Colours</span>
-    <span data-i18n="strip.6">Free Shipping ₹999+</span>
-    <span data-i18n="strip.1">Hand-Ground in Alwar</span>
-    <span data-i18n="strip.2">Family Run Since 1918</span>
-    <span data-i18n="strip.3">Four Shops in Alwar</span>
-    <span data-i18n="strip.4">Stocked Across India</span>
-    <span data-i18n="strip.5">No Artificial Colours</span>
-    <span data-i18n="strip.6">Free Shipping ₹999+</span>
+    <span data-i18n="strip.1">Family Run Since 1918</span>
+    <span data-i18n="strip.2">Four Shops in Alwar</span>
+    <span data-i18n="strip.3">Stocked Across India, with over 400 counters in Rajasthan</span>
+    <span data-i18n="strip.4">Free Shipping ₹999+</span>
+    <span data-i18n="strip.1">Family Run Since 1918</span>
+    <span data-i18n="strip.2">Four Shops in Alwar</span>
+    <span data-i18n="strip.3">Stocked Across India, with over 400 counters in Rajasthan</span>
+    <span data-i18n="strip.4">Free Shipping ₹999+</span>
   </div>
 </div>
 
@@ -1892,6 +1993,7 @@ html[data-lang="hi"] .notify-subtitle, html[data-lang="hi"] .notify-success p{fo
 <script src="/js/translations.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/chatbot.js"></script>
+<script src="/js/qrcode.js"></script>
 
 <script>
 // reveal-on-scroll
@@ -2144,11 +2246,14 @@ document.querySelectorAll('.filters button').forEach(btn => {
   }
 
   function applyAddToBagState() {
+    const bagTrigger = document.getElementById('bag-trigger');
+    if (bagTrigger) bagTrigger.style.display = addToBagEnabled ? '' : 'none';
+
     document.querySelectorAll('.card-add').forEach(btn => {
       btn.disabled = false;
       if (addToBagEnabled) {
         btn.textContent = window.GLP_I18N?.t('p.cta.add') || 'Add to Bag';
-        btn.onclick = null;
+        btn.onclick = btn._addHandler || null;
       } else {
         btn.textContent = window.GLP_I18N?.t('p.cta.notify') || 'Notify Me';
         btn.onclick = () => openNotifyModal(getProductNameForBtn(btn));
@@ -2156,12 +2261,17 @@ document.querySelectorAll('.filters button').forEach(btn => {
     });
   }
 
+  let upiId = '';
+  let upiPayeeName = '';
+
   async function loadAddToBagSetting() {
     try {
       const r = await fetch('/api/settings');
       if (!r.ok) return;
       const { settings } = await r.json();
       addToBagEnabled = settings.add_to_bag_enabled !== 'false';
+      upiId = settings.upi_id || '';
+      upiPayeeName = settings.upi_payee_name || '';
     } catch(e) {}
     applyAddToBagState();
   }
@@ -2195,27 +2305,27 @@ document.querySelectorAll('.filters button').forEach(btn => {
           <p class="notify-subtitle">${t('notify.subtitle', 'Leave your number and we\'ll let you know the moment it\'s back.')}</p>
         </div>
         <form class="notify-form" novalidate>
-          <div class="notify-fd">
-            <label for="ntf-name">${t('notify.name','Name')} <span class="notify-opt">${t('notify.optional','(optional)')}</span></label>
+          <div class="mform-fd">
+            <label for="ntf-name">${t('notify.name','Name')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
             <input id="ntf-name" type="text" maxlength="200" autocomplete="name"/>
           </div>
-          <div class="notify-fd">
-            <label for="ntf-phone">${t('notify.phone','Phone')} <span class="notify-req">*</span></label>
+          <div class="mform-fd">
+            <label for="ntf-phone">${t('notify.phone','Phone')} <span class="mform-req">*</span></label>
             <input id="ntf-phone" type="tel" maxlength="13" required autocomplete="tel"/>
           </div>
-          <div class="notify-fd">
-            <label for="ntf-email">${t('notify.email','Email')} <span class="notify-opt">${t('notify.optional','(optional)')}</span></label>
+          <div class="mform-fd">
+            <label for="ntf-email">${t('notify.email','Email')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
             <input id="ntf-email" type="email" maxlength="200" autocomplete="email"/>
           </div>
-          <div class="notify-fd">
-            <label for="ntf-city">${t('notify.city','City')} <span class="notify-opt">${t('notify.optional','(optional)')}</span></label>
+          <div class="mform-fd">
+            <label for="ntf-city">${t('notify.city','City')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
             <select id="ntf-city">
               <option value="">${t('notify.city.placeholder','Select city')}</option>
               ${INDIAN_CITIES.map(c => `<option value="${c}">${c}</option>`).join('')}
             </select>
           </div>
-          <div class="notify-error" id="ntf-error"></div>
-          <button type="submit" class="notify-submit">${t('notify.submit','Notify Me')}</button>
+          <div class="mform-error" id="ntf-error"></div>
+          <button type="submit" class="mform-submit">${t('notify.submit','Notify Me')}</button>
         </form>
         <div class="notify-success">
           <div class="notify-success-icon">&#10003;</div>
@@ -2245,7 +2355,7 @@ document.querySelectorAll('.filters button').forEach(btn => {
         return;
       }
 
-      const submitBtn = form.querySelector('.notify-submit');
+      const submitBtn = form.querySelector('.mform-submit');
       submitBtn.disabled = true;
       submitBtn.textContent = t('notify.sending', 'Sending…');
       try {
@@ -2268,10 +2378,6 @@ document.querySelectorAll('.filters button').forEach(btn => {
       }
     });
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && notifyModalEl?.classList.contains('open')) closeNotifyModal();
-    });
-
     return ovl;
   }
 
@@ -2283,15 +2389,399 @@ document.querySelectorAll('.filters button').forEach(btn => {
     ovl.querySelector('#ntf-error').textContent = '';
     ovl.classList.remove('notify-done');
     ovl.classList.add('open');
-    document.body.classList.add('notify-lock');
+    document.body.classList.add('modal-lock');
     setTimeout(() => ovl.querySelector('#ntf-phone')?.focus(), 50);
   }
 
   function closeNotifyModal() {
     if (!notifyModalEl) return;
     notifyModalEl.classList.remove('open');
-    document.body.classList.remove('notify-lock');
+    document.body.classList.remove('modal-lock');
   }
+
+  // ── Cart / Review / Checkout ─────────────────────────────────────────────
+  // Kept in sync with the server's own shipping constants in server.js.
+  const CART_KEY               = 'glp_cart_v1';
+  const CART_FREE_SHIP_MIN     = 999;
+  const CART_SHIPPING_FEE      = 49;
+  const CART_MAX_ITEM_QTY      = 20;
+
+  function escHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function loadCart() {
+    try {
+      const c = JSON.parse(localStorage.getItem(CART_KEY));
+      return Array.isArray(c) ? c : [];
+    } catch(e) { return []; }
+  }
+  function saveCart(cart) {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch(e) {}
+  }
+  function updateCartBadge() {
+    const trigger = document.getElementById('bag-trigger');
+    if (!trigger) return;
+    const count = loadCart().reduce((s,i) => s + i.quantity, 0);
+    trigger.dataset.count = String(count);
+  }
+
+  function addToCart(product, variant, disc) {
+    if (!addToBagEnabled || !variant) return;
+    const salePrice = computeDisc(parseFloat(variant.price), disc);
+    const unitPrice = salePrice ?? parseFloat(variant.price);
+    const cart = loadCart();
+    const existing = cart.find(i => i.sku === product.sku && i.variantId === variant.id);
+    if (existing) {
+      existing.quantity = Math.min(CART_MAX_ITEM_QTY, existing.quantity + 1);
+    } else {
+      cart.push({
+        sku: product.sku, variantId: variant.id, variantLabel: variant.label || '',
+        name: product.name_en, unitPrice, quantity: 1
+      });
+    }
+    saveCart(cart);
+    updateCartBadge();
+    showCartStep('cart');
+    renderCartItems();
+    openCartDrawer();
+  }
+
+  let cartDrawerEl = null;
+
+  function ensureCartDrawer() {
+    if (cartDrawerEl) return cartDrawerEl;
+
+    const ovl = document.createElement('div');
+    ovl.className = 'cart-ovl';
+    ovl.innerHTML = `
+      <aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+        <div class="cart-hd">
+          <h3 id="cart-title">${t('cart.title','Your Bag')}</h3>
+          <button type="button" class="cart-close" aria-label="${t('chat.close','Close')}">&times;</button>
+        </div>
+
+        <div class="cart-body">
+          <div class="cart-view cart-view-cart">
+            <div id="cart-items"></div>
+            <div id="cart-empty" class="cart-empty-state" hidden>
+              <p>${t('cart.empty','Your bag is empty.')}</p>
+              <button type="button" class="cart-continue">${t('cart.continueShopping','Continue Shopping')}</button>
+            </div>
+          </div>
+
+          <div class="cart-view cart-view-checkout" hidden>
+            <button type="button" class="cart-back">&larr; ${t('checkout.back','Back to Bag')}</button>
+            <form class="checkout-form" novalidate>
+              <div class="mform-fd">
+                <label for="cko-name">${t('notify.name','Name')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
+                <input id="cko-name" type="text" maxlength="200" autocomplete="name"/>
+              </div>
+              <div class="mform-fd">
+                <label for="cko-phone">${t('notify.phone','Phone')} <span class="mform-req">*</span></label>
+                <input id="cko-phone" type="tel" maxlength="13" required autocomplete="tel"/>
+              </div>
+              <div class="mform-fd">
+                <label for="cko-email">${t('notify.email','Email')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
+                <input id="cko-email" type="email" maxlength="200" autocomplete="email"/>
+              </div>
+              <div class="mform-fd">
+                <label for="cko-address">${t('checkout.address','Delivery Address')} <span class="mform-req">*</span></label>
+                <textarea id="cko-address" rows="2" maxlength="300" autocomplete="street-address"></textarea>
+              </div>
+              <div class="checkout-row2">
+                <div class="mform-fd">
+                  <label for="cko-city">${t('notify.city','City')} <span class="mform-req">*</span></label>
+                  <select id="cko-city">
+                    <option value="">${t('notify.city.placeholder','Select city')}</option>
+                    ${INDIAN_CITIES.map(c => `<option value="${c}">${c}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="mform-fd">
+                  <label for="cko-pincode">${t('checkout.pincode','Pincode')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
+                  <input id="cko-pincode" type="text" inputmode="numeric" maxlength="6" autocomplete="postal-code"/>
+                </div>
+              </div>
+              <div class="mform-fd">
+                <label for="cko-state">${t('checkout.state','State')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
+                <input id="cko-state" type="text" maxlength="100" autocomplete="address-level1"/>
+              </div>
+              <div class="mform-fd">
+                <label for="cko-notes">${t('checkout.notes','Order Notes')} <span class="mform-opt">${t('notify.optional','(optional)')}</span></label>
+                <input id="cko-notes" type="text" maxlength="300" placeholder="${t('checkout.notes.placeholder','Landmark, delivery instructions…')}"/>
+              </div>
+
+              <div class="mform-fd">
+                <label>${t('checkout.payment','Payment Method')}</label>
+                <div class="pay-options">
+                  <label class="pay-option">
+                    <input type="radio" name="pay-method" value="cod" checked/>
+                    <span>${t('checkout.payment.cod','Cash on Delivery')}</span>
+                  </label>
+                  <label class="pay-option" id="pay-upi-option" hidden>
+                    <input type="radio" name="pay-method" value="upi"/>
+                    <span>${t('checkout.payment.upi','Pay via UPI')}</span>
+                  </label>
+                </div>
+              </div>
+              <div class="upi-panel" hidden>
+                <div class="upi-qr" id="upi-qr"></div>
+                <div class="upi-id-row">
+                  <span id="upi-id-display"></span>
+                  <button type="button" class="upi-copy">${t('checkout.upi.copy','Copy')}</button>
+                </div>
+                <p class="upi-instructions">${t('checkout.upi.instructions','Scan with any UPI app and pay the amount shown, then tap the button below — we\'ll confirm your payment shortly.')}</p>
+              </div>
+
+              <div class="checkout-recap" id="checkout-recap"></div>
+              <div class="mform-error" id="cko-error"></div>
+              <button type="submit" class="mform-submit">${t('checkout.placeOrder','Place Order')}</button>
+            </form>
+          </div>
+
+          <div class="cart-view cart-view-confirm" hidden>
+            <div class="notify-success-icon">&#10003;</div>
+            <h4 id="cko-confirm-title"></h4>
+            <p id="cko-confirm-body"></p>
+            <button type="button" class="cart-continue">${t('cart.continueShopping','Continue Shopping')}</button>
+          </div>
+        </div>
+
+        <div class="cart-footer" id="cart-footer">
+          <div class="cart-row"><span>${t('cart.subtotal','Subtotal')}</span><span id="cart-subtotal">₹0</span></div>
+          <div class="cart-row"><span>${t('cart.shipping','Shipping')}</span><span id="cart-shipping">${t('cart.free','Free')}</span></div>
+          <div class="cart-row cart-row-total"><span>${t('cart.total','Total')}</span><span id="cart-total">₹0</span></div>
+          <button type="button" class="mform-submit" id="cart-checkout-btn">${t('cart.checkout','Proceed to Checkout')}</button>
+        </div>
+      </aside>
+    `;
+    document.body.appendChild(ovl);
+    cartDrawerEl = ovl;
+
+    ovl.addEventListener('click', e => { if (e.target === ovl) closeCartDrawer(); });
+    ovl.querySelector('.cart-close').addEventListener('click', closeCartDrawer);
+    ovl.querySelectorAll('.cart-continue').forEach(b => b.addEventListener('click', closeCartDrawer));
+    ovl.querySelector('.cart-back').addEventListener('click', () => { showCartStep('cart'); renderCartItems(); });
+
+    ovl.querySelector('#cart-items').addEventListener('click', e => {
+      const btn = e.target.closest('[data-qty], .cart-remove');
+      if (!btn) return;
+      const row = btn.closest('.cart-item');
+      const idx = parseInt(row.dataset.idx);
+      const cart = loadCart();
+      if (btn.classList.contains('cart-remove')) {
+        cart.splice(idx, 1);
+      } else {
+        const dir = btn.dataset.qty === 'inc' ? 1 : -1;
+        cart[idx].quantity = Math.max(1, Math.min(CART_MAX_ITEM_QTY, cart[idx].quantity + dir));
+      }
+      saveCart(cart);
+      updateCartBadge();
+      renderCartItems();
+    });
+
+    ovl.querySelector('#cart-checkout-btn').addEventListener('click', () => {
+      if (!loadCart().length) return;
+      showCartStep('checkout');
+      const upiOption = ovl.querySelector('#pay-upi-option');
+      upiOption.hidden = !upiId;
+      ovl.querySelectorAll('input[name="pay-method"]')[0].checked = true;
+      ovl.querySelector('.upi-panel').hidden = true;
+      renderCheckoutRecap();
+    });
+
+    ovl.querySelector('.checkout-form').addEventListener('change', e => {
+      if (e.target.name !== 'pay-method') return;
+      const upiPanel = ovl.querySelector('.upi-panel');
+      if (e.target.value === 'upi' && upiId) {
+        upiPanel.hidden = false;
+        ovl.querySelector('#upi-id-display').textContent = upiId;
+        renderUpiQr(cartTotals().total);
+      } else {
+        upiPanel.hidden = true;
+      }
+    });
+
+    ovl.querySelector('.upi-copy').addEventListener('click', async () => {
+      const copyBtn = ovl.querySelector('.upi-copy');
+      try {
+        await navigator.clipboard.writeText(upiId);
+        copyBtn.textContent = t('checkout.upi.copied','Copied!');
+        setTimeout(() => copyBtn.textContent = t('checkout.upi.copy','Copy'), 1500);
+      } catch(e) {}
+    });
+
+    ovl.querySelector('.checkout-form').addEventListener('submit', handleCheckoutSubmit);
+
+    return ovl;
+  }
+
+  function cartTotals() {
+    const cart = loadCart();
+    const subtotal = cart.reduce((s,i) => s + i.unitPrice * i.quantity, 0);
+    const shipping = !cart.length ? 0 : (subtotal >= CART_FREE_SHIP_MIN ? 0 : CART_SHIPPING_FEE);
+    return { subtotal, shipping, total: subtotal + shipping, count: cart.reduce((s,i)=>s+i.quantity,0) };
+  }
+
+  function renderCartItems() {
+    const ovl = ensureCartDrawer();
+    const cart = loadCart();
+    const itemsEl = ovl.querySelector('#cart-items');
+    const emptyEl = ovl.querySelector('#cart-empty');
+    const checkoutBtn = ovl.querySelector('#cart-checkout-btn');
+
+    if (!cart.length) {
+      itemsEl.innerHTML = '';
+      emptyEl.hidden = false;
+      checkoutBtn.disabled = true;
+    } else {
+      emptyEl.hidden = true;
+      checkoutBtn.disabled = false;
+      itemsEl.innerHTML = cart.map((it, idx) => `
+        <div class="cart-item" data-idx="${idx}">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${escHtml(it.name)}</div>
+            ${it.variantLabel ? `<div class="cart-item-variant">${escHtml(it.variantLabel)}</div>` : ''}
+            <div class="cart-item-price">₹${it.unitPrice.toFixed(0)}</div>
+          </div>
+          <div class="cart-item-actions">
+            <div class="cart-qty">
+              <button type="button" class="cart-qty-btn" data-qty="dec" aria-label="Decrease quantity">&minus;</button>
+              <span>${it.quantity}</span>
+              <button type="button" class="cart-qty-btn" data-qty="inc" aria-label="Increase quantity">+</button>
+            </div>
+            <button type="button" class="cart-remove">${t('cart.remove','Remove')}</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    const totals = cartTotals();
+    ovl.querySelector('#cart-subtotal').textContent = '₹' + totals.subtotal.toFixed(0);
+    ovl.querySelector('#cart-shipping').textContent = totals.shipping === 0 ? t('cart.free','Free') : '₹' + totals.shipping.toFixed(0);
+    ovl.querySelector('#cart-total').textContent = '₹' + totals.total.toFixed(0);
+  }
+
+  function renderCheckoutRecap() {
+    const ovl = ensureCartDrawer();
+    const totals = cartTotals();
+    const label = totals.count === 1 ? t('checkout.recap.item','item') : t('checkout.recap.items','items');
+    ovl.querySelector('#checkout-recap').textContent = `${totals.count} ${label} · ${t('cart.total','Total')} ₹${totals.total.toFixed(0)}`;
+  }
+
+  function renderUpiQr(amount) {
+    const ovl = ensureCartDrawer();
+    const container = ovl.querySelector('#upi-qr');
+    if (!container || typeof qrcode !== 'function' || !upiId) { if (container) container.innerHTML = ''; return; }
+    const payee = upiPayeeName || 'Ganga Lehari Pansari';
+    const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payee)}&am=${amount.toFixed(2)}&cu=INR&tn=${encodeURIComponent('GLP Order')}`;
+    try {
+      const qr = qrcode(0, 'M');
+      qr.addData(upiUrl);
+      qr.make();
+      container.innerHTML = qr.createSvgTag(4, 0);
+    } catch(e) { container.innerHTML = ''; }
+  }
+
+  function showCartStep(step) {
+    const ovl = ensureCartDrawer();
+    ovl.querySelector('.cart-view-cart').hidden = step !== 'cart';
+    ovl.querySelector('.cart-view-checkout').hidden = step !== 'checkout';
+    ovl.querySelector('.cart-view-confirm').hidden = step !== 'confirm';
+    ovl.querySelector('#cart-footer').hidden = step !== 'cart';
+    ovl.querySelector('#cart-title').textContent =
+      step === 'checkout' ? t('checkout.title','Checkout') :
+      step === 'confirm'  ? t('checkout.success.title','Order Placed!') :
+      t('cart.title','Your Bag');
+  }
+
+  function openCartDrawer() {
+    const ovl = ensureCartDrawer();
+    ovl.classList.add('open');
+    document.body.classList.add('modal-lock');
+  }
+  function closeCartDrawer() {
+    if (!cartDrawerEl) return;
+    cartDrawerEl.classList.remove('open');
+    document.body.classList.remove('modal-lock');
+  }
+
+  async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    const ovl = ensureCartDrawer();
+    const errorEl = ovl.querySelector('#cko-error');
+    errorEl.textContent = '';
+
+    const cart = loadCart();
+    if (!cart.length) { errorEl.textContent = t('checkout.error.empty','Your bag is empty.'); return; }
+
+    const name    = ovl.querySelector('#cko-name').value.trim();
+    const phone   = ovl.querySelector('#cko-phone').value.replace(/[^0-9]/g, '');
+    const email   = ovl.querySelector('#cko-email').value.trim();
+    const address = ovl.querySelector('#cko-address').value.trim();
+    const city    = ovl.querySelector('#cko-city').value;
+    const pincode = ovl.querySelector('#cko-pincode').value.trim();
+    const state   = ovl.querySelector('#cko-state').value.trim();
+    const notes   = ovl.querySelector('#cko-notes').value.trim();
+    const paymentMethod = ovl.querySelector('input[name="pay-method"]:checked')?.value || 'cod';
+
+    if (phone.length < 10 || phone.length > 13) {
+      errorEl.textContent = t('checkout.error.phone','Please enter a valid phone number.');
+      return;
+    }
+    if (!address) {
+      errorEl.textContent = t('checkout.error.address','Please enter your delivery address.');
+      return;
+    }
+    if (!city) {
+      errorEl.textContent = t('checkout.error.city','Please select your city.');
+      return;
+    }
+
+    const submitBtn = ovl.querySelector('.checkout-form .mform-submit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = t('checkout.placing','Placing order…');
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.map(i => ({ sku: i.sku, variantId: i.variantId, quantity: i.quantity })),
+          paymentMethod,
+          customer: { name, phone, email, address, city, state, pincode, notes, language: window.GLP_I18N?.lang || 'en' }
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errorEl.textContent = data.error || t('checkout.error.generic','Something went wrong. Please try again.');
+        return;
+      }
+
+      saveCart([]);
+      updateCartBadge();
+
+      const titleEl = ovl.querySelector('#cko-confirm-title');
+      const bodyEl  = ovl.querySelector('#cko-confirm-body');
+      titleEl.textContent = t('checkout.success.title','Order Placed!');
+      if (data.paymentMethod === 'upi') {
+        bodyEl.textContent = `${t('checkout.success.order','Order')} #${data.orderId} · ₹${Number(data.total).toFixed(0)} — ${t('checkout.success.upiBody', "We'll confirm your UPI payment shortly.")}`;
+      } else {
+        bodyEl.textContent = `${t('checkout.success.order','Order')} #${data.orderId} · ${t('checkout.success.codBody','Pay')} ₹${Number(data.total).toFixed(0)} ${t('checkout.success.onDelivery','on delivery')}.`;
+      }
+      showCartStep('confirm');
+    } catch(err) {
+      errorEl.textContent = t('checkout.error.generic','Something went wrong. Please try again.');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = t('checkout.placeOrder','Place Order');
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (notifyModalEl?.classList.contains('open')) closeNotifyModal();
+    if (cartDrawerEl?.classList.contains('open')) closeCartDrawer();
+  });
 
   function computeDisc(price, disc) {
     if (!disc || !disc.is_active) return null;
@@ -2410,6 +2900,7 @@ document.querySelectorAll('.filters button').forEach(btn => {
     addBtn.type = 'button';
     addBtn.className = 'card-add';
     addBtn.textContent = window.GLP_I18N?.t('p.cta.add') || 'Add to Bag';
+    addBtn._addHandler = () => addToCart(p, activeVariant, disc);
     cta.appendChild(addBtn);
 
     body.appendChild(cta);
@@ -2608,6 +3099,14 @@ document.querySelectorAll('.filters button').forEach(btn => {
     await loadAddToBagSetting();
     await loadDynamicProducts();
     applyAddToBagState();
+    updateCartBadge();
+    const bagTrigger = document.getElementById('bag-trigger');
+    if (bagTrigger) bagTrigger.addEventListener('click', () => {
+      if (!addToBagEnabled) return;
+      showCartStep('cart');
+      renderCartItems();
+      openCartDrawer();
+    });
   });
 })();
 
