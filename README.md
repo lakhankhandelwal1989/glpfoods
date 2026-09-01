@@ -12,17 +12,19 @@ Express + PostgreSQL app with a bilingual (EN/HI) landing page, a chatbot that c
 ├── server.js              ← Express app, all routes & auth
 ├── package.json
 ├── .env.example           ← env-var template
+├── docker-compose.yml     ← local Postgres for development (see below)
 ├── README.md
 ├── db/
 │   └── schema.sql         ← reference schema (server creates idempotently)
 └── public/
-    ├── index.html         ← landing page (bilingual, chatbot mounted)
+    ├── index.html         ← landing page (bilingual, chatbot, cart & checkout)
     ├── admin.html         ← admin login + dashboard SPA
     ├── GLP_Logo.png
     └── js/
         ├── translations.js   ← all EN+HI strings
         ├── i18n.js           ← language switcher
-        └── chatbot.js        ← lead-capture widget
+        ├── chatbot.js        ← lead-capture widget
+        └── qrcode.js         ← vendored QR generator (UPI checkout)
 ```
 
 ---
@@ -70,16 +72,80 @@ Express + PostgreSQL app with a bilingual (EN/HI) landing page, a chatbot that c
 
 ## Local development
 
+You need a Postgres database to point the app at. Easiest way — a disposable
+one via Docker:
+
+```bash
+docker compose up -d          # starts Postgres on localhost:5432 (user/pass/db: glp/glp/glp)
+```
+
+(No Docker? Any Postgres works — a local install, or a free instance from
+[Neon](https://neon.tech) or [Supabase](https://supabase.com). Just put its
+connection string in `DATABASE_URL` below.)
+
+Then:
+
 ```bash
 cp .env.example .env
-# fill in DATABASE_URL with a local Postgres instance
-# fill in a JWT_SECRET (any string is fine for local)
+# DATABASE_URL=postgres://glp:glp@localhost:5432/glp   (if using docker compose above)
+# JWT_SECRET=anything                                   (any string is fine for local)
+# NODE_ENV=development
 
 npm install
 npm start
 ```
 
-Then open `http://localhost:3000`. The admin panel is at `http://localhost:3000/admin`.
+Open `http://localhost:3000` for the site and `http://localhost:3000/admin`
+for the admin panel (default login `Lakhan` / `Lakhan`). The server creates
+every table it needs on first boot and seeds three sample products, so
+there's nothing else to set up.
+
+To wipe local data and start over: `docker compose down -v` (destroys the
+volume), then `docker compose up -d` again and restart `npm start`.
+
+---
+
+## Testing a branch before it goes to production
+
+Do this **before merging into `main`** (which is what Railway deploys from).
+Pull the branch, run it locally against a throwaway database as above, then
+work through whichever of these applies to what changed:
+
+**Add to Bag toggle** (`/admin` → Settings → Store Controls)
+- [ ] Toggle **on**: every product card shows a working "Add to Bag" button; the bag icon appears in the nav.
+- [ ] Toggle **off**: buttons everywhere switch to "Notify Me"; the bag icon disappears from the nav entirely; if you had items in the bag already, they're just inaccessible, not deleted — they reappear if you switch it back on.
+- [ ] "Notify Me" opens a form (name optional, phone required, email optional, city dropdown); submitting shows a success message and the lead appears in the **Leads** tab with source `Notify Me - <product name>`.
+
+**Cart & review** (toggle must be on)
+- [ ] "Add to Bag" on a product opens the cart drawer with that item in it.
+- [ ] Adding the same product+size again increases its quantity instead of creating a duplicate row.
+- [ ] The +/− steppers change quantity; "Remove" deletes the row; removing everything shows the empty-bag state and disables "Proceed to Checkout".
+- [ ] Subtotal/shipping/total update live. Shipping is ₹49 under ₹999 subtotal, free at or above it.
+- [ ] The bag icon's badge count matches the total quantity in the cart, and survives a page reload (it's saved in the browser).
+
+**Checkout — Cash on Delivery**
+- [ ] "Proceed to Checkout" shows the form with a live item/total recap.
+- [ ] Submitting with an invalid or missing phone/address/city is rejected with a clear message; a valid submission shows an order-confirmation screen with an order number and "Pay ₹X on delivery."
+- [ ] The order appears in `/admin` → **Orders** with payment "Cash on Delivery" and status "Placed".
+
+**Checkout — UPI** (`/admin` → Settings → Payments)
+- [ ] With no UPI ID set, "Pay via UPI" doesn't appear at checkout at all.
+- [ ] Set a UPI ID (any fake one is fine for testing, e.g. `test@upi`) and optionally a payee name → Save.
+- [ ] Back at checkout, "Pay via UPI" now appears; selecting it renders a QR code and the UPI ID with a working "Copy" button.
+- [ ] Placing the order shows "We'll confirm your UPI payment shortly," and the order lands in **Orders** as "UPI · Pending" with a **Mark Paid** button.
+- [ ] Clicking **Mark Paid** flips it to "UPI · Paid" and the "UPI Awaiting Verification" stat at the top decreases.
+
+**Admin → Orders**
+- [ ] The status dropdown (Placed/Confirmed/Shipped/Delivered/Cancelled) saves on change.
+- [ ] "Export CSV" downloads a file with every order and its line items.
+- [ ] Deleting an order removes it after confirmation.
+
+**Cross-check**
+- [ ] With the toggle off, try placing an order anyway by re-enabling only the API (skip this unless you're comfortable with `curl`) — `/api/checkout` should refuse with a 403 even if someone bypasses the UI, since the toggle is enforced server-side too.
+- [ ] Switch the language to हिं and click back through the flows above — labels should be in Hindi (a few concatenated sentences read a little stiffly by design, since this codebase builds them from fixed fragments rather than full translated sentences).
+
+Once everything on the relevant list checks out, merge to `main` — Railway
+picks it up automatically from there.
 
 ---
 
